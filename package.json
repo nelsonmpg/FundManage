@@ -1,0 +1,24 @@
+{
+  "name": "founcontrol",
+  "version": "1.0.0",
+  "description": "Control Found",
+  "main": "main.js",
+  "scripts": {
+    "start": "NODE_ENV=PROD node main.js",
+    "prod": "NODE_ENV=PROD node main.js",
+    "dev": "NODE_ENV=DEV node main.js"
+  },
+  "author": "Nelson Gomes",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "colors": "^1.3.3",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.4.20",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "request": "^2.88.0"
+  }
+}

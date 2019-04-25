@@ -1,0 +1,154 @@
+<template>
+  <b-row class="animated fadeIn">
+    <b-col cols="12">
+      <transition name="slide">
+        <b-card :header="caption">
+          <b-button
+            class="mb-2"
+            @click="createNewFund"
+            block
+            variant="outline-success"
+          ><i class="cui-pencil icons"></i> Create New Fund</b-button>
+          <b-table
+            hover
+            stripe
+            bordered
+            small
+            fixed
+            responsive="sm"
+            :items="items"
+            :fields="fields"
+            :current-page="currentPage"
+            :per-page="perPage"
+            @row-clicked="rowClicked"
+          >
+            <template
+              slot="lastUpdate"
+              slot-scope="data"
+            >{{utils.onlyDateFormat(data.item.lastUpdate)}}</template>
+            <template
+              slot="lastHistoryDate"
+              slot-scope="data"
+            >{{utils.onlyDateFormat(data.item.lastHistoryDate)}}</template>
+          </b-table>
+          <nav>
+            <b-pagination
+              size="sm"
+              :total-rows="getRowCount(items)"
+              :per-page="perPage"
+              v-model="currentPage"
+              prev-text="Prev"
+              next-text="Next"
+              hide-goto-end-buttons
+            />
+          </nav>
+        </b-card>
+      </transition>
+    </b-col>
+  </b-row>
+</template>
+
+<script>
+import utils from "./../../shared/utilsLib.js";
+export default {
+  components: {},
+  name: "Funds",
+  props: {
+    caption: {
+      type: String,
+      default: "Funds"
+    },
+    hover: {
+      type: Boolean,
+      default: true
+    },
+    striped: {
+      type: Boolean,
+      default: true
+    },
+    bordered: {
+      type: Boolean,
+      default: false
+    },
+    small: {
+      type: Boolean,
+      default: false
+    },
+    fixed: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: () => {
+    return {
+      items: [],
+      fields: [
+        { key: "isin", sortable: true },
+        { key: "name", sortable: true },
+        { key: "lastUpdate", label: "Date Updated" },
+        { key: "lastHistoryDate", label: "Last Date Record" },
+        { key: "lastValue" }
+      ],
+      currentPage: 1,
+      perPage: 10,
+      totalRows: 0,
+      utils
+    };
+  },
+  computed: {},
+  methods: {
+    createNewFund() {
+      this.$router.push("/funds/fund");
+    },
+    getAllFunds() {
+      this.$http
+        .get("/api/funds")
+        .then(function(response) {
+          let data = response.data;
+          // console.log("AllFunds", data);
+          if (data.status === true) {
+            this.items = data.data;
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "New fund existes.",
+              type: "eror",
+              text: "The fund '" + data.data + "' exists in database.",
+              position: "top center"
+            });
+          }
+          this.$loading.hide();
+        })
+        .catch(function(err) {
+          this.$loading.hide();
+          console.log("Error", err);
+        });
+    },
+    getRowCount(items) {
+      return items.length;
+    },
+    userLink(isin) {
+      return `/funds/fundView/${isin.toString()}`;
+    },
+    rowClicked(item) {
+      const userLink = this.userLink(item.isin);
+      this.$router.push({ path: userLink });
+    }
+  },
+  created() {
+    this.getAllFunds();
+  },
+  mounted() {
+    this.$loading.show();
+  },
+  beforeCreate() {},
+  beforeDestroy() {}
+};
+</script>
+
+<style scoped>
+.card-body >>> table > tbody > tr > td {
+  cursor: pointer;
+  vertical-align: middle;
+}
+</style>
