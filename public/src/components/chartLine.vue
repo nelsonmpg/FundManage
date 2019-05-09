@@ -28,6 +28,7 @@ export default {
               borderColor: "#e4e7ea",
               pointBackgroundColor: "#e4e7ea",
               backgroundColor: "rgba(0, 0, 0, 0)",
+              lineTension: 0.2,
               data: []
             }
           ]
@@ -62,7 +63,7 @@ export default {
                 id: "y-axis-0",
                 type: "linear",
                 ticks: {
-                  fontColor: "#e4e7ea"/*,
+                  fontColor: "#e4e7ea" /*,
                   stepSize: 2*/
                 },
                 gridLines: {

@@ -9,18 +9,22 @@
               <b-form-group>
                 <b-input-group>
                   <b-input-group-prepend>
-                    <b-input-group-text>Wallet Name</b-input-group-text>
+                    <b-input-group-text>Portfolio Name</b-input-group-text>
                   </b-input-group-prepend>
                   <b-form-input
                     v-model="walletName"
                     type="text"
                     ref="walletNameFocus"
-                    placeholder="Please enter Wallet Name."
-                    required
+                    placeholder="Please enter Portfolio Name."
+                    disabled
                   ></b-form-input>
                   <b-input-group-append>
                     <b-input-group-text>
-                      <i class="fa" :class="classwalletName"></i>
+                      <i
+                        class="fa"
+                        v-b-tooltip.hover.html="'<strong>A prefered Portfolio name.</strong>'"
+                        :class="classwalletName"
+                      ></i>
                     </b-input-group-text>
                   </b-input-group-append>
                 </b-input-group>
@@ -30,10 +34,10 @@
           <b-row>
             <b-col sm="12">
               <add-fund-edit
-                :dataObj="dataObjToSave"
-                :fund="fund"
                 :posArr="index"
+                :fund="fund"
                 :optsSelect="options"
+                ref="checkFund"
                 v-for="(fund, index) in fundsList"
                 :key="index"
               ></add-fund-edit>
@@ -41,8 +45,8 @@
           </b-row>
           <b-row>
             <b-col sm="12" class="mt-3 mb-3">
-              <b-button @click="addFund" block variant="outline-info">
-                <i class="fa fa-dot-circle-o"></i> Add Fund to Wallet
+              <b-button @click="addFund" ref="addFundFocus" block variant="outline-info">
+                <i class="fa fa-plus"></i> Add Fund to Portfolio
               </b-button>
             </b-col>
           </b-row>
@@ -51,12 +55,14 @@
         </b-form>
         <template slot="footer">
           <b-row>
-            <b-col cols="12">
-              <b-button @click="saveWallet" block variant="outline-success">
-                <i class="fa fa-dot-circle-o"></i> Save Wallet
-              </b-button>
+            <b-col cols="6">
               <b-button block variant="outline-primary" @click="goBack">
                 <i class="cui-account-logout icons active mt-3"></i> Back
+              </b-button>
+            </b-col>
+            <b-col cols="6">
+              <b-button @click="saveWallet" block variant="outline-success">
+                <i class="fa fa-save"></i> Save Portfolio
               </b-button>
             </b-col>
           </b-row>
@@ -67,153 +73,126 @@
 </template>
 <script>
 import AddFundEdit from "./AddFundEdit.vue";
+import utils from "./../../shared/utilsLib.js";
 export default {
   components: {
     AddFundEdit
   },
-  name: "Wallet Edit",
+  name: "Portfolio Edit",
   data: () => {
     return {
-      title: "Edit Wallet of Fund",
-      wallet: "",
+      title: "",
       walletName: "",
       walletNameCheck: false,
       classwalletName: "fa-close",
       fundsList: [],
+      fundslistDelete: [],
+      fundCount: 0,
       options: [],
-      dataObjToSave: []
+      utils
     };
   },
   methods: {
     goBack() {
       this.$router.go(-1);
-      this.$router.replace({ path: "/WalletFunds" });
-    },
-    getWalletFundList() {
-      this.$http
-        .get(
-          "/api/walletfunds/" +
-            JSON.parse(localStorage.getItem("user")).data._id +
-            "/" +
-            this.wallet
-        )
-        .then(function(response) {
-          let data = response.data;
-          console.log("Wallet Funds List", data);
-          if (data.status === true) {
-            let walletData = data.data,
-              fundWallet = walletData.listFunds;
-
-            this.walletName = walletData.nameWallet;
-            for (let x = 0; x < fundWallet.length; x++) {
-              for (let y = 0; y < fundWallet[x].investList.length; y++) {
-                this.fundsList.push({
-                  isin: fundWallet[x].isin,
-                  name: fundWallet[x].name,
-                  dateInvest: fundWallet[x].investList[y].dateInvest,
-                  nUps: fundWallet[x].investList[y].nUps,
-                  cotacaoUp: fundWallet[x].investList[y].cotacaoUp,
-                  valInvest: fundWallet[x].investList[y].valInvest,
-                  active: fundWallet[x].investList[y].active
-                });
-              }
-            }
-            console.log("complete");
-          } else {
-            this.$notify({
-              group: "notification",
-              title: "Find fund.",
-              type: "warn",
-              text: data.data,
-              position: "top center"
-            });
-          }
-          this.$loading.hide();
-        })
-        .catch(function(err) {
-          console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "Find fund.",
-            type: "warn",
-            text: err,
-            position: "top center"
-          });
-          this.$loading.hide();
-        });
+      this.$router.replace({ path: "/Portfoliofunds" });
     },
     addFund() {
-      this.fundsList++;
-      this.dataObjToSave[this.fundsList] = {
+      this.fundCount++;
+      this.fundsList.push({
         isin: "",
         name: "",
-        dateInvest: "",
-        nUps: "",
-        dateCheck: ""
-      };
+        investList: []
+      });
+    },
+    deleteFund(index) {
+      this.fundslistDelete.push(this.fundsList[index].isin);
+      this.fundsList[index] = null;
+      this.fundCount--;
     },
     saveWallet() {
+      // console.log("SaveWallet", this.fundsList);
+
       if (!this.walletNameCheck) {
+        this.$refs.walletNameFocus.$el.focus();
         return this.$notify({
           group: "notification",
           title: "Error",
-          text: "Check field 'Wallet Name'.",
+          text: "Check field 'Portfolio Name'.",
           type: "error",
           position: "top center"
         });
       }
-      if (this.dataObjToSave.length === 0) {
+      if (this.fundsList.length === 0 || this.fundCount <= 0) {
+        this.$refs.addFundFocus.focus();
         return this.$notify({
           group: "notification",
           title: "Error",
-          text: "Add one or more funds to wallet.",
+          text: "Add one or more funds to Portfolio.",
           type: "error",
           position: "top center"
         });
       }
-      let fundArrSave = [];
-      for (let index = 0; index < this.dataObjToSave.length; index++) {
-        if (!this.chekFieldsWalletFund(this.dataObjToSave[index])) {
-          return this.$notify({
-            group: "notification",
-            title: "Error",
-            text: "Check fields in funds.",
-            type: "error",
-            position: "top center"
-          });
+      let controlDuplicates = [];
+      for (let f = 0; f < this.$refs.checkFund.length; f++) {
+        if (this.fundsList[f]) {
+          controlDuplicates.push(this.fundsList[f].isin);
+          if (!this.$refs.checkFund[f].checkFund()) {
+            return console.log("Problems with validations.");
+          }
         }
-        if (this.dataObjToSave[index]) {
-          fundArrSave.push(this.dataObjToSave[index]);
+      }
+      let checkResult = utils.checkDuplicatesV2(controlDuplicates);
+      if (!checkResult.status) {
+        for (let x = 0; x < this.fundsList.length; x++) {
+          if (this.fundsList[this.fundsList.length - 1 - x]) {
+            if (
+              this.fundsList[this.fundsList.length - 1 - x].isin ===
+              checkResult.duplicate[0]
+            ) {
+              this.$refs.checkFund[
+                this.fundsList.length - 1 - x
+              ].focusFundDuplicate();
+              x = this.fundsList.length;
+            }
+          }
         }
+        return this.$notify({
+          group: "notification",
+          title: "Error",
+          text:
+            "The list of fund of Portfolio contains duplicate funds, check this.",
+          type: "error",
+          position: "top center"
+        });
       }
       let dataSave = {
+        _idWallet: this.wallet,
         owner: JSON.parse(localStorage.getItem("user")).data._id,
         walletName: this.walletName.trim(),
-        walletFunds: fundArrSave
+        walletFunds: this.fundsList
       };
+      // console.log("data save Portfolio Edit", dataSave);
       this.$loading.show();
-      console.log("data save", dataSave);
 
       this.$http
-        .post("/api/walletfunds", dataSave)
+        .put("/api/portfoliofunds", dataSave)
         .then(function(response) {
           let data = response.data;
-          // console.log("saveWallet", data);
           if (data.status === true) {
             this.$notify({
               group: "notification",
-              title: "New wallet of funds created.",
-              text: "Wallet '" + data.data.nameWallet + "' created.",
+              title: "The Portfolio of funds updated.",
+              text: "Portfolio '" + data.data + "' update.",
               position: "top center"
             });
-            this.$router.push("/walletfunds");
+            this.$router.push("/Portfoliofunds");
           } else {
             this.$notify({
               group: "notification",
-              title: "Save Wallet Funds.",
+              title: "Save Portfolio Funds.",
               type: "warn",
-              text:
-                "The Wallet '" + data.data.nameWallet + "' exists in database.",
+              text: "Error to update Portfolio.",
               position: "top center"
             });
           }
@@ -223,21 +202,6 @@ export default {
           this.$loading.hide();
           console.log("Error", err);
         });
-    },
-    chekFieldsWalletFund(obj) {
-      if (obj) {
-        if (Object.keys(obj).length === 0) {
-          return true;
-        } else {
-          let keys = Object.keys(obj);
-          for (const key in keys) {
-            if (obj[keys[key]] === "") {
-              return false;
-            }
-          }
-        }
-      }
-      return true;
     },
     getAllFunds() {
       this.$http
@@ -267,6 +231,48 @@ export default {
           this.$loading.hide();
           console.log("Error", err);
         });
+    },
+    getWalletFundList() {
+      this.$http
+        .get(
+          "/api/portfoliofunds/" +
+            JSON.parse(localStorage.getItem("user")).data._id +
+            "/" +
+            this.wallet
+        )
+        .then(function(response) {
+          let data = response.data;
+          // console.log("Portfolio Funds List", data);
+          if (data.status === true) {
+            let walletData = data.data,
+              fundWallet = walletData.listFunds;
+            this.walletName = walletData.nameWallet;
+            this.selectedFundCheck = true;
+            this.classselectedFund = "fa-check";
+            this.fundsList = fundWallet;
+            this.fundCount = fundWallet.length;
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Find fund.",
+              type: "warn",
+              text: data.data,
+              position: "top center"
+            });
+          }
+          this.$loading.hide();
+        })
+        .catch(function(err) {
+          console.log("Error", err);
+          this.$notify({
+            group: "notification",
+            title: "Find fund.",
+            type: "warn",
+            text: err,
+            position: "top center"
+          });
+          this.$loading.hide();
+        });
     }
   },
   created() {
@@ -280,7 +286,7 @@ export default {
   beforeCreate() {},
   beforeDestroy() {},
   watch: {
-    /* walletName: function(val) {
+    walletName: function(val) {
       let addClass = "";
       this.walletNameCheck = false;
       if (val.trim().length > 4) {
@@ -290,7 +296,7 @@ export default {
         addClass = "close";
       }
       this.classwalletName = "fa-" + addClass;
-    }*/
+    }
   }
 };
 </script>

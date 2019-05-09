@@ -19,15 +19,14 @@
                       <i class="icon-user"></i>
                     </b-input-group-text>
                   </b-input-group-prepend>
-                  <b-form-input
-                    type="text"
-                    v-model="nameUser"
-                    placeholder="Username"
-                    v-b-tooltip.hover.html="'<strong>Insert a valid name. Size larger than 4.</strong>'"
-                  />
+                  <b-form-input type="text" v-model="nameUser" placeholder="Username"/>
                   <b-input-group-append>
                     <b-input-group-text>
-                      <i class="fa" :class="classusername"></i>
+                      <i
+                        class="fa"
+                        v-b-tooltip.hover.html="'<strong>Insert a valid name. Size larger than 4.</strong>'"
+                        :class="classusername"
+                      ></i>
                     </b-input-group-text>
                   </b-input-group-append>
                 </b-input-group>
@@ -39,15 +38,14 @@
                   <b-input-group-prepend>
                     <b-input-group-text>@</b-input-group-text>
                   </b-input-group-prepend>
-                  <b-form-input
-                    type="text"
-                    v-model="emailUser"
-                    placeholder="Email"
-                    v-b-tooltip.hover.html="'<strong>Insert a valid email.</strong>'"
-                  />
+                  <b-form-input type="text" v-model="emailUser" placeholder="Email"/>
                   <b-input-group-append>
                     <b-input-group-text>
-                      <i class="fa" :class="classemailUser"></i>
+                      <i
+                        class="fa"
+                        v-b-tooltip.hover.html="'<strong>Insert a valid email.</strong>'"
+                        :class="classemailUser"
+                      ></i>
                     </b-input-group-text>
                   </b-input-group-append>
                 </b-input-group>
@@ -61,15 +59,14 @@
                       <i class="icon-lock"></i>
                     </b-input-group-text>
                   </b-input-group-prepend>
-                  <b-form-input
-                    type="password"
-                    v-model="passUser"
-                    placeholder="Password"
-                    v-b-tooltip.hover.html="'<strong>Insert a valid password. Size larger than 6.</strong>'"
-                  />
+                  <b-form-input type="password" v-model="passUser" placeholder="Password"/>
                   <b-input-group-append>
                     <b-input-group-text>
-                      <i class="fa" :class="classpassUser"></i>
+                      <i
+                        class="fa"
+                        v-b-tooltip.hover.html="'<strong>Insert a valid password. Size larger than 6.</strong>'"
+                        :class="classpassUser"
+                      ></i>
                     </b-input-group-text>
                   </b-input-group-append>
                 </b-input-group>
@@ -87,11 +84,14 @@
                     type="password"
                     v-model="passUserTest"
                     placeholder="Repeat password"
-                    v-b-tooltip.hover.html="'<strong>Repeat password.</strong>'"
                   />
                   <b-input-group-append>
                     <b-input-group-text>
-                      <i class="fa" :class="classpassUserTest"></i>
+                      <i
+                        class="fa"
+                        v-b-tooltip.hover.html="'<strong>Repeat password.</strong>'"
+                        :class="classpassUserTest"
+                      ></i>
                     </b-input-group-text>
                   </b-input-group-append>
                 </b-input-group>
@@ -146,10 +146,10 @@ export default {
       this.showErrorEmail = false;
       this.showErrorName = false;
 
-      this.showErrorName = (!this.nameUserCheck) ? true : false;
-      this.showErrorEmail = (!this.emailUserCheck) ? true : false;
-      this.showErrorPass = (!this.passTUsrCheck) ? true : false;
-      this.showErrorPassRepeat = (!this.passTUsrTestCheck) ? true : false;
+      this.showErrorName = !this.nameUserCheck ? true : false;
+      this.showErrorEmail = !this.emailUserCheck ? true : false;
+      this.showErrorPass = !this.passTUsrCheck ? true : false;
+      this.showErrorPassRepeat = !this.passTUsrTestCheck ? true : false;
 
       if (
         !this.nameUserCheck ||
@@ -218,7 +218,7 @@ export default {
         classAdd = "close";
       } else {
         classAdd = "check";
-      this.nameUserCheck = true;
+        this.nameUserCheck = true;
       }
       this.classusername = "fa-" + classAdd;
     },
@@ -233,7 +233,7 @@ export default {
         classAdd = "close";
       } else {
         classAdd = "check";
-      this.emailUserCheck = true;
+        this.emailUserCheck = true;
       }
       this.classemailUser = "fa-" + classAdd;
     },
@@ -248,7 +248,7 @@ export default {
         classAdd = "close";
       } else {
         classAdd = "check";
-      this.passTUsrCheck = true;
+        this.passTUsrCheck = true;
       }
       this.classpassUser = "fa-" + classAdd;
     },
@@ -263,7 +263,7 @@ export default {
         classAdd = "close";
       } else {
         classAdd = "check";
-      this.passTUsrTestCheck = true;
+        this.passTUsrTestCheck = true;
       }
       this.classpassUserTest = "fa-" + classAdd;
     }

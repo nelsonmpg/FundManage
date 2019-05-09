@@ -19,7 +19,7 @@
                 <b-form-group class="mb-0">
                   <b-input-group>
                     <b-input-group-prepend>
-                      <b-input-group-text>Slect Fund</b-input-group-text>
+                      <b-input-group-text>Select Fund</b-input-group-text>
                     </b-input-group-prepend>
                     <b-form-select
                       ref="selectFundFocus"
@@ -30,7 +30,11 @@
                     ></b-form-select>
                     <b-input-group-append>
                       <b-input-group-text>
-                        <i class="fa" :class="classselectedFund"></i>
+                        <i
+                          class="fa"
+                          v-b-tooltip.hover.html="'<strong>Select a Fund to add to this portfolio.</strong>'"
+                          :class="classselectedFund"
+                        ></i>
                       </b-input-group-text>
                     </b-input-group-append>
                   </b-input-group>
@@ -38,7 +42,12 @@
               </b-col>
               <b-col cols="1">
                 <div class="card-header-actions">
-                  <b-link href="#" class="card-header-action btn-close" v-on:click="removePanel">
+                  <b-link
+                    href="#"
+                    class="card-header-action btn-close"
+                    v-b-tooltip.hover.html="'<strong>Delete this fund.</strong>'"
+                    v-on:click="removePanel"
+                  >
                     <i class="icon-close"></i>
                   </b-link>
                 </div>
@@ -46,58 +55,26 @@
             </b-row>
           </template>
           <b-row v-show="selectedFund != ''">
-            <b-col cols="6">
-              <b-form-group class="mb-0">
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>
-                      <i class="fa fa-calendar-check-o"></i>
-                    </b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input
-                    type="date"
-                    v-model="dateFund"
-                  ></b-form-input>
-                  <b-input-group-append>
-                    <b-input-group-text>
-                      <i class="fa" :class="classdateFund"></i>
-                    </b-input-group-text>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
+            <b-col cols="12">
+              <add-invest-edit
+                :invest="invest"
+                :posArr="index"
+                ref="checkInvest"
+                v-for="(invest, index) in fund.investList"
+                :key="index"
+              ></add-invest-edit>
             </b-col>
-            <b-col cols="6">
-              <b-form-group class="mb-0">
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>Nº Ups</b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input type="number" v-model="nUpsFund" placeholder="123"></b-form-input>
-                  <b-input-group-append>
-                    <b-input-group-text>
-                      <i class="fa" :class="classnUpsFund"></i>
-                    </b-input-group-text>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
+            <b-col sm="12" class="mt-3 mb-3">
+              <b-button
+                @click="addInvest"
+                ref="addInvestFocus"
+                block
+                size="sm"
+                variant="outline-secondary"
+              >
+                <i class="fa fa-plus"></i> Add new Invest to Fund
+              </b-button>
             </b-col>
-            <!-- <b-col cols="4">
-              <b-form-group class="mb-0">
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>
-                      <i class="fa fa-euro"></i>
-                    </b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input type="number" v-model="valInvestFund" placeholder="ex. €1000,00"></b-form-input>
-                  <b-input-group-append>
-                    <b-input-group-text>
-                      <i class="fa" :class="classvalInvestFund"></i>
-                    </b-input-group-text>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
-            </b-col>-->
           </b-row>
         </b-card>
       </b-col>
@@ -107,149 +84,148 @@
 </template>
 <script>
 import utils from "./../../shared/utilsLib.js";
+import AddInvestEdit from "./AddFundInvestEdit.vue";
 export default {
-  components: {},
-  props: ["optsSelect", "dataObj", "fund", "posArr"],
-  name: "EditFund",
+  components: {
+    AddInvestEdit
+  },
+  props: ["optsSelect", "posArr", "fund"],
+  name: "AddFundEdit",
   data: () => {
     return {
       selectedFund: "",
       selectedFundCheck: false,
       classselectedFund: "fa-close",
-      dateFund: "",
-      dateFundCheck: false,
-      classdateFund: "fa-close",
-      nUpsFund: "",
-      nUpsFundCheck: false,
-      classnUpsFund: "fa-close",
-      valInvestFund: "",
-      valInvestFundCheck: true,
-      classvalInvestFund: "fa-close",
+      countInvest: 0,
+      investList: [],
       show: true,
       utils
     };
   },
   computed: {},
   methods: {
+    addInvest() {
+      this.countInvest++;
+      this.fund.investList.push({
+        dateInvest: "",
+        nUps: ""
+      });
+    },
+    deleteInvest(index) {
+      this.countInvest--;
+      this.fund.investList[index] = null;
+      console.log("Rem", this.countInvest);
+    },
     removePanel() {
       this.show = false;
-      this.dataObj[this.posArr] = {};
+      this.$parent.deleteFund(this.posArr);
+      /* this.$notify({
+        group: "notification",
+        title: "warn",
+        text: "This function is desatived.",
+        type: "warn",
+        position: "top center"
+      }); */
+    },
+    focusFundDuplicate() {
+      this.$refs.selectFundFocus.$el.focus();
+    },
+    checkFund() {
+      // console.log("checkFund function");
+      if (!this.selectedFundCheck) {
+        this.$notify({
+          group: "notification",
+          title: "Error",
+          text: "Check the Select Fund field.",
+          type: "error",
+          position: "top center"
+        });
+        this.$refs.selectFundFocus.$el.focus();
+        return false;
+      }
+      if (this.fund.investList.length === 0 || this.countInvest <= 0) {
+        this.$notify({
+          group: "notification",
+          title: "Error",
+          text: "Add one or more investments in this fund.",
+          type: "error",
+          position: "top center"
+        });
+        this.$refs.addInvestFocus.focus();
+        return false;
+      }
+      let chekDuplicateDates = [];
+      for (let t = 0; t < this.$refs.checkInvest.length; t++) {
+        if (this.fund.investList[t]) {
+          chekDuplicateDates.push(
+            new Date(this.fund.investList[t].dateInvest).getTime()
+          );
+          if (!this.$refs.checkInvest[t].checkInvest()) {
+            return false;
+          }
+        }
+      }
+      let checkResult = utils.checkDuplicatesV2(chekDuplicateDates);
+      if (!checkResult.status) {
+        for (let x = 0; x < this.fund.investList.length; x++) {
+          if (this.fund.investList[this.fund.investList.length - 1 - x]) {
+            if (
+              this.fund.investList[this.fund.investList.length - 1 - x]
+                .dateCheck *
+                1 ===
+              checkResult.duplicate[0] * 1
+            ) {
+              this.$refs.checkInvest[
+                this.fund.investList.length - 1 - x
+              ].focusInvestDuplicateDate();
+              x = this.fund.investList.length;
+            }
+          }
+        }
+        this.$notify({
+          group: "notification",
+          title: "Error",
+          text:
+            "The list of investments of Fund contains duplicate dates, check this.",
+          type: "error",
+          position: "top center"
+        });
+        return false;
+      }
+      return true;
     }
   },
   created() {},
   mounted() {
     this.$refs.selectFundFocus.$el.focus();
-    console.log(this.fund);
-    this.selectedFund = this.fund.isin + " - " + this.fund.name;
-    this.selectedFundCheck = true;
-    this.classselectedFund = "fa-check";
-    this.dateFund = new Date(this.fund.dateInvest).toISOString().split('T')[0];
-    this.dateFundCheck = true;
-    this.classdateFund = "fa-check";
-    this.nUpsFund = this.fund.nUps;
-    this.nUpsFundCheck = true;
-    this.classnUpsFund = "fa-check";
-    this.valInvestFund = this.fund.valInvest;
-    this.valInvestFundCheck = true;
-    this.classvalInvestFund = "fa-check";
+    if (this.fund.investList.length > 0) {
+      this.selectedFund = this.fund.isin + " - " + this.fund.name;
+      this.selectedFundCheck = true;
+      this.classselectedFund = "fa-check";
+      this.countInvest = this.fund.investList.length;
+    }
   },
   beforeCreate() {},
   beforeDestroy() {},
   watch: {
-    selectedFund: function(val) {
+    selectedFund: function(val, oldVal) {
+      if (oldVal === "" && this.countInvest === 0) {
+        this.addInvest();
+      }
       let classAdd = "";
       this.selectedFundCheck = false;
-      try {
-        if (val.trim() === "") {
-          classAdd = "close";
-          // this.dataObj[this.posArr].isin = "";
-          // this.dataObj[this.posArr].name = "";
-        } else {
-          classAdd = "check";
-          this.selectedFundCheck = true;
-          let datafund = this.selectedFund.split("-");
-          // this.dataObj[this.posArr].isin = datafund[0].trim();
-          // this.dataObj[this.posArr].name = datafund[1].trim();
-        }
-        this.classselectedFund = "fa-" + classAdd;
-      } catch (e) {
-        console.log("error selectfund", e);
+      if (val.trim() === "") {
+        classAdd = "close";
+        this.fund.isin = "";
+        this.fund.name = "";
+      } else {
+        classAdd = "check";
+        this.selectedFundCheck = true;
+        let datafund = this.selectedFund.split("-");
+        this.fund.isin = datafund[0].trim();
+        this.fund.name = datafund[1].trim();
       }
-    },
-    dateFund: function(val) {
-      let classAdd = "";
-      let dat1 = new Date();
-      let dat2 = new Date(val);
-      let weekEnd = this.utils.dateIsWeekend(val);
-      this.dateFundCheck = false;
-      try {
-        if (val.trim() === "") {
-          classAdd = "close";
-          // this.dataObj[this.posArr].dateInvest = "";
-        } else if (Date.parse(dat1) < Date.parse(dat2)) {
-          this.$notify({
-            group: "notification",
-            title: "Attention.",
-            type: "warn",
-            text: "You selected a day after Today.",
-            position: "top center"
-          });
-          classAdd = "close";
-          // this.dataObj[this.posArr].dateInvest = "";
-        } else if (weekEnd) {
-          this.$notify({
-            group: "notification",
-            title: "Attention.",
-            type: "warn",
-            text: "You selected a day of weekend.",
-            position: "top center"
-          });
-          classAdd = "close";
-          // this.dataObj[this.posArr].dateInvest = "";
-        } else {
-          classAdd = "check";
-          this.dateFundCheck = true;
-          // this.dataObj[this.posArr].dateInvest = this.dateFund;
-          // this.dataObj[this.posArr].dateCheck = new Date(this.dateFund).getTime();
-        }
-        this.classdateFund = "fa-" + classAdd;
-      } catch (e) {
-        console.log("error datefndo", e);
-      }
-    },
-    nUpsFund: function(val) {
-      let classAdd = "";
-      this.nUpsFundCheck = false;
-      try {
-        if (val.trim() === "" || val.trim() * 1 <= 0) {
-          classAdd = "close";
-          // this.dataObj[this.posArr].nUps = "";
-        } else {
-          classAdd = "check";
-          this.nUpsFundCheck = true;
-          // this.dataObj[this.posArr].nUps = this.nUpsFund;
-        }
-        this.classnUpsFund = "fa-" + classAdd;
-      } catch (e) {
-        console.log("Error nUps", e);
-      }
-    },
-    valInvestFund: function(val) {
-      let classAdd = "";
-      this.valInvestFundCheck = false;
-      try {
-        if (val.trim() === "" || val.trim() * 1 <= 0) {
-          classAdd = "close";
-          // this.dataObj[this.posArr].valInvest = "";
-        } else {
-          classAdd = "check";
-          this.valInvestFundCheck = true;
-          // this.dataObj[this.posArr].valInvest = this.valInvestFund;
-        }
-        this.classvalInvestFund = "fa-" + classAdd;
-      } catch (e) {
-        console.log("error valInvestFund", e);
-      }
+      this.classselectedFund = "fa-" + classAdd;
     }
   }
 };

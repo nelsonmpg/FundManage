@@ -3,12 +3,9 @@
     <b-col cols="12">
       <transition name="slide">
         <b-card :header="caption">
-          <b-button
-            class="mb-3"
-            @click="createNewFund"
-            block
-            variant="outline-success"
-          ><i class="cui-pencil icons"></i> Create New Wallet Fund</b-button>
+          <b-button class="mb-3" @click="createNewFund" block variant="outline-success">
+            <i class="cui-pencil icons"></i> Create New Portfolio Fund
+          </b-button>
           <b-table
             :hover="hover"
             striped
@@ -23,30 +20,6 @@
             <template slot="nameWallet" slot-scope="data">
               <strong>{{data.item.nameWallet}}</strong>
             </template>
-            <!-- <template slot="listFunds" slot-scope="data">
-              <b-table
-                striped
-                bordered
-                small
-                responsive="sm"
-                :items="data.item.listFunds"
-                :fields="fields2"
-              >
-                <template
-                  slot="dateInvest"
-                  slot-scope="data"
-                >{{utils.onlyDateFormat(data.item.dateInvest)}}</template>
-                <template slot="nUps" slot-scope="data">{{data.item.nUps}}</template>
-                <template
-                  slot="valInvest"
-                  slot-scope="data"
-                >{{utils.formatCurrency(data.item.valInvest)}}</template>
-                <template
-                  slot="cotacaoUp"
-                  slot-scope="data"
-                >{{utils.formatCurrency(data.item.cotacaoUp)}}</template>
-              </b-table>
-            </template>-->
             <template
               slot="startWalletMoney"
               slot-scope="data"
@@ -90,11 +63,11 @@
 import utils from "./../../shared/utilsLib.js";
 export default {
   components: {},
-  name: "WalletFunds",
+  name: "Portfoliofunds",
   props: {
     caption: {
       type: String,
-      default: "Wallet of Funds"
+      default: "Portfolio of Funds"
     },
     hover: {
       type: Boolean,
@@ -121,23 +94,14 @@ export default {
     return {
       items: [],
       fields: [
-        { key: "_id", thClass: 'd-none', tdClass: 'd-none' },
-        { key: "nameWallet", label: "Wallet Name", sortable: true },
-        // { key: "listFunds", label: "Funds Wallet" },
+        { key: "_id", thClass: "d-none", tdClass: "d-none" },
+        { key: "nameWallet", label: "Portfolio Name", sortable: true },
         { key: "dateLastUpdateWallet", label: "Last Update" },
         { key: "startWalletMoney", label: "€ Invested" },
         { key: "lastWalletMoney", label: "€ Last Update" },
         { key: "rendLiquido", label: "Net income" },
         { key: "rendBruto", label: "Gross income" }
-      ] /*
-      fields2: [
-        { key: "name", label: "Fund Name", sortable: true },
-        { key: "isin" },
-        { key: "dateInvest", label: "Date Investiment" },
-        { key: "nUps", label: "Nº Ups" },
-        { key: "cotacaoUp", label: "Value Buy" },
-        { key: "valInvest", label: "Invested Money" }
-      ],*/,
+      ],
       currentPage: 1,
       perPage: 10,
       totalRows: 0,
@@ -147,17 +111,16 @@ export default {
   computed: {},
   methods: {
     createNewFund() {
-      this.$router.push("/walletfunds/walletfund");
+      this.$router.push("/Portfoliofunds/Portfoliofund");
     },
     getAllOwnerWallets() {
       this.$http
         .get(
-          "/api/walletfunds/" +
+          "/api/portfoliofunds/" +
             JSON.parse(localStorage.getItem("user")).data._id
         )
         .then(function(response) {
           let data = response.data;
-          console.log("AllWallets", data);
           if (data.status === true) {
             let allWallet = data.data,
               refactWallet = [];
@@ -182,7 +145,7 @@ export default {
               group: "notification",
               title: "New fund existes.",
               type: "eror",
-              text: "The Wallets find database.",
+              text: "The Portfolio find database.",
               position: "top center"
             });
           }
@@ -197,7 +160,7 @@ export default {
       return items.length;
     },
     userLink(_id) {
-      return `/walletfunds/walletView/${_id.toString()}`;
+      return `/Portfoliofunds/PortfolioView/${_id.toString()}`;
     },
     rowClicked(item) {
       const userLink = this.userLink(item._id);

@@ -8,7 +8,7 @@
               <b-form-group class="mb-0">
                 <b-input-group>
                   <b-input-group-prepend>
-                    <b-input-group-text>Wallet Name</b-input-group-text>
+                    <b-input-group-text>Portfolio Name</b-input-group-text>
                   </b-input-group-prepend>
                   <b-form-input :value="walletName" type="text" disabled></b-form-input>
                 </b-input-group>
@@ -17,8 +17,12 @@
             <b-col sm="4">
               <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
                 <b-button-group>
-                  <b-button @click="openWalletEdit" variant="outline-primary"><i class="cui-note icons"></i> Edit</b-button>
-                  <b-button @click="deleteWallet" variant="outline-danger"><i class="cui-trash icons"></i> Delete</b-button>
+                  <b-button @click="openWalletEdit" variant="outline-primary">
+                    <i class="cui-note icons"></i> Edit
+                  </b-button>
+                  <b-button @click="deleteWallet" variant="outline-danger">
+                    <i class="cui-trash icons"></i> Delete
+                  </b-button>
                 </b-button-group>
               </b-button-toolbar>
             </b-col>
@@ -53,6 +57,29 @@
               <template slot="active" slot-scope="data">
                 <input type="checkbox" :checked="data.item.active" disabled>
               </template>
+              <template slot="dateInative" slot-scope="data">
+                <n v-if="!data.item.active">{{utils.onlyDateFormat(data.item.dateInative)}}</n>
+                <n v-else>- - -</n>
+              </template>
+              <template
+                slot="lastvalUp"
+                slot-scope="data"
+              >{{utils.formatCurrency(data.item.lastvalUp)}}</template>
+              <template
+                slot="lastDate"
+                slot-scope="data"
+              >{{utils.onlyDateFormat(data.item.lastDate)}}</template>
+              <template slot="lastVal" slot-scope="data">{{utils.formatCurrency(data.item.lastVal)}}</template>
+              <template slot="gainValue" slot-scope="data">
+                <b-card
+                  :no-body="true"
+                  class="mt-0 mb-0 pt-0 pb-0"
+                  :class="data.item.gainValue > 0 ? 'bg-success' : 'bg-danger'"
+                >
+                  <b v-if="data.item.active">{{utils.formatCurrency(data.item.gainValue)}}</b>
+                  <b v-else>0,00</b>
+                </b-card>
+              </template>
             </b-table>
             <nav>
               <b-pagination
@@ -69,7 +96,7 @@
           <b-col sm="12">
             <b-row>
               <b-col sm="4">
-                <h4 class="card-title mb-0">Wallet History</h4>
+                <h4 class="card-title mb-0">Portfolio History</h4>
               </b-col>
               <b-col sm="8" class="d-none d-md-block">
                 <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
@@ -135,7 +162,8 @@
       @ok="closeModalAccept"
       ok-variant="danger"
     >
-      Are you sure you want to delete the wallet?<br>
+      Are you sure you want to delete the Portfolio?
+      <br>
       "{{ walletName }}"
     </b-modal>
   </b-row>
@@ -150,7 +178,7 @@ export default {
   props: {
     caption: {
       type: String,
-      default: "List Funds in Wallet"
+      default: "List Funds in Portfolio"
     },
     hover: {
       type: Boolean,
@@ -173,7 +201,7 @@ export default {
       default: false
     }
   },
-  name: "WalletView",
+  name: "PortfolioView",
   data: () => {
     return {
       wallet: "",
@@ -187,7 +215,12 @@ export default {
         { key: "nUps", label: "Nº Ups" },
         { key: "cotacaoUp", label: "Buy Price" },
         { key: "valInvest", label: "Invested Value" },
-        { key: "active", label: "Status" }
+        { key: "lastvalUp", label: "Last Value Up" },
+        { key: "lastDate", label: "Last Date Update" },
+        { key: "lastVal", label: "Last Value" },
+        { key: "gainValue", label: "Gain", sortable: true },
+        { key: "active", label: "Active" },
+        { key: "dateInative" }
       ],
       currentPage: 1,
       perPage: 10,
@@ -208,30 +241,68 @@ export default {
   methods: {
     goBack() {
       this.$router.go(-1);
-      this.$router.replace({ path: "/WalletFunds" });
+      this.$router.replace({ path: "/Portfoliofunds" });
     },
     deleteWallet() {
       this.deleteWalletModal = true;
     },
     closeModalAccept() {
       this.deleteWalletModal = false;
-      console.log("Close modal.");
-
-    },
-    openWalletEdit() {
-      this.$router.push("/walletfunds/walletEdit/" + this.wallet);
-    },
-    getWalletFundList() {
       this.$http
-        .get(
-          "/api/walletfunds/" +
+        .delete(
+          "/api/portfoliofunds/" +
             JSON.parse(localStorage.getItem("user")).data._id +
             "/" +
             this.wallet
         )
         .then(function(response) {
           let data = response.data;
-          console.log("Wallet Funds List", data);
+          if (data.status === true) {
+            this.$notify({
+              group: "notification",
+              title: "Find fund.",
+              type: "info",
+              text: data.data,
+              position: "top center"
+            });
+            this.$router.push("/Portfoliofunds");
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Find fund.",
+              type: "warn",
+              text: data.data,
+              position: "top center"
+            });
+          }
+          this.$loading.hide();
+        })
+        .catch(function(err) {
+          console.log("Error", err);
+          this.$notify({
+            group: "notification",
+            title: "Find fund.",
+            type: "warn",
+            text: err,
+            position: "top center"
+          });
+          this.$loading.hide();
+        });
+    },
+    openWalletEdit() {
+      this.$router.push("/Portfoliofunds/PortfolioEdit/" + this.wallet);
+    },
+    getWalletFundList() {
+      this.$http
+        .get(
+          "/api/portfoliofunds/" +
+            JSON.parse(localStorage.getItem("user")).data._id +
+            "/" +
+            this.wallet
+        )
+        .then(function(response) {
+          let data = response.data;
+          // console.log("Wallet Funds List", data);
           if (data.status === true) {
             let walletData = data.data,
               fundWallet = walletData.listFunds,
@@ -239,15 +310,34 @@ export default {
             this.walletName = walletData.nameWallet;
             for (let x = 0; x < fundWallet.length; x++) {
               for (let y = 0; y < fundWallet[x].investList.length; y++) {
-                refactWallet.push({
-                  isin: fundWallet[x].isin,
-                  name: fundWallet[x].name,
-                  dateInvest: fundWallet[x].investList[y].dateInvest,
-                  nUps: fundWallet[x].investList[y].nUps,
-                  cotacaoUp: fundWallet[x].investList[y].cotacaoUp,
-                  valInvest: fundWallet[x].investList[y].valInvest,
-                  active: fundWallet[x].investList[y].active
-                });
+                if (fundWallet[x].investList[y]) {
+                  refactWallet.push({
+                    isin: fundWallet[x].isin,
+                    name: fundWallet[x].name,
+                    dateInvest: fundWallet[x].investList[y].dateInvest,
+                    nUps: fundWallet[x].investList[y].nUps,
+                    cotacaoUp: fundWallet[x].investList[y].cotacaoUp,
+                    valInvest: fundWallet[x].investList[y].valInvest,
+                    lastvalUp:
+                      fundWallet[x].investList[y].moneyFund[
+                        fundWallet[x].investList[y].moneyFund.length - 1
+                      ].Value,
+                    lastDate:
+                      fundWallet[x].investList[y].moneyFund[
+                        fundWallet[x].investList[y].moneyFund.length - 1
+                      ].EndDate,
+                    lastVal:
+                      fundWallet[x].investList[y].moneyFund[
+                        fundWallet[x].investList[y].moneyFund.length - 1
+                      ].moneyCalc,
+                    gainValue:
+                      fundWallet[x].investList[y].moneyFund[
+                        fundWallet[x].investList[y].moneyFund.length - 1
+                      ].moneyCalc - fundWallet[x].investList[y].valInvest,
+                    active: fundWallet[x].investList[y].active,
+                    dateInative: fundWallet[x].investList[y].dateInative
+                  });
+                }
               }
             }
             this.items = refactWallet;
@@ -283,7 +373,7 @@ export default {
           console.log("Error", err);
           this.$notify({
             group: "notification",
-            title: "Find fund.",
+            title: "Error Find fund.",
             type: "warn",
             text: err,
             position: "top center"
@@ -293,13 +383,6 @@ export default {
     },
     getRowCount(items) {
       return items.length;
-    },
-    userLink(isin) {
-      // return `/funds/fundView/${isin.toString()}`;
-    },
-    rowClicked(item) {
-      // const userLink = this.userLink(item.isin);
-      // this.$router.push({ path: userLink });
     },
     createChartData(arrL, arrV) {
       this.chartData = {

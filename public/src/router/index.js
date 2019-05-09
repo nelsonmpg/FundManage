@@ -63,8 +63,8 @@ const router = new Router({
           ]
         },
         {
-          path: 'walletfunds',
-          meta: { label: 'Wallet of Funds' },
+          path: 'Portfoliofunds',
+          meta: { label: 'Portfolio of Funds' },
           component: {
             render(c) { return c('router-view') }
           },
@@ -74,21 +74,21 @@ const router = new Router({
               component: WalletFunds,
             },
             {
-              path: 'WalletFund',
-              meta: { label: 'New Wallet Fund' },
-              name: 'NewWalletFund',
+              path: 'Portfoliofund',
+              meta: { label: 'New Portfolio Fund' },
+              name: 'NewPortfolioFund',
               component: WalletFund,
             },
             {
-              path: 'walletView/:wallet',
-              meta: { label: 'Wallet Details' },
-              name: 'WalletView',
+              path: 'PortfolioView/:wallet',
+              meta: { label: 'Portfolio Details' },
+              name: 'PortfolioView',
               component: WalletView,
             },
             {
-              path: 'walletEdit/:wallet',
-              meta: { label: 'Wallet Edit' },
-              name: 'WalletEdit',
+              path: 'PortfolioEdit/:wallet',
+              meta: { label: 'Portfolio Edit' },
+              name: 'PortfolioEdit',
               component: WalletEdit,
             }
           ]

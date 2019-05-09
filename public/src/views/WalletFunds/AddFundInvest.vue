@@ -1,5 +1,5 @@
 <template>
-  <b-row class="mb-3" v-if="show">
+  <b-row class="mb-2" v-if="show">
     <b-col cols="1" class="mx-auto text-center">
       <h5>
         <b-badge pill variant="dark">{{ (posArr + 1) }}</b-badge>
@@ -13,10 +13,14 @@
               <i class="fa fa-calendar-check-o"></i>
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input type="date" v-model="dateFund"></b-form-input>
+          <b-form-input type="date" ref="fundDate" v-model="dateFund"></b-form-input>
           <b-input-group-append>
             <b-input-group-text>
-              <i class="fa" :class="classdateFund"></i>
+              <i
+                class="fa"
+                v-b-tooltip.hover.html="'<strong>Select a date to start this investiment.</strong>'"
+                :class="classdateFund"
+              ></i>
             </b-input-group-text>
           </b-input-group-append>
         </b-input-group>
@@ -28,35 +32,27 @@
           <b-input-group-prepend>
             <b-input-group-text>Nº Ups</b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input type="number" v-model="nUpsFund" placeholder="123"></b-form-input>
+          <b-form-input type="number" ref="fundNups" v-model="nUpsFund" placeholder="ex. 123.45"></b-form-input>
           <b-input-group-append>
             <b-input-group-text>
-              <i class="fa" :class="classnUpsFund"></i>
+              <i
+                class="fa"
+                v-b-tooltip.hover.html="'<strong>Inser the number of Nups to invest.</strong>'"
+                :class="classnUpsFund"
+              ></i>
             </b-input-group-text>
           </b-input-group-append>
         </b-input-group>
       </b-form-group>
     </b-col>
-    <!-- <b-col cols="4">
-      <b-form-group class="mb-0">
-        <b-input-group>
-          <b-input-group-prepend>
-            <b-input-group-text>
-              <i class="fa fa-euro"></i>
-            </b-input-group-text>
-          </b-input-group-prepend>
-          <b-form-input type="number" v-model="valInvestFund" placeholder="ex. €1000,00"></b-form-input>
-          <b-input-group-append>
-            <b-input-group-text>
-              <i class="fa" :class="classvalInvestFund"></i>
-            </b-input-group-text>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
-    </b-col>-->
     <b-col cols="1">
       <div class="card-header-actions">
-        <b-link href="#" class="card-header-action btn-close" v-on:click="removePanel">
+        <b-link
+          href="#"
+          class="card-header-action btn-close"
+          v-b-tooltip.hover.html="'<strong>Delete this investiment.</strong>'"
+          v-on:click="removePanel"
+        >
           <i class="icon-close"></i>
         </b-link>
       </div>
@@ -66,7 +62,6 @@
 </template>
 <script>
 import utils from "./../../shared/utilsLib.js";
-import AddFund from "./AddFundInvest.vue";
 export default {
   components: {},
   props: ["invest", "posArr"],
@@ -79,9 +74,6 @@ export default {
       nUpsFund: "",
       nUpsFundCheck: false,
       classnUpsFund: "fa-close",
-      valInvestFund: "",
-      valInvestFundCheck: true,
-      classvalInvestFund: "fa-close",
       show: true,
       utils
     };
@@ -91,6 +83,35 @@ export default {
     removePanel() {
       this.show = false;
       this.$parent.deleteInvest(this.posArr);
+    },
+    focusInvestDuplicateDate() {
+      this.$refs.fundDate.$el.focus();
+    },
+    checkInvest() {
+      if (!this.dateFundCheck) {
+        this.$notify({
+          group: "notification",
+          title: "Error",
+          text: "Check the date invest field.",
+          type: "error",
+          position: "top center"
+        });
+        this.$refs.fundDate.$el.focus();
+        return false;
+      }
+
+      if (!this.nUpsFundCheck) {
+        this.$notify({
+          group: "notification",
+          title: "Error",
+          text: "Check the nUps invest field.",
+          type: "error",
+          position: "top center"
+        });
+        this.$refs.fundNups.$el.focus();
+        return false;
+      }
+      return true;
     }
   },
   created() {},
@@ -147,19 +168,6 @@ export default {
         this.invest.nUps = this.nUpsFund;
       }
       this.classnUpsFund = "fa-" + classAdd;
-    },
-    valInvestFund: function(val) {
-      let classAdd = "";
-      this.valInvestFundCheck = false;
-      if (val.trim() === "" || val.trim() * 1 <= 0) {
-        classAdd = "close";
-        this.invest.valInvest = "";
-      } else {
-        classAdd = "check";
-        this.valInvestFundCheck = true;
-        this.invest.valInvest = this.valInvestFund;
-      }
-      this.classvalInvestFund = "fa-" + classAdd;
     }
   }
 };

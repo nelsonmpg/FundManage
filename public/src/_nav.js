@@ -17,8 +17,8 @@ export default {
       }
     },
     {
-      name: 'Wallet of funds',
-      url: '/walletfunds',
+      name: 'Portfolio of Funds',
+      url: '/Portfoliofunds',
       icon: 'cui-dollar',
       badge: {
         variant: 'primary'

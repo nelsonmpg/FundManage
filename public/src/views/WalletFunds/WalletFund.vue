@@ -9,18 +9,22 @@
               <b-form-group>
                 <b-input-group>
                   <b-input-group-prepend>
-                    <b-input-group-text>Wallet Name</b-input-group-text>
+                    <b-input-group-text>Portfolio Name</b-input-group-text>
                   </b-input-group-prepend>
                   <b-form-input
                     v-model="walletName"
                     type="text"
                     ref="walletNameFocus"
-                    placeholder="Please enter Wallet Name."
+                    placeholder="Please enter Portfolio Name."
                     required
                   ></b-form-input>
                   <b-input-group-append>
                     <b-input-group-text>
-                      <i class="fa" :class="classwalletName"></i>
+                      <i
+                        class="fa"
+                        v-b-tooltip.hover.html="'<strong>Insert a prefered Portfolio name.</strong>'"
+                        :class="classwalletName"
+                      ></i>
                     </b-input-group-text>
                   </b-input-group-append>
                 </b-input-group>
@@ -30,10 +34,10 @@
           <b-row>
             <b-col sm="12">
               <add-fund
-                :dataObj="dataObjToSave"
                 :posArr="index"
                 :fund="fund"
                 :optsSelect="options"
+                ref="checkFund"
                 v-for="(fund, index) in fundsList"
                 :key="index"
               ></add-fund>
@@ -41,8 +45,8 @@
           </b-row>
           <b-row>
             <b-col sm="12" class="mt-3 mb-3">
-              <b-button @click="addFund" block variant="outline-info">
-                <i class="fa fa-plus"></i> Add Fund to Wallet
+              <b-button @click="addFund" ref="addFundFocus" block variant="outline-info">
+                <i class="fa fa-plus"></i> Add Fund to Portfolio
               </b-button>
             </b-col>
           </b-row>
@@ -58,7 +62,7 @@
             </b-col>
             <b-col cols="6">
               <b-button @click="saveWallet" block variant="outline-success">
-                <i class="fa fa-save"></i> Save Wallet
+                <i class="fa fa-save"></i> Save Portfolio
               </b-button>
             </b-col>
           </b-row>
@@ -69,28 +73,31 @@
 </template>
 <script>
 import AddFund from "./AddFund.vue";
+import utils from "./../../shared/utilsLib.js";
 export default {
   components: {
     AddFund
   },
-  name: "New Wallet",
+  name: "New Portfolio",
   data: () => {
     return {
-      title: "New Wallet of Fund",
+      title: "New Portfolio of Fund",
       walletName: "",
       walletNameCheck: false,
       classwalletName: "fa-close",
       fundsList: [],
+      fundCount: 0,
       options: [],
-      dataObjToSave: []
+      utils
     };
   },
   methods: {
     goBack() {
       this.$router.go(-1);
-      this.$router.replace({ path: "/WalletFunds" });
+      this.$router.replace({ path: "/Portfoliofunds" });
     },
     addFund() {
+      this.fundCount++;
       this.fundsList.push({
         isin: "",
         name: "",
@@ -98,74 +105,95 @@ export default {
       });
     },
     deleteFund(index) {
-      console.log("Delete fundo", index);
       this.fundsList[index] = null;
+      this.fundCount--;
     },
     saveWallet() {
-      console.log("SaveWallet", this.fundsList);
+      // console.log("SaveWallet", this.fundsList);
 
       if (!this.walletNameCheck) {
+        this.$refs.walletNameFocus.$el.focus();
         return this.$notify({
           group: "notification",
           title: "Error",
-          text: "Check field 'Wallet Name'.",
+          text: "Check field 'Portfolio Name'.",
           type: "error",
           position: "top center"
         });
       }
-      if (this.fundsList.length === 0) {
+      if (this.fundsList.length === 0 || this.fundCount <= 0) {
+        this.$refs.addFundFocus.focus();
         return this.$notify({
           group: "notification",
           title: "Error",
-          text: "Add one or more funds to wallet.",
+          text: "Add one or more funds to Portfolio.",
           type: "error",
           position: "top center"
         });
       }
-      /*
-      let fundArrSave = [];
-      for (let index = 0; index < this.fundsList.length; index++) {
-        if (!this.chekFieldsWalletFund(this.fundsList[index])) {
-          return this.$notify({
-            group: "notification",
-            title: "Error",
-            text: "Check fields in funds.",
-            type: "error",
-            position: "top center"
-          });
+      let controlDuplicates = [];
+      for (let f = 0; f < this.$refs.checkFund.length; f++) {
+        if (this.fundsList[f]) {
+          controlDuplicates.push(this.fundsList[f].isin);
+          if (!this.$refs.checkFund[f].checkFund()) {
+            return console.log("Problems with validations.");
+          }
         }
-        if (this.fundsList[index]) {
-          fundArrSave.push(this.fundsList[index]);
+      }
+      let checkResult = utils.checkDuplicatesV2(controlDuplicates);
+      if (!checkResult.status) {
+        for (let x = 0; x < this.fundsList.length; x++) {
+          if (this.fundsList[this.fundsList.length - 1 - x]) {
+            if (
+              this.fundsList[this.fundsList.length - 1 - x].isin ===
+              checkResult.duplicate[0]
+            ) {
+              this.$refs.checkFund[
+                this.fundsList.length - 1 - x
+              ].focusFundDuplicate();
+              x = this.fundsList.length;
+            }
+          }
         }
+        return this.$notify({
+          group: "notification",
+          title: "Error",
+          text:
+            "The list of fund of Portfolio contains duplicate funds, check this.",
+          type: "error",
+          position: "top center"
+        });
       }
       let dataSave = {
         owner: JSON.parse(localStorage.getItem("user")).data._id,
         walletName: this.walletName.trim(),
-        walletFunds: fundArrSave
+        walletFunds: this.fundsList
       };
+      // console.log("data save", dataSave);
       this.$loading.show();
-      console.log("data save", dataSave);
 
       this.$http
-        .post("/api/walletfunds", dataSave)
+        .post("/api/portfoliofunds", dataSave)
         .then(function(response) {
           let data = response.data;
           // console.log("saveWallet", data);
           if (data.status === true) {
             this.$notify({
               group: "notification",
-              title: "New wallet of funds created.",
-              text: "Wallet '" + data.data.nameWallet + "' created.",
+              title: "New Portfolio of funds created.",
+              text: "Portfolio '" + data.data.nameWallet + "' created.",
               position: "top center"
             });
-            this.$router.push("/walletfunds");
+            this.$router.push("/Portfoliofunds");
           } else {
             this.$notify({
               group: "notification",
-              title: "Save Wallet Funds.",
+              title: "Save Portfolio Funds.",
               type: "warn",
               text:
-                "The Wallet '" + data.data.nameWallet + "' exists in database.",
+                "The name of Portfolio '" +
+                data.data.nameWallet +
+                "' exists in database.",
               position: "top center"
             });
           }
@@ -175,22 +203,6 @@ export default {
           this.$loading.hide();
           console.log("Error", err);
         });
-        */
-    },
-    chekFieldsWalletFund(obj) {
-      if (obj) {
-        if (Object.keys(obj).length === 0) {
-          return true;
-        } else {
-          let keys = Object.keys(obj);
-          for (const key in keys) {
-            if (obj[keys[key]] === "") {
-              return false;
-            }
-          }
-        }
-      }
-      return true;
     },
     getAllFunds() {
       this.$http

@@ -19,7 +19,11 @@
                   ></b-form-input>
                   <b-input-group-append>
                     <b-input-group-text>
-                      <i class="fa" :class="classisinCode"></i>
+                      <i
+                        class="fa"
+                        v-b-tooltip.hover.html="'<strong>Insert a valid ISIN of Fund.</strong>'"
+                        :class="classisinCode"
+                      ></i>
                     </b-input-group-text>
                   </b-input-group-append>
                 </b-input-group>
@@ -39,7 +43,11 @@
                   ></b-form-input>
                   <b-input-group-append>
                     <b-input-group-text>
-                      <i class="fa" :class="classisinName"></i>
+                      <i
+                        class="fa"
+                        v-b-tooltip.hover.html="'<strong>Insert a valid fund name.</strong>'"
+                        :class="classisinName"
+                      ></i>
                     </b-input-group-text>
                   </b-input-group-append>
                 </b-input-group>

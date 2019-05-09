@@ -19,7 +19,7 @@
                 <b-form-group class="mb-0">
                   <b-input-group>
                     <b-input-group-prepend>
-                      <b-input-group-text>Slect Fund</b-input-group-text>
+                      <b-input-group-text>Select Fund</b-input-group-text>
                     </b-input-group-prepend>
                     <b-form-select
                       ref="selectFundFocus"
@@ -30,7 +30,11 @@
                     ></b-form-select>
                     <b-input-group-append>
                       <b-input-group-text>
-                        <i class="fa" :class="classselectedFund"></i>
+                        <i
+                          class="fa"
+                          v-b-tooltip.hover.html="'<strong>Select a Fund to add to this portfolio.</strong>'"
+                          :class="classselectedFund"
+                        ></i>
                       </b-input-group-text>
                     </b-input-group-append>
                   </b-input-group>
@@ -38,7 +42,12 @@
               </b-col>
               <b-col cols="1">
                 <div class="card-header-actions">
-                  <b-link href="#" class="card-header-action btn-close" v-on:click="removePanel">
+                  <b-link
+                    href="#"
+                    class="card-header-action btn-close"
+                    v-b-tooltip.hover.html="'<strong>Delete this fund.</strong>'"
+                    v-on:click="removePanel"
+                  >
                     <i class="icon-close"></i>
                   </b-link>
                 </div>
@@ -50,12 +59,19 @@
               <add-invest
                 :invest="invest"
                 :posArr="index"
+                ref="checkInvest"
                 v-for="(invest, index) in fund.investList"
                 :key="index"
               ></add-invest>
             </b-col>
             <b-col sm="12" class="mt-3 mb-3">
-              <b-button @click="addInvest" block size="sm" variant="outline-secondary">
+              <b-button
+                @click="addInvest"
+                ref="addInvestFocus"
+                block
+                size="sm"
+                variant="outline-secondary"
+              >
                 <i class="fa fa-plus"></i> Add new Invest to Fund
               </b-button>
             </b-col>
@@ -73,13 +89,14 @@ export default {
   components: {
     AddInvest
   },
-  props: ["optsSelect", "dataObj", "posArr", "fund"],
+  props: ["optsSelect", "posArr", "fund"],
   name: "AddFund",
   data: () => {
     return {
       selectedFund: "",
       selectedFundCheck: false,
       classselectedFund: "fa-close",
+      countInvest: 0,
       show: true,
       utils
     };
@@ -87,18 +104,84 @@ export default {
   computed: {},
   methods: {
     addInvest() {
+      this.countInvest++;
       this.fund.investList.push({
         dateInvest: "",
         nUps: ""
       });
     },
+    deleteInvest(index) {
+      this.countInvest--;
+      this.fund.investList[index] = null;
+    },
+    focusFundDuplicate() {
+      this.$refs.selectFundFocus.$el.focus();
+    },
     removePanel() {
       this.show = false;
       this.$parent.deleteFund(this.posArr);
     },
-    deleteInvest(index) {
-      console.log("Teste remove", index);
-      this.fund.investList[index] = null;
+    checkFund() {
+      console.log("checkFund function");
+      if (!this.selectedFundCheck) {
+        this.$notify({
+          group: "notification",
+          title: "Error",
+          text: "Check the Select Fund field.",
+          type: "error",
+          position: "top center"
+        });
+        this.$refs.selectFundFocus.$el.focus();
+        return false;
+      }
+      if (this.fund.investList.length === 0 || this.countInvest <= 0) {
+        this.$notify({
+          group: "notification",
+          title: "Error",
+          text: "Add one or more investments in this fund.",
+          type: "error",
+          position: "top center"
+        });
+        this.$refs.addInvestFocus.focus();
+        return false;
+      }
+      let chekDuplicateDates = [];
+      for (let t = 0; t < this.$refs.checkInvest.length; t++) {
+        if (this.fund.investList[t]) {
+          chekDuplicateDates.push(this.fund.investList[t].dateCheck);
+          if (!this.$refs.checkInvest[t].checkInvest()) {
+            return false;
+          }
+        }
+      }
+      let checkResult = utils.checkDuplicatesV2(chekDuplicateDates);
+      if (!checkResult.status) {
+        for (let x = 0; x < this.fund.investList.length; x++) {
+          if (this.fund.investList[this.fund.investList.length - 1 - x]) {
+            if (
+              this.fund.investList[this.fund.investList.length - 1 - x]
+                .dateCheck *
+                1 ===
+              checkResult.duplicate[0] * 1
+            ) {
+              this.$refs.checkInvest[
+                this.fund.investList.length - 1 - x
+              ].focusInvestDuplicateDate();
+              x = this.fund.investList.length;
+            }
+          }
+        }
+        this.$notify({
+          group: "notification",
+          title: "Error",
+          text:
+            "The list of investments of Fund contains duplicate dates, check this.",
+          type: "error",
+          position: "top center"
+        });
+        return false;
+      }
+      return true;
     }
   },
   created() {},

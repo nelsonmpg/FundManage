@@ -30,6 +30,10 @@
               slot="lastHistoryDate"
               slot-scope="data"
             >{{utils.onlyDateFormat(data.item.lastHistoryDate)}}</template>
+            <template
+              slot="fundStart"
+              slot-scope="data"
+            >{{utils.onlyDateFormat(data.item.fundStart)}}</template>
           </b-table>
           <nav>
             <b-pagination
@@ -85,6 +89,7 @@ export default {
       fields: [
         { key: "isin", sortable: true },
         { key: "name", sortable: true },
+        { key: "fundStart", label: "Fund Created" },
         { key: "lastUpdate", label: "Date Updated" },
         { key: "lastHistoryDate", label: "Last Date Record" },
         { key: "lastValue" }
