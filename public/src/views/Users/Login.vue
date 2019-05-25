@@ -53,27 +53,10 @@
                         class="px-4"
                       >Register Now!</b-button>
                     </b-col>
-                    <!-- <b-col cols="6" class="text-right">
-                      <b-button variant="link" class="px-0">Forgot password?</b-button>
-                    </b-col>-->
                   </b-row>
                 </b-form>
               </b-card-body>
             </b-card>
-            <!-- <b-card no-body class="text-white bg-primary py-5 d-md-down-none">
-              <b-card-body class="text-center">
-                <div>
-                  <h2>Sign up</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  <b-button
-                  block
-                    variant="primary"
-                    v-on:click="register()"
-                    class="active mt-3"
-                  >Register Now!</b-button>
-                </div>
-              </b-card-body>
-            </b-card> -->
           </b-card-group>
         </b-col>
       </b-row>
@@ -85,23 +68,22 @@ export default {
   name: "Login",
   methods: {
     login() {
-      // function utf8_to_b64( str ) {
-      //   return window.btoa(unescape(encodeURIComponent( str )));
-      // }
-
-      // function b64_to_utf8( str ) {
-      //   return decodeURIComponent(escape(window.atob( str )));
-      // }
       let data = {
         email: document.getElementsByClassName("user-mail")[0].value,
-        password: window.btoa(unescape(encodeURIComponent(document.getElementsByClassName("user-pass")[0].value)))
+        password: window.btoa(
+          unescape(
+            encodeURIComponent(
+              document.getElementsByClassName("user-pass")[0].value
+            )
+          )
+        )
       };
       if (data.email.trim().length === 0 || data.password.trim().length === 0) {
         return this.$notify({
           group: "notification",
           title: "Error",
           text: "Insert valid email and password to login.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
       }
@@ -115,6 +97,7 @@ export default {
               group: "notification",
               title: "Login Success",
               text: "Welcome " + data.data.name,
+              type: "success",
               position: "top center"
             });
             localStorage.setItem("user", JSON.stringify(data));
@@ -125,13 +108,20 @@ export default {
               group: "notification",
               title: "Login Error",
               text: data.data,
-              type: "error",
+              type: "danger",
               position: "top center"
             });
           }
         })
         .catch(err => {
           console.log(err.toString());
+          this.$notify({
+            group: "notification",
+            title: "New fund existes.",
+            type: "danger",
+            text: "Error " + err,
+            position: "top center"
+          });
         });
     },
     register() {

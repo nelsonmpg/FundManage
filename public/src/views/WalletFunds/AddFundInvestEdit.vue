@@ -5,103 +5,112 @@
         <b-badge pill variant="dark">{{ (posArr + 1) }}</b-badge>
       </h5>
     </b-col>
-    <b-col cols="2">
-      <b-form-group class="mb-0">
-        <b-input-group>
-          <b-input-group-prepend>
-            <b-input-group-text>Active</b-input-group-text>
-          </b-input-group-prepend>
-          <b-input-group-append>
-            <b-input-group-text>
-              <i
-                class="fa"
-                v-b-tooltip.hover.html="'<strong>Investiment inative.</strong>'"
-                :class="classfundStateA"
-              ></i>
-              <c-switch
-                color="dark"
-                checked
-                v-model="fundState"
-                value="true"
-                uncheckedValue="false"
-                variant="pill"
-              />
-              <i
-                class="fa"
-                v-b-tooltip.hover.html="'<strong>Investiment ative.</strong>'"
-                :class="classfundStateB"
-              ></i>
-            </b-input-group-text>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
-    </b-col>
-    <b-col class="col-3" v-show="!controlStatus">
-      <b-form-group class="mb-0">
-        <b-input-group>
-          <b-input-group-prepend>
-            <b-input-group-text>
-              <i class="fa fa-calendar-times-o"></i>
-            </b-input-group-text>
-          </b-input-group-prepend>
-          <b-form-input type="date" ref="fundDateInative" v-model="dateFundInative"></b-form-input>
-          <b-input-group-append>
-            <b-input-group-text>
-              <i
-                class="fa"
-                v-b-tooltip.hover.html="'<strong>Select a date to stop this investiment.</strong>'"
-                :class="classdateFundInative"
-              ></i>
-            </b-input-group-text>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
-    </b-col>
-    <b-col :class="classsDateShow">
-      <b-form-group class="mb-0">
-        <b-input-group>
-          <b-input-group-prepend>
-            <b-input-group-text>
-              <i class="fa fa-calendar-check-o"></i>
-            </b-input-group-text>
-          </b-input-group-prepend>
-          <b-form-input type="date" ref="fundDate" v-model="dateFund" :disabled="!controlStatus"></b-form-input>
-          <b-input-group-append>
-            <b-input-group-text>
-              <i
-                class="fa"
-                v-b-tooltip.hover.html="'<strong>Select a date to start this investiment.</strong>'"
-                :class="classdateFund"
-              ></i>
-            </b-input-group-text>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
-    </b-col>
-    <b-col :class="classsNupsShow">
-      <b-form-group class="mb-0">
-        <b-input-group>
-          <b-input-group-prepend>
-            <b-input-group-text>Nº Ups</b-input-group-text>
-          </b-input-group-prepend>
-          <b-form-input
-            type="number"
-            ref="fundNups"
-            v-model="nUpsFund"
-            :disabled="!controlStatus"
-            placeholder="ex. 123.45"
-          ></b-form-input>
-          <b-input-group-append>
-            <b-input-group-text>
-              <i
-                class="fa"
-                v-b-tooltip.hover.html="'<strong>Inser the number of Nups to invest.</strong>'"
-                :class="classnUpsFund"
-              ></i>
-            </b-input-group-text>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
+    <b-col cols="10">
+      <b-row>
+        <b-col xl="3" lg="6" md="12" sm="12" xs="12">
+          <b-form-group class="mb-0">
+            <b-input-group>
+              <b-input-group-prepend>
+                <b-input-group-text>Active</b-input-group-text>
+              </b-input-group-prepend>
+              <b-input-group-append>
+                <b-input-group-text>
+                  <i
+                    class="fa"
+                    v-b-tooltip.hover.html="'<strong>Investiment inative.</strong>'"
+                    :class="classfundStateA"
+                  ></i>
+                  <c-switch
+                    color="dark"
+                    checked
+                    v-model="fundState"
+                    value="true"
+                    uncheckedValue="false"
+                    variant="pill"
+                  />
+                  <i
+                    class="fa"
+                    v-b-tooltip.hover.html="'<strong>Investiment ative.</strong>'"
+                    :class="classfundStateB"
+                  ></i>
+                </b-input-group-text>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+        <b-col class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-xs-12" v-show="!controlStatus">
+          <b-form-group class="mb-0">
+            <b-input-group>
+              <b-input-group-prepend>
+                <b-input-group-text>
+                  <i class="fa fa-calendar-times-o"></i>
+                </b-input-group-text>
+              </b-input-group-prepend>
+              <b-form-input type="date" ref="fundDateInative" v-model="dateFundInative"></b-form-input>
+              <b-input-group-append>
+                <b-input-group-text>
+                  <i
+                    class="fa"
+                    v-b-tooltip.hover.html="'<strong>Select a date to stop this investiment.</strong>'"
+                    :class="classdateFundInative"
+                  ></i>
+                </b-input-group-text>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+        <b-col :class="classsDateShow">
+          <b-form-group class="mb-0">
+            <b-input-group>
+              <b-input-group-prepend>
+                <b-input-group-text>
+                  <i class="fa fa-calendar-check-o"></i>
+                </b-input-group-text>
+              </b-input-group-prepend>
+              <b-form-input
+                type="date"
+                ref="fundDate"
+                v-model="dateFund"
+                :disabled="!controlStatus"
+              ></b-form-input>
+              <b-input-group-append>
+                <b-input-group-text>
+                  <i
+                    class="fa"
+                    v-b-tooltip.hover.html="'<strong>Select a date to start this investiment.</strong>'"
+                    :class="classdateFund"
+                  ></i>
+                </b-input-group-text>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+        <b-col :class="classsNupsShow">
+          <b-form-group class="mb-0">
+            <b-input-group>
+              <b-input-group-prepend>
+                <b-input-group-text>Nº Ups</b-input-group-text>
+              </b-input-group-prepend>
+              <b-form-input
+                type="number"
+                ref="fundNups"
+                v-model="nUpsFund"
+                :disabled="!controlStatus"
+                placeholder="ex. 123.45"
+              ></b-form-input>
+              <b-input-group-append>
+                <b-input-group-text>
+                  <i
+                    class="fa"
+                    v-b-tooltip.hover.html="'<strong>Inser the number of Nups to invest.</strong>'"
+                    :class="classnUpsFund"
+                  ></i>
+                </b-input-group-text>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+      </b-row>
     </b-col>
     <b-col cols="1">
       <div class="card-header-actions">
@@ -141,8 +150,8 @@ export default {
       dateFundInative: "",
       classdateFundInative: "fa-close",
       dateFundInativeCheck: false,
-      classsDateShow: "col-4",
-      classsNupsShow: "col-4",
+      classsDateShow: "col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12",
+      classsNupsShow: "col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12",
       controlStatus: false,
       show: true,
       utils
@@ -153,13 +162,6 @@ export default {
     removePanel() {
       this.show = false;
       this.$parent.deleteInvest(this.posArr);
-      /* this.$notify({
-        group: "notification",
-        title: "warn",
-        text: "This function is desatived.",
-        type: "warn",
-        position: "top center"
-      }); */
     },
     focusInvestDuplicateDate() {
       this.$refs.fundDate.$el.focus();
@@ -170,7 +172,7 @@ export default {
           group: "notification",
           title: "Error",
           text: "Check the date invest field.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
         this.$refs.fundDate.$el.focus();
@@ -182,7 +184,7 @@ export default {
           group: "notification",
           title: "Error",
           text: "Check the nUps invest field.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
         this.$refs.fundNups.$el.focus();
@@ -194,7 +196,7 @@ export default {
             group: "notification",
             title: "Error",
             text: "Check the date to inative invest field.",
-            type: "error",
+            type: "danger",
             position: "top center"
           });
           this.$refs.fundDateInative.$el.focus();
@@ -253,7 +255,7 @@ export default {
         this.$notify({
           group: "notification",
           title: "Attention.",
-          type: "warn",
+          type: "warning",
           text: "You selected a day after Today.",
           position: "top center"
         });
@@ -263,7 +265,7 @@ export default {
         this.$notify({
           group: "notification",
           title: "Attention.",
-          type: "warn",
+          type: "warning",
           text: "You selected a day of weekend.",
           position: "top center"
         });
@@ -295,13 +297,13 @@ export default {
       if (this.controlStatus) {
         this.classfundStateA = "fa-circle-o";
         this.classfundStateB = "fa-check-circle-o";
-        this.classsDateShow = "col-4";
-        this.classsNupsShow = "col-4";
+        this.classsDateShow = "col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12";
+        this.classsNupsShow = "col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12";
       } else {
         this.classfundStateA = "fa-times-circle-o";
         this.classfundStateB = "fa-circle-o";
-        this.classsDateShow = "col-3";
-        this.classsNupsShow = "col-2";
+        this.classsDateShow = "col-xl-3 col-lg-6 col-md-12 col-sm-12 col-xs-12";
+        this.classsNupsShow = "col-xl-3 col-lg-6 col-md-12 col-sm-12 col-xs-12";
       }
       this.invest.active = this.controlStatus;
     },
@@ -320,7 +322,7 @@ export default {
         this.$notify({
           group: "notification",
           title: "Attention.",
-          type: "warn",
+          type: "warning",
           text: "You selected a day after Today.",
           position: "top center"
         });
@@ -330,7 +332,7 @@ export default {
         this.$notify({
           group: "notification",
           title: "Attention.",
-          type: "warn",
+          type: "warning",
           text: "You selected a day of weekend.",
           position: "top center"
         });
@@ -340,7 +342,7 @@ export default {
         this.$notify({
           group: "notification",
           title: "Attention.",
-          type: "warn",
+          type: "warning",
           text: "You selected a day before investment is created.",
           position: "top center"
         });

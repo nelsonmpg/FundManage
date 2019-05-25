@@ -3,12 +3,9 @@
     <b-col cols="12">
       <transition name="slide">
         <b-card :header="caption">
-          <b-button
-            class="mb-2"
-            @click="createNewFund"
-            block
-            variant="outline-success"
-          ><i class="cui-pencil icons"></i> Create New Fund</b-button>
+          <b-button class="mb-2" @click="createNewFund" block variant="outline-success">
+            <i class="cui-pencil icons"></i> Create New Fund
+          </b-button>
           <b-table
             hover
             stripe
@@ -22,10 +19,7 @@
             :per-page="perPage"
             @row-clicked="rowClicked"
           >
-            <template
-              slot="lastUpdate"
-              slot-scope="data"
-            >{{utils.onlyDateFormat(data.item.lastUpdate)}}</template>
+            <template slot="lastUpdate" slot-scope="data">{{utils.dateFormat(data.item.lastUpdate)}}</template>
             <template
               slot="lastHistoryDate"
               slot-scope="data"
@@ -89,7 +83,7 @@ export default {
       fields: [
         { key: "isin", sortable: true },
         { key: "name", sortable: true },
-        { key: "fundStart", label: "Fund Created" },
+        { key: "fundStart", label: "Fund Created", sortable: true },
         { key: "lastUpdate", label: "Date Updated" },
         { key: "lastHistoryDate", label: "Last Date Record" },
         { key: "lastValue" }
@@ -117,7 +111,7 @@ export default {
             this.$notify({
               group: "notification",
               title: "New fund existes.",
-              type: "eror",
+              type: "danger",
               text: "The fund '" + data.data + "' exists in database.",
               position: "top center"
             });
@@ -127,6 +121,13 @@ export default {
         .catch(function(err) {
           this.$loading.hide();
           console.log("Error", err);
+          this.$notify({
+            group: "notification",
+            title: "New fund existes.",
+            type: "danger",
+            text: "Error " + err,
+            position: "top center"
+          });
         });
     },
     getRowCount(items) {

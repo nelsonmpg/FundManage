@@ -4,17 +4,10 @@
       <b-card no-header>
         <template slot="header">
           <b-row>
-            <b-col sm="8">
-              <b-form-group class="mb-0">
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>Portfolio Name</b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input :value="walletName" type="text" disabled></b-form-input>
-                </b-input-group>
-              </b-form-group>
+            <b-col cols="6">
+              <h3 class="card-title">Portfolio Details</h3>
             </b-col>
-            <b-col sm="4">
+            <b-col cols="6">
               <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
                 <b-button-group>
                   <b-button @click="openWalletEdit" variant="outline-primary">
@@ -28,110 +21,169 @@
             </b-col>
           </b-row>
         </template>
-        <b-row>
-          <b-col sm="12">
-            <h3>{{caption}}</h3>
-            <b-table
-              stripe
-              bordered
-              small
-              responsive="sm"
-              :items="items"
-              :fields="fields"
-              :current-page="currentPage"
-              :per-page="perPage"
-              @row-clicked="rowClicked"
-            >
-              <template
-                slot="dateInvest"
-                slot-scope="data"
-              >{{utils.onlyDateFormat(data.item.dateInvest)}}</template>
-              <template
-                slot="cotacaoUp"
-                slot-scope="data"
-              >{{utils.formatCurrency(data.item.cotacaoUp)}}</template>
-              <template
-                slot="valInvest"
-                slot-scope="data"
-              >{{utils.formatCurrency(data.item.valInvest)}}</template>
-              <template slot="active" slot-scope="data">
-                <input type="checkbox" :checked="data.item.active" disabled>
-              </template>
-              <template slot="dateInative" slot-scope="data">
-                <n v-if="!data.item.active">{{utils.onlyDateFormat(data.item.dateInative)}}</n>
-                <n v-else>- - -</n>
-              </template>
-              <template
-                slot="lastvalUp"
-                slot-scope="data"
-              >{{utils.formatCurrency(data.item.lastvalUp)}}</template>
-              <template
-                slot="lastDate"
-                slot-scope="data"
-              >{{utils.onlyDateFormat(data.item.lastDate)}}</template>
-              <template slot="lastVal" slot-scope="data">{{utils.formatCurrency(data.item.lastVal)}}</template>
-              <template slot="gainValue" slot-scope="data">
-                <b-card
-                  :no-body="true"
-                  class="mt-0 mb-0 pt-0 pb-0"
-                  :class="data.item.gainValue > 0 ? 'bg-success' : 'bg-danger'"
-                >
-                  <b v-if="data.item.active">{{utils.formatCurrency(data.item.gainValue)}}</b>
-                  <b v-else>0,00</b>
-                </b-card>
-              </template>
-            </b-table>
-            <nav>
-              <b-pagination
-                size="sm"
-                :total-rows="getRowCount(items)"
-                :per-page="perPage"
-                v-model="currentPage"
-                prev-text="Prev"
-                next-text="Next"
-                hide-goto-end-buttons
-              />
-            </nav>
-          </b-col>
-          <b-col sm="12">
-            <b-row>
-              <b-col sm="4">
-                <h4 class="card-title mb-0">Portfolio History</h4>
-              </b-col>
-              <b-col sm="8" class="d-none d-md-block">
-                <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
-                  <b-form-radio-group
-                    class="mr-3"
-                    id="radiosBtn"
-                    buttons
-                    button-variant="outline-secondary"
-                    v-model="selected"
-                    name="radiosBtn"
+        <b-form>
+          <b-row>
+            <b-col cols="12">
+              <b-form-group>
+                <b-input-group>
+                  <b-input-group-prepend>
+                    <b-input-group-text>Portfolio Name</b-input-group-text>
+                  </b-input-group-prepend>
+                  <b-form-input :value="walletName" type="text" disabled></b-form-input>
+                </b-input-group>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col xl="4" lg="4" md="12" sm="12" xs="12">
+              <b-form-group>
+                <b-input-group>
+                  <b-input-group-prepend>
+                    <b-input-group-text>€ Total Invest</b-input-group-text>
+                  </b-input-group-prepend>
+                  <b-form-input :value="utils.formatCurrency(totalInvest)" type="text" disabled></b-form-input>
+                </b-input-group>
+              </b-form-group>
+            </b-col>
+            <b-col xl="4" lg="4" md="12" sm="12" xs="12">
+              <b-form-group>
+                <b-input-group>
+                  <b-input-group-prepend>
+                    <b-input-group-text>€ Total</b-input-group-text>
+                  </b-input-group-prepend>
+                  <b-form-input :value="utils.formatCurrency(totalEnd)" type="text" disabled></b-form-input>
+                </b-input-group>
+              </b-form-group>
+            </b-col>
+            <b-col xl="4" lg="4" md="12" sm="12" xs="12">
+              <b-form-group>
+                <b-input-group>
+                  <b-input-group-prepend>
+                    <b-input-group-text>Status</b-input-group-text>
+                  </b-input-group-prepend>
+                  <b-input-group-text
+                    :class="'bg-' + (valArrow > 0 ? 'success' : (valArrow = 0 ? 'info' : 'danger'))"
                   >
-                    <b-form-radio class="mx-0" value="22">Last 1 Month</b-form-radio>
-                    <b-form-radio
-                      class="mx-0"
-                      v-if="walletMoney.labels.length >= 66"
-                      value="66"
-                    >Last 3 Months</b-form-radio>
-                    <b-form-radio
-                      class="mx-0"
-                      v-if="walletMoney.labels.length >= 130"
-                      value="130"
-                    >Last 6 Months</b-form-radio>
-                    <b-form-radio
-                      class="mx-0"
-                      v-if="walletMoney.labels.length >= 260"
-                      value="260"
-                    >Last 1 Year</b-form-radio>
-                    <b-form-radio class="mx-0" :value="walletMoney.labels.length">All</b-form-radio>
-                  </b-form-radio-group>
-                </b-button-toolbar>
-              </b-col>
-            </b-row>
-            <b-card class="mt-3 mb-0 pb-0">
+                    <i class="fa" :class="'fa-thumbs-' + (valArrow >= 0 ? 'up' : 'down')"></i>
+                  </b-input-group-text>
+                </b-input-group>
+              </b-form-group>
+            </b-col>
+            <!---->
+          </b-row>
+          <div slot="footer"></div>
+        </b-form>
+        <b-row>
+          <b-col cols="12">
+            <b-card no-body>
+              <template slot="header">
+                <b-row>
+                  <b-col cols="12">
+                    <h4 class="card-title">{{ caption }}</h4>
+                  </b-col>
+                </b-row>
+              </template>
+              <b-table
+                stripe
+                bordered
+                small
+                responsive="sm"
+                :items="items"
+                :fields="fields"
+                :current-page="currentPage"
+                :per-page="perPage"
+                @row-clicked="rowClicked"
+              >
+                <template
+                  slot="dateInvest"
+                  slot-scope="data"
+                >{{utils.onlyDateFormat(data.item.dateInvest)}}</template>
+                <template
+                  slot="cotacaoUp"
+                  slot-scope="data"
+                >{{utils.formatCurrency(data.item.cotacaoUp)}}</template>
+                <template
+                  slot="valInvest"
+                  slot-scope="data"
+                >{{utils.formatCurrency(data.item.valInvest)}}</template>
+                <template slot="active" slot-scope="data">
+                  <input type="checkbox" :checked="data.item.active" disabled>
+                </template>
+                <template slot="dateInative" slot-scope="data">
+                  <n v-if="!data.item.active">{{utils.onlyDateFormat(data.item.dateInative)}}</n>
+                  <n v-else>- - -</n>
+                </template>
+                <template
+                  slot="lastvalUp"
+                  slot-scope="data"
+                >{{utils.formatCurrency(data.item.lastvalUp)}}</template>
+                <template
+                  slot="lastDate"
+                  slot-scope="data"
+                >{{utils.onlyDateFormat(data.item.lastDate)}}</template>
+                <template
+                  slot="lastVal"
+                  slot-scope="data"
+                >{{utils.formatCurrency(data.item.lastVal)}}</template>
+                <template slot="gainValue" slot-scope="data">
+                  <b-card
+                    :no-body="true"
+                    class="mt-0 mb-0 pt-0 pb-0"
+                    :class="data.item.gainValue > 0 ? 'bg-success' : 'bg-danger'"
+                  >
+                    <b v-if="data.item.active">{{utils.formatCurrency(data.item.gainValue)}}</b>
+                    <b v-else>0,00</b>
+                  </b-card>
+                </template>
+              </b-table>
+              <nav>
+                <b-pagination
+                  size="sm"
+                  :total-rows="getRowCount(items)"
+                  :per-page="perPage"
+                  v-model="currentPage"
+                  prev-text="Prev"
+                  next-text="Next"
+                  hide-goto-end-buttons
+                />
+              </nav>
+            </b-card>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="12">
+            <b-card no-header>
+              <template slot="header">
+                <b-row>
+                  <b-col cols="5">
+                    <h4 class="card-title">Portfolio History</h4>
+                  </b-col>
+                  <b-col cols="7" class="d-md-block d-sm-block d-xs-block">
+                    <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
+                      <b-form-radio-group
+                        class="mr-3"
+                        id="radiosBtn"
+                        buttons
+                        button-variant="outline-secondary"
+                        v-model="selected"
+                        name="radiosBtn"
+                      >
+                        <b-form-radio value="30">1M</b-form-radio>
+                        <b-form-radio v-if="walletMoney.labels.length >= 90" value="90">3M</b-form-radio>
+                        <b-form-radio v-if="walletMoney.labels.length >= 180" value="180">6M</b-form-radio>
+                        <b-form-radio v-if="walletMoney.labels.length >= 365" value="365">1Y</b-form-radio>
+                        <b-form-radio v-if="walletMoney.labels.length >= 730" value="730">2Y</b-form-radio>
+                        <b-form-radio v-if="walletMoney.labels.length >= 1095" value="1095">3Y</b-form-radio>
+                        <b-form-radio v-if="walletMoney.labels.length >= 1460" value="1460">4Y</b-form-radio>
+                        <b-form-radio v-if="walletMoney.labels.length >= 1825" value="1825">5Y</b-form-radio>
+                        <b-form-radio :value="walletMoney.labels.length">All</b-form-radio>
+                      </b-form-radio-group>
+                    </b-button-toolbar>
+                  </b-col>
+                </b-row>
+              </template>
               <b-row>
-                <b-col sm="12" v-if="showChart">
+                <b-col cols="12" v-if="showChart">
                   <chart-line
                     :id="'lineChart-1'"
                     :lineChartId="'lineChart-1'"
@@ -206,7 +258,7 @@ export default {
     return {
       wallet: "",
       walletName: "",
-      selected: "22",
+      selected: "30",
       items: [],
       fields: [
         { key: "name", sortable: true, label: "Fund Name" },
@@ -235,6 +287,9 @@ export default {
       },
       showChart: false,
       deleteWalletModal: false,
+      totalInvest: 0,
+      totalEnd: 0,
+      valArrow: 0,
       utils
     };
   },
@@ -261,7 +316,7 @@ export default {
             this.$notify({
               group: "notification",
               title: "Find fund.",
-              type: "info",
+              type: "success",
               text: data.data,
               position: "top center"
             });
@@ -270,7 +325,7 @@ export default {
             this.$notify({
               group: "notification",
               title: "Find fund.",
-              type: "warn",
+              type: "warning",
               text: data.data,
               position: "top center"
             });
@@ -281,9 +336,9 @@ export default {
           console.log("Error", err);
           this.$notify({
             group: "notification",
-            title: "Find fund.",
-            type: "warn",
-            text: err,
+            title: "New fund existes.",
+            type: "danger",
+            text: "Error " + err,
             position: "top center"
           });
           this.$loading.hide();
@@ -308,6 +363,9 @@ export default {
               fundWallet = walletData.listFunds,
               refactWallet = [];
             this.walletName = walletData.nameWallet;
+            this.totalInvest = walletData.startWalletMoney;
+            this.totalEnd = walletData.lastWalletMoney;
+            this.valArrow = this.totalEnd - this.totalInvest;
             for (let x = 0; x < fundWallet.length; x++) {
               for (let y = 0; y < fundWallet[x].investList.length; y++) {
                 if (fundWallet[x].investList[y]) {
@@ -362,7 +420,7 @@ export default {
             this.$notify({
               group: "notification",
               title: "Find fund.",
-              type: "warn",
+              type: "warning",
               text: data.data,
               position: "top center"
             });
@@ -373,9 +431,9 @@ export default {
           console.log("Error", err);
           this.$notify({
             group: "notification",
-            title: "Error Find fund.",
-            type: "warn",
-            text: err,
+            title: "New fund existes.",
+            type: "danger",
+            text: "Error " + err,
             position: "top center"
           });
           this.$loading.hide();

@@ -3,6 +3,7 @@
 </template>
 <script>
 import Chart from "chart.js";
+import utils from "./../shared/utilsLib.js";
 
 export default {
   name: "ChartLine",
@@ -36,7 +37,7 @@ export default {
         options: {
           elements: {
             point: {
-              radius: 0
+              radius: 3
             }
           },
           responsive: true,
@@ -54,7 +55,12 @@ export default {
             }
           },
           tooltips: {
-            enabled: true
+            yAlign: "bottom",
+            callbacks: {
+              label: function(tooltipItem) {
+                return utils.formatCurrency(tooltipItem.yLabel);
+              }
+            }
           },
           scales: {
             yAxes: [
@@ -63,6 +69,9 @@ export default {
                 id: "y-axis-0",
                 type: "linear",
                 ticks: {
+                  callback: function(label, index, labels) {
+                    return utils.formatCurrency(label);
+                  },
                   fontColor: "#e4e7ea" /*,
                   stepSize: 2*/
                 },
@@ -85,7 +94,8 @@ export default {
             ]
           }
         }
-      }
+      },
+      utils
     };
   },
   methods: {

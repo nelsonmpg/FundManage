@@ -7,7 +7,6 @@ import cssVars from 'css-vars-ponyfill'
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import Notifications from 'vue-notification'
-// import vSelect from 'vue-select'
 import App from './App'
 import resource from 'vue-resource'
 import VLoading from './components/loading.js'
@@ -20,7 +19,6 @@ Vue.use(BootstrapVue)
 Vue.use(resource)
 Vue.use(Notifications)
 Vue.use(VLoading)
-// Vue.component('v-select', vSelect)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

@@ -2,7 +2,14 @@
   <b-row class="animated fadeIn">
     <b-col cols="12">
       <transition name="slide">
-        <b-card :header="caption">
+        <b-card>
+          <template slot="header">
+            <b-row>
+              <b-col cols="12">
+                <h3 class="card-title">{{ caption }}</h3>
+              </b-col>
+            </b-row>
+          </template>
           <b-button class="mb-3" @click="createNewFund" block variant="outline-success">
             <i class="cui-pencil icons"></i> Create New Portfolio Fund
           </b-button>
@@ -31,7 +38,7 @@
             <template
               slot="dateLastUpdateWallet"
               slot-scope="data"
-            >{{utils.onlyDateFormat(data.item.dateLastUpdateWallet)}}</template>
+            >{{utils.dateFormat(data.item.dateLastUpdateWallet)}}</template>
 
             <template
               slot="rendLiquido"
@@ -41,6 +48,18 @@
               slot="rendBruto"
               slot-scope="data"
             >{{utils.formatPercentage(data.item.rendBruto, 3)}}</template>
+            <template slot="status" slot-scope="data">
+              <b-card
+                :no-body="true"
+                class="mt-0 mb-0 pt-0 pb-0"
+                :class="'bg-' + (data.item.status > 0 ? 'success' : (data.item.status = 0 ? 'info' :'danger'))"
+              >
+                <i
+                  class="fa pt-2 pb-2"
+                  :class="'fa-thumbs-' + (data.item.status >= 0 ? 'up' : 'down')"
+                ></i>
+              </b-card>
+            </template>
           </b-table>
           <nav>
             <b-pagination
@@ -100,7 +119,8 @@ export default {
         { key: "startWalletMoney", label: "€ Invested" },
         { key: "lastWalletMoney", label: "€ Last Update" },
         { key: "rendLiquido", label: "Net income" },
-        { key: "rendBruto", label: "Gross income" }
+        { key: "rendBruto", label: "Gross income" },
+        { key: "status" }
       ],
       currentPage: 1,
       perPage: 10,
@@ -134,9 +154,10 @@ export default {
                 lastWalletMoney: allWallet[i].lastWalletMoney,
                 dateLastUpdateWallet: allWallet[i].dateLastUpdateWallet,
                 _id: allWallet[i]._id,
-                //listFunds: [],
                 rendLiquido: a,
-                rendBruto: a * 0.72
+                rendBruto: a * 0.72,
+                status:
+                  allWallet[i].lastWalletMoney - allWallet[i].startWalletMoney
               });
             }
             this.items = refactWallet;
@@ -144,7 +165,7 @@ export default {
             this.$notify({
               group: "notification",
               title: "New fund existes.",
-              type: "eror",
+              type: "danger",
               text: "The Portfolio find database.",
               position: "top center"
             });
@@ -152,19 +173,26 @@ export default {
           this.$loading.hide();
         })
         .catch(function(err) {
-          this.$loading.hide();
           console.log("Error", err);
+          this.$notify({
+            group: "notification",
+            title: "New fund existes.",
+            type: "danger",
+            text: "Error " + err,
+            position: "top center"
+          });
+          this.$loading.hide();
         });
     },
     getRowCount(items) {
       return items.length;
     },
-    userLink(_id) {
+    walletLink(_id) {
       return `/Portfoliofunds/PortfolioView/${_id.toString()}`;
     },
     rowClicked(item) {
-      const userLink = this.userLink(item._id);
-      this.$router.push({ path: userLink });
+      const walletLink = this.walletLink(item._id);
+      this.$router.push({ path: walletLink });
     }
   },
   created() {

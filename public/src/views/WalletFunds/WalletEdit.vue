@@ -119,7 +119,7 @@ export default {
           group: "notification",
           title: "Error",
           text: "Check field 'Portfolio Name'.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
       }
@@ -129,7 +129,7 @@ export default {
           group: "notification",
           title: "Error",
           text: "Add one or more funds to Portfolio.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
       }
@@ -162,7 +162,7 @@ export default {
           title: "Error",
           text:
             "The list of fund of Portfolio contains duplicate funds, check this.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
       }
@@ -183,7 +183,8 @@ export default {
             this.$notify({
               group: "notification",
               title: "The Portfolio of funds updated.",
-              text: "Portfolio '" + data.data + "' update.",
+              text: "Portfolio '" + data.data.nameWallet + "' updated.",
+              type: "success",
               position: "top center"
             });
             this.$router.push("/Portfoliofunds");
@@ -191,7 +192,7 @@ export default {
             this.$notify({
               group: "notification",
               title: "Save Portfolio Funds.",
-              type: "warn",
+              type: "warning",
               text: "Error to update Portfolio.",
               position: "top center"
             });
@@ -201,6 +202,13 @@ export default {
         .catch(function(err) {
           this.$loading.hide();
           console.log("Error", err);
+          this.$notify({
+            group: "notification",
+            title: "New fund existes.",
+            type: "danger",
+            text: "Error " + err,
+            position: "top center"
+          });
         });
     },
     getAllFunds() {
@@ -220,7 +228,7 @@ export default {
             this.$notify({
               group: "notification",
               title: "Find Funds.",
-              type: "eror",
+              type: "danger",
               text: "Find all funds in database.",
               position: "top center"
             });
@@ -255,7 +263,7 @@ export default {
             this.$notify({
               group: "notification",
               title: "Find fund.",
-              type: "warn",
+              type: "warning",
               text: data.data,
               position: "top center"
             });
@@ -267,7 +275,7 @@ export default {
           this.$notify({
             group: "notification",
             title: "Find fund.",
-            type: "warn",
+            type: "warning",
             text: err,
             position: "top center"
           });

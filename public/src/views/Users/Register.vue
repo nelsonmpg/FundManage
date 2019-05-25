@@ -161,7 +161,7 @@ export default {
           group: "notification",
           title: "Error",
           text: "Check all fields.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
       }
@@ -181,22 +181,30 @@ export default {
               group: "notification",
               title: "New User created.",
               text: "User created.",
+              typr: "success",
               position: "top center"
             });
             this.$router.push("/login");
           } else {
+            console.log("Logged Error");
             return this.$notify({
               group: "notification",
               title: "Error",
               text: data.data,
-              type: "error",
+              type: "danger",
               position: "top center"
             });
-            console.log("Logged Error");
           }
         })
         .catch(function(err) {
           console.log(err);
+          this.$notify({
+            group: "notification",
+            title: "New fund existes.",
+            type: "danger",
+            text: "Error " + err,
+            position: "top center"
+          });
         });
     },
     backLogin() {

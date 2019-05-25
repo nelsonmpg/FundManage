@@ -11,7 +11,9 @@
   "author": "Nelson Gomes",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.3",
+    "cinovo-isin-validator": "^0.2.0",
     "colors": "^1.3.3",
     "cookie-parser": "^1.4.4",
     "express": "^4.16.4",

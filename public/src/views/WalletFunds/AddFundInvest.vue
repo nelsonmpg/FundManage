@@ -5,45 +5,54 @@
         <b-badge pill variant="dark">{{ (posArr + 1) }}</b-badge>
       </h5>
     </b-col>
-    <b-col cols="5">
-      <b-form-group class="mb-0">
-        <b-input-group>
-          <b-input-group-prepend>
-            <b-input-group-text>
-              <i class="fa fa-calendar-check-o"></i>
-            </b-input-group-text>
-          </b-input-group-prepend>
-          <b-form-input type="date" ref="fundDate" v-model="dateFund"></b-form-input>
-          <b-input-group-append>
-            <b-input-group-text>
-              <i
-                class="fa"
-                v-b-tooltip.hover.html="'<strong>Select a date to start this investiment.</strong>'"
-                :class="classdateFund"
-              ></i>
-            </b-input-group-text>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
-    </b-col>
-    <b-col cols="5">
-      <b-form-group class="mb-0">
-        <b-input-group>
-          <b-input-group-prepend>
-            <b-input-group-text>Nº Ups</b-input-group-text>
-          </b-input-group-prepend>
-          <b-form-input type="number" ref="fundNups" v-model="nUpsFund" placeholder="ex. 123.45"></b-form-input>
-          <b-input-group-append>
-            <b-input-group-text>
-              <i
-                class="fa"
-                v-b-tooltip.hover.html="'<strong>Inser the number of Nups to invest.</strong>'"
-                :class="classnUpsFund"
-              ></i>
-            </b-input-group-text>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
+    <b-col cols="10">
+      <b-row>
+        <b-col xl="6" lg="12" md="12" sm="12" xs="12">
+          <b-form-group class="mb-0">
+            <b-input-group>
+              <b-input-group-prepend>
+                <b-input-group-text>
+                  <i class="fa fa-calendar-check-o"></i>
+                </b-input-group-text>
+              </b-input-group-prepend>
+              <b-form-input type="date" ref="fundDate" v-model="dateFund"></b-form-input>
+              <b-input-group-append>
+                <b-input-group-text>
+                  <i
+                    class="fa"
+                    v-b-tooltip.hover.html="'<strong>Select a date to start this investiment.</strong>'"
+                    :class="classdateFund"
+                  ></i>
+                </b-input-group-text>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+        <b-col xl="6" lg="12" md="12" sm="12" xs="12">
+          <b-form-group class="mb-0">
+            <b-input-group>
+              <b-input-group-prepend>
+                <b-input-group-text>Nº Ups</b-input-group-text>
+              </b-input-group-prepend>
+              <b-form-input
+                type="number"
+                ref="fundNups"
+                v-model="nUpsFund"
+                placeholder="ex. 123.45"
+              ></b-form-input>
+              <b-input-group-append>
+                <b-input-group-text>
+                  <i
+                    class="fa"
+                    v-b-tooltip.hover.html="'<strong>Inser the number of Nups to invest.</strong>'"
+                    :class="classnUpsFund"
+                  ></i>
+                </b-input-group-text>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+      </b-row>
     </b-col>
     <b-col cols="1">
       <div class="card-header-actions">
@@ -93,7 +102,7 @@ export default {
           group: "notification",
           title: "Error",
           text: "Check the date invest field.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
         this.$refs.fundDate.$el.focus();
@@ -105,7 +114,7 @@ export default {
           group: "notification",
           title: "Error",
           text: "Check the nUps invest field.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
         this.$refs.fundNups.$el.focus();
@@ -132,7 +141,7 @@ export default {
         this.$notify({
           group: "notification",
           title: "Attention.",
-          type: "warn",
+          type: "warning",
           text: "You selected a day after Today.",
           position: "top center"
         });
@@ -142,7 +151,7 @@ export default {
         this.$notify({
           group: "notification",
           title: "Attention.",
-          type: "warn",
+          type: "warning",
           text: "You selected a day of weekend.",
           position: "top center"
         });

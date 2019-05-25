@@ -1,7 +1,19 @@
 <template>
   <div>
     <router-view></router-view>
-    <notifications group="notification" position="top center"/>
+    <!-- <notifications group="notification" position="top center"/> -->
+    <notifications group="notification" position="top center">
+      <template slot="body" slot-scope="props">
+        <b-card no-body :border-variant="props.item.type" class="bg-gray-900">
+          <header class="modal-header ajust-notifications" :class="'bg-' + props.item.type">
+            <h5 class="modal-title">{{props.item.title}}</h5>
+          </header>
+          <div class="modal-body ajust-notifications">
+            <div v-html="props.item.text"></div>
+          </div>
+        </b-card>
+      </template>
+    </notifications>
     <v-loading/>
   </div>
 </template>
@@ -27,6 +39,11 @@ $simple-line-font-path: "~simple-line-icons/fonts/";
 @import "~bootstrap-vue/dist/bootstrap-vue.css";
 // Import Main styles for this application
 @import "assets/scss/style";
+
+.ajust-notifications {
+  padding-top: 0.5rem;
+  padding-bottom: 0.6rem;
+}
 
 .fa-border {
   border: 0.08em solid #eee;
@@ -3769,8 +3786,8 @@ pre code {
 .table-bordered,
 .table-bordered td,
 .table-bordered th {
-border: 1px solid #23282c;
-background-color: #3a4149;
+  border: 1px solid #23282c;
+  background-color: #3a4149;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
@@ -9231,5 +9248,4 @@ button.bg-gray-900:hover {
   border-top: 3px solid #f3f4f5;
   border-bottom: 3px solid #f3f4f5;
 }
-
 </style>

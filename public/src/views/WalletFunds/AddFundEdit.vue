@@ -119,13 +119,6 @@ export default {
     removePanel() {
       this.show = false;
       this.$parent.deleteFund(this.posArr);
-      /* this.$notify({
-        group: "notification",
-        title: "warn",
-        text: "This function is desatived.",
-        type: "warn",
-        position: "top center"
-      }); */
     },
     focusFundDuplicate() {
       this.$refs.selectFundFocus.$el.focus();
@@ -137,7 +130,7 @@ export default {
           group: "notification",
           title: "Error",
           text: "Check the Select Fund field.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
         this.$refs.selectFundFocus.$el.focus();
@@ -148,7 +141,7 @@ export default {
           group: "notification",
           title: "Error",
           text: "Add one or more investments in this fund.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
         this.$refs.addInvestFocus.focus();
@@ -187,7 +180,7 @@ export default {
           title: "Error",
           text:
             "The list of investments of Fund contains duplicate dates, check this.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
         return false;

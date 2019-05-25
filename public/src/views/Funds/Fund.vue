@@ -5,7 +5,7 @@
         <template slot="header">ISIN: {{ isin }}</template>
         <b-form>
           <b-row>
-            <b-col sm="4">
+            <b-col xl="5" lg="12" md="12" sm="12" xs="12">
               <b-form-group class="mb-0">
                 <b-input-group>
                   <b-input-group-prepend>
@@ -29,7 +29,7 @@
                 </b-input-group>
               </b-form-group>
             </b-col>
-            <b-col sm="8">
+            <b-col xl="7" lg="12" md="12" sm="12" xs="12">
               <b-form-group class="mb-0">
                 <b-input-group>
                   <b-input-group-prepend>
@@ -100,15 +100,16 @@ export default {
           group: "notification",
           title: "Error",
           text: "Check all fields.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
       }
       let data = {
         isin: this.isinCode,
-        name: this.isinName
+        name: this.isinName,
+        idFundmorningstar: ""
       };
-
+      this.$loading.show();
       this.$http
         .post("/api/funds/fund", data)
         .then(function(response) {
@@ -119,6 +120,7 @@ export default {
               group: "notification",
               title: "New fund created.",
               text: "Fund '" + data.data.name + "' created.",
+              type: "info",
               position: "top center"
             });
             this.$router.push("/funds");
@@ -126,14 +128,22 @@ export default {
             this.$notify({
               group: "notification",
               title: "New fund existes.",
-              type: "warn",
+              type: "warning",
               text: "The fund '" + data.data.name + "' exists in database.",
               position: "top center"
             });
           }
+          this.$loading.hide();
         })
         .catch(function(err) {
-          console.log("Error", err);
+          this.$notify({
+            group: "notification",
+            title: "New fund existes.",
+            type: "danger",
+            text: "Error " + err,
+            position: "top center"
+          });
+          this.$loading.hide();
         });
     }
   },

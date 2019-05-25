@@ -5,7 +5,7 @@
         <template slot="header">Name: {{ title }}</template>
         <b-form>
           <b-row>
-            <b-col sm="12">
+            <b-col cols="12">
               <b-form-group>
                 <b-input-group>
                   <b-input-group-prepend>
@@ -32,7 +32,7 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col sm="12">
+            <b-col cols="12">
               <add-fund
                 :posArr="index"
                 :fund="fund"
@@ -44,7 +44,7 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col sm="12" class="mt-3 mb-3">
+            <b-col cols="12" class="mt-3 mb-3">
               <b-button @click="addFund" ref="addFundFocus" block variant="outline-info">
                 <i class="fa fa-plus"></i> Add Fund to Portfolio
               </b-button>
@@ -117,7 +117,7 @@ export default {
           group: "notification",
           title: "Error",
           text: "Check field 'Portfolio Name'.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
       }
@@ -127,7 +127,7 @@ export default {
           group: "notification",
           title: "Error",
           text: "Add one or more funds to Portfolio.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
       }
@@ -160,7 +160,7 @@ export default {
           title: "Error",
           text:
             "The list of fund of Portfolio contains duplicate funds, check this.",
-          type: "error",
+          type: "danger",
           position: "top center"
         });
       }
@@ -182,6 +182,7 @@ export default {
               group: "notification",
               title: "New Portfolio of funds created.",
               text: "Portfolio '" + data.data.nameWallet + "' created.",
+              type: "success",
               position: "top center"
             });
             this.$router.push("/Portfoliofunds");
@@ -189,7 +190,7 @@ export default {
             this.$notify({
               group: "notification",
               title: "Save Portfolio Funds.",
-              type: "warn",
+              type: "warning",
               text:
                 "The name of Portfolio '" +
                 data.data.nameWallet +
@@ -200,8 +201,15 @@ export default {
           this.$loading.hide();
         })
         .catch(function(err) {
-          this.$loading.hide();
           console.log("Error", err);
+          this.$notify({
+            group: "notification",
+            title: "New fund existes.",
+            type: "danger",
+            text: "Error " + err,
+            position: "top center"
+          });
+          this.$loading.hide();
         });
     },
     getAllFunds() {
@@ -220,7 +228,7 @@ export default {
             this.$notify({
               group: "notification",
               title: "Find Funds.",
-              type: "eror",
+              type: "danger",
               text: "Find all funds in database.",
               position: "top center"
             });
@@ -228,8 +236,15 @@ export default {
           this.$loading.hide();
         })
         .catch(function(err) {
-          this.$loading.hide();
           console.log("Error", err);
+          this.$notify({
+            group: "notification",
+            title: "New fund existes.",
+            type: "danger",
+            text: "Error " + err,
+            position: "top center"
+          });
+          this.$loading.hide();
         });
     }
   },
