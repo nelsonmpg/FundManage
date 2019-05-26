@@ -41,12 +41,11 @@
                       <b-input-group-prepend>
                         <b-input-group-text>Currency</b-input-group-text>
                       </b-input-group-prepend>
-                      <b-input-group-text>
-                        <i
-                          class="fa fa-lg"
-                          :class="'fa-' + currency.toLowerCase()"
-                        >&nbsp;&nbsp;({{ currency.toUpperCase() }})</i>
-                      </b-input-group-text>
+                      <b-form-input
+                        :value="getSymbolFromCurrency(currency.toUpperCase()) + ' (' + currency.toUpperCase() + ')'"
+                        type="text"
+                        disabled
+                      ></b-form-input>
                     </b-input-group>
                   </b-form-group>
                 </b-col>
@@ -238,6 +237,7 @@
 import ChartLine from "./../../components/chartLine.vue";
 import Flag from "./../../components/flag.vue";
 import utils from "./../../shared/utilsLib.js";
+import getSymbolFromCurrency from "currency-symbol-map";
 export default {
   components: {
     ChartLine,
@@ -269,7 +269,8 @@ export default {
       fundStartPrice: 0,
       fundLastUpdate: "",
       fundLastPrice: 0,
-      utils
+      utils,
+      getSymbolFromCurrency
     };
   },
   methods: {
