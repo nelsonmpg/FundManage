@@ -12,7 +12,7 @@
                 <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
                   <b-button-group>
                     <!-- <b-button variant="outline-primary">Edit</b-button> -->
-                    <b-button variant="outline-danger">
+                    <b-button @click="deleteFund" variant="outline-danger">
                       <i class="cui-trash icons"></i> Delete
                     </b-button>
                   </b-button-group>
@@ -42,7 +42,7 @@
                         <b-input-group-text>Currency</b-input-group-text>
                       </b-input-group-prepend>
                       <b-form-input
-                        :value="getSymbolFromCurrency(currency.toUpperCase()) + ' (' + currency.toUpperCase() + ')'"
+                        :value="currency && currency.length > 0 ? (getSymbolFromCurrency(currency.toUpperCase()) + ' (' + currency.toUpperCase() + ')') : ''"
                         type="text"
                         disabled
                       ></b-form-input>
@@ -231,6 +231,17 @@
         </template>
       </b-card>
     </b-col>
+    <b-modal
+      title="Attention"
+      class="modal-danger"
+      v-model="deleteFundModal"
+      @ok="closeFundAccept"
+      ok-variant="danger"
+    >
+      Are you sure you want to delete this Fund?
+      <br>
+      "{{ fundName }}"
+    </b-modal>
   </b-row>
 </template>
 <script>
@@ -269,6 +280,7 @@ export default {
       fundStartPrice: 0,
       fundLastUpdate: "",
       fundLastPrice: 0,
+      deleteFundModal: false,
       utils,
       getSymbolFromCurrency
     };
@@ -277,6 +289,48 @@ export default {
     goBack() {
       this.$router.go(-1);
       this.$router.replace({ path: "/funds" });
+    },
+    deleteFund() {
+      this.deleteFundModal = true;
+    },
+    closeFundAccept() {
+      this.deleteFundModal = false;
+      this.$loading.show();
+      this.$http
+        .delete("/api/funds/" + this.isin)
+        .then(function(response) {
+          let data = response.data;
+          if (data.status === true) {
+            this.$notify({
+              group: "notification",
+              title: "Delete fund.",
+              type: "success",
+              text: data.data,
+              position: "top center"
+            });
+            this.$router.push("/funds");
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Delete fund.",
+              type: "warning",
+              text: data.data,
+              position: "top center"
+            });
+          }
+          this.$loading.hide();
+        })
+        .catch(function(err) {
+          console.log("Error", err);
+          this.$notify({
+            group: "notification",
+            title: "Delete fund.",
+            type: "danger",
+            text: "Error " + err,
+            position: "top center"
+          });
+          this.$loading.hide();
+        });
     },
     getFundData() {
       this.$http
@@ -295,29 +349,31 @@ export default {
             if (data.country) {
               this.domicileFlag = data.country.flag;
             }
-            this.domicile = data.data.domicile;
-            this.currency = data.data.currency;
-            let hist = data.data.HistoryDetail;
-            if (hist.length > 0) {
-              this.fundStart = hist[0].EndDate;
-              this.fundStartPrice = hist[0].Value;
-              this.fundLastUpdate = hist[hist.length - 1].EndDate;
-              this.fundLastPrice = hist[hist.length - 1].Value;
-            }
-            for (let index = 0; index < hist.length; index++) {
-              this.historyValues.labels.push(
-                utils.onlyShortDateFormat(hist[index].EndDate)
-              );
-              this.historyValues.values.push(hist[index].Value);
-            }
-            let lArr = this.historyValues.labels.slice(
-              Math.max(this.historyValues.labels.length - this.selected, 1)
-            );
-            let vArr = this.historyValues.values.slice(
-              Math.max(this.historyValues.values.length - this.selected, 1)
-            );
+            if (data.data) {
+              this.domicile = data.data.domicile;
+              this.currency = data.data.currency;
 
-            this.createChartData(lArr, vArr);
+              let hist = data.data.HistoryDetail;
+              if (hist.length > 0) {
+                this.fundStart = hist[0].EndDate;
+                this.fundStartPrice = hist[0].Value;
+                this.fundLastUpdate = hist[hist.length - 1].EndDate;
+                this.fundLastPrice = hist[hist.length - 1].Value;
+              }
+              for (let index = 0; index < hist.length; index++) {
+                this.historyValues.labels.push(
+                  utils.onlyShortDateFormat(hist[index].EndDate)
+                );
+                this.historyValues.values.push(hist[index].Value);
+              }
+              let lArr = this.historyValues.labels.slice(
+                Math.max(this.historyValues.labels.length - this.selected, 1)
+              );
+              let vArr = this.historyValues.values.slice(
+                Math.max(this.historyValues.values.length - this.selected, 1)
+              );
+              this.createChartData(lArr, vArr);
+            }
           } else {
             this.$notify({
               group: "notification",

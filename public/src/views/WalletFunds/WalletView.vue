@@ -303,6 +303,7 @@ export default {
     },
     closeModalAccept() {
       this.deleteWalletModal = false;
+      this.$loading.show();
       this.$http
         .delete(
           "/api/portfoliofunds/" +
@@ -315,7 +316,7 @@ export default {
           if (data.status === true) {
             this.$notify({
               group: "notification",
-              title: "Find fund.",
+              title: "Delete Portfolio.",
               type: "success",
               text: data.data,
               position: "top center"
@@ -324,7 +325,7 @@ export default {
           } else {
             this.$notify({
               group: "notification",
-              title: "Find fund.",
+              title: "Delete Portfolio.",
               type: "warning",
               text: data.data,
               position: "top center"
@@ -336,7 +337,7 @@ export default {
           console.log("Error", err);
           this.$notify({
             group: "notification",
-            title: "New fund existes.",
+            title: "Delete Portfolio.",
             type: "danger",
             text: "Error " + err,
             position: "top center"

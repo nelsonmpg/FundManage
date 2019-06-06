@@ -6,6 +6,12 @@ var LoadingPlugin = {
       show() {
         LoadingPlugin.event.$emit('loadingShow')
       },
+      showProgressBar() {
+        LoadingPlugin.event.$emit('loadingProgressBarShow')
+      },
+      hideProgressBar() {
+        LoadingPlugin.event.$emit('loadingHide')
+      },
       hide() {
         LoadingPlugin.event.$emit('loadingHide')
       }

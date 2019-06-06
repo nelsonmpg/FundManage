@@ -114,12 +114,12 @@ export default {
         .post("/api/funds/fund", data)
         .then(function(response) {
           let data = response.data;
-          // console.log("save", data);
+          console.log("save", data);
           if (data.status === true) {
             this.$notify({
               group: "notification",
               title: "New fund created.",
-              text: "Fund '" + data.data.name + "' created.",
+              text: data.data,
               type: "info",
               position: "top center"
             });

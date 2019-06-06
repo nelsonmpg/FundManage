@@ -1,65 +1,89 @@
 <template>
-  <div id="loader-wrapper" v-show="this.execProcess">
-    <div id="loader">
-      <h4 class="text-center">
-          <b-col cols="12" sm="5" md="4" lg="3">
-            <i class="fa fa-refresh fa-spin"></i><br>
-          </b-col>
-      </h4>
-      <h1 class="text-center">Loading...</h1>
+  <div class="modal-success fade show bg-gray-900" no-header v-show="execProcess">
+    <div style="position: absolute; z-index: 1040;">
+      <div class="modal fade show d-block">
+        <div class="modal-dialog">
+          <div role="document" class="modal-content">
+            <div class="modal-body">
+              <h1 class="text-center">
+                <br>
+                <p>
+                  <i class="fa fa-refresh fa-spin fa-lg"></i>
+                </p>
+                <p v-if="showProgressBar">Wait...</p>
+                <p v-else>Loading...</p>
+                <br>
+              </h1>
+              <div class="progress" v-show="showProgressBar">
+                <div
+                  class="progress-bar progress-bar-striped bg-success"
+                  role="progressbar"
+                  :style="pbStyle"
+                  aria-valuenow="0"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >{{pbarVal}}%</div>
+              </div>
+              <b-row v-show="showProgressBar">
+                <b-col cols="10">{{text}}</b-col>
+                <b-col cols="2" class="text-right">{{pbarVal}}%</b-col>
+              </b-row>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-backdrop fade show"></div>
     </div>
   </div>
 </template>
 <script>
-import Loading from './loading.js'
+import Loading from "./loading.js";
+import { clearInterval } from "timers";
 export default {
-  name: 'loading',
+  name: "loading",
   data() {
     return {
-      execProcess: false
-    }
+      execProcess: false,
+      showProgressBar: false,
+      pbarVal: 0,
+      pbStyle: "width: 0%",
+      text: ""
+    };
   },
   beforeMount() {
-    Loading.event.$on('loadingShow', _ => {
+    Loading.event.$on("loadingShow", _ => {
       this.show();
-    })
-    Loading.event.$on('loadingHide', _ => {
+    });
+    Loading.event.$on("loadingHide", _ => {
       this.hide();
-    })
+    });
+    Loading.event.$on("loadingProgressBarShow", _ => {
+      this.showProgessBar();
+    });
   },
   methods: {
     show() {
-      this.execProcess = true
+      this.execProcess = true;
+      this.showProgressBar = false;
     },
     hide() {
-      this.execProcess = false
+      this.execProcess = false;
+      this.showProgressBar = false;
+      this.pbarVal = 0;
+    },
+    showProgessBar() {
+      this.execProcess = true;
+      this.showProgressBar = true;
+      this.pbarVal = 0;
+    }
+  },
+  beforeDestroy() {},
+  watch: {
+    pbarVal: function(val) {
+      this.pbStyle = "width: " + val + "%";
     }
   }
-}
+};
 </script>
 <style>
-#loader-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1100;
-  background-color: #000000;
-  opacity: 0.5;
-  filter: alpha(opacity=50); /* For IE8 and earlier */
-}
-#loader {
-  display: block;
-  position: relative;
-  left: 45%;
-  top: 55%;
-  width: 30px;
-  height: 30px;
-  margin: -150px 0 0 0;
-  z-index: 1110;
-}
-#loader > .text-center > div > i {
-  font-size: 550%;
-}
 </style>

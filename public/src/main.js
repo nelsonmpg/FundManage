@@ -11,15 +11,25 @@ import App from './App'
 import resource from 'vue-resource'
 import VLoading from './components/loading.js'
 import router from './router'
+import VueSocketio from 'vue-socket.io'
 
 // todo
 cssVars()
 
-Vue.use(BootstrapVue)
-Vue.use(resource)
-Vue.use(Notifications)
-Vue.use(VLoading)
-Vue.config.productionTip = false
+Vue.use(BootstrapVue);
+Vue.use(resource);
+Vue.use(Notifications);
+Vue.use(VLoading);
+Vue.config.productionTip = false;
+Vue.use(new VueSocketio({
+  debug: false,
+  transports: ['websocket'],
+  upgrade: false,
+  connection: location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : ''),
+  query: {
+    token: window.localStorage.getItem('auth')
+  }
+}));
 
 /* eslint-disable no-new */
 new Vue({
@@ -28,5 +38,17 @@ new Vue({
   template: '<App/>',
   components: {
     App
+  },
+  sockets: {
+    connect() {
+      console.log("socket connected...");
+    },
+    disconnected() {
+      console.log("socket disconnected...");
+    },
+    socketId(sktId) {
+      console.log("SoketId", sktId);
+      localStorage.setItem("SoketId", sktId);
+    }
   }
 })
