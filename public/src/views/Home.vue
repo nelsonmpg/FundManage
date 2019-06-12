@@ -10,6 +10,39 @@
             </b-col>
           </b-row>
         </b-card>
+        <b-card no-header v-show="continersArticles.length > 0">
+          <b-carousel
+            id="carousel1"
+            controls
+            indicators
+            img-width="1024"
+            img-height="480"
+            :interval="4000"
+            v-model="slide"
+            @sliding-start="onSlideStart"
+            @sliding-end="onSlideEnd"
+          >
+            <b-carousel-slide img-blank v-for="(article, index) in continersArticles" :key="index">
+              <b-card no-body border-variant="info">
+                <div class="brand-card-header bg-gray-900">
+                  <i :class="article.classIcon"></i>
+                </div>
+                <div class="h4 mt-2" v-html="utils.decode_utf8(article.local)"></div>
+                <div class="h5" v-html="utils.decode_utf8(article.state)"></div>
+                <div class="brand-card-body p-0 m-0">
+                  <div>
+                    <div class="text-value" v-html="article.maxval"></div>
+                    <div class="text-uppercase small">Max</div>
+                  </div>
+                  <div>
+                    <div class="text-value" v-html="article.minval"></div>
+                    <div class="text-uppercase small">Min</div>
+                  </div>
+                </div>
+              </b-card>
+            </b-carousel-slide>
+          </b-carousel>
+        </b-card>
       </b-col>
       <b-col xl="6" lg="12" md="12" sm="12" xs="12">
         <b-row>
@@ -25,7 +58,7 @@
                     :disabled="uupdatefundsAll.status"
                     variant="outline-success"
                   >
-                    <i class="fa fa-save"></i> Force update All Funds and Portfolio
+                    <i class="fa fa-refresh"></i> Force update All Funds and Portfolio
                   </b-button>
                 </b-col>
               </b-row>
@@ -56,7 +89,7 @@
 </template>
 <script>
 import fundupdateinfo from "./../components/updateFundInfo.vue";
-import { clearInterval } from "timers";
+import utils from "./../shared/utilsLib.js";
 export default {
   name: "Home",
   components: {
@@ -64,6 +97,9 @@ export default {
   },
   data: function() {
     return {
+      slide: 0,
+      sliding: null,
+      continersArticles: "",
       listFundsUpdate: [],
       uupdatefundsAll: {
         status: false,
@@ -78,7 +114,8 @@ export default {
         time: "",
         date: ""
       },
-      timerID: null
+      timerID: null,
+      utils
     };
   },
   methods: {
@@ -142,11 +179,57 @@ export default {
         this.zeroPadding(cd.getDate(), 2) +
         " " +
         this.week[cd.getDay()];
+    },
+    getWeather() {
+      this.continersArticles = [];
+      this.$http
+        .get("/api/WeatherList")
+        .then(function(response) {
+          let data = response.data;
+          if (data.status === true) {
+            let WeatherData = data.data;
+            this.continersArticles = WeatherData;
+            // console.log(this.continersArticles);
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Find fund.",
+              type: "warning",
+              text: data.data,
+              position: "top center"
+            });
+          }
+        })
+        .catch(function(err) {
+          console.log("Error", err);
+          this.$notify({
+            group: "notification",
+            title: "New fund existes.",
+            type: "danger",
+            text: "Error " + err,
+            position: "top center"
+          });
+        });
+    },
+    onSlideStart(slide) {
+      // console.log("onSlideStart", slide);
+      this.sliding = true;
+    },
+    onSlideEnd(slide) {
+      // console.log("onSlideEnd", slide);
+      this.sliding = false;
+      if (this.continersArticles.length - 1 == slide) {
+        setTimeout(() => {
+          this.getWeather();
+          // console.log("-+ new call -+");
+        }, 3500);
+      }
     }
   },
   created() {
     this.timerID = setInterval(this.updateTime, 1000);
     this.updateTime();
+    this.getWeather();
   },
   beforeDestroy() {
     // clearInterval(this.timerID);
@@ -192,7 +275,7 @@ export default {
       }
     },
     updateFundsAndWallets(data) {
-      console.log("Receive upate", data);
+      // console.log("Receive upate", data);
       if (data.status === true) {
         this.uupdatefundsAll.status = true;
         this.msgUpdateall = data.msg;
@@ -224,7 +307,7 @@ export default {
 }
 .time {
   letter-spacing: 0.05em;
-  font-size: 80px;
+  font-size: 50px;
   padding: 5px 0;
 }
 .date {

@@ -11,6 +11,7 @@ module.exports = {
     fundHistory: "https://markets.ft.com/data/equities/ajax/get-historical-prices?startDate={{STARTDATE}}&endDate={{ENDDATE}}&symbol="
   },
   countryListApi: 'https://restcountries.eu/rest/v2/all',
+  weatherurl: "http://www.rtp.pt/noticias/o-tempo",
   serverHttp: {
     port: 9090
   },

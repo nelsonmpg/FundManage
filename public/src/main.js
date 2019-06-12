@@ -3,6 +3,8 @@
 import 'core-js/es6/promise'
 import 'core-js/es6/string'
 import 'core-js/es7/array'
+import "@/assets/css/weather-icons.min.css"
+import "@/assets/css/weather-icons-wind.min.css"
 import cssVars from 'css-vars-ponyfill'
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
@@ -12,6 +14,7 @@ import resource from 'vue-resource'
 import VLoading from './components/loading.js'
 import router from './router'
 import VueSocketio from 'vue-socket.io'
+
 
 // todo
 cssVars()
