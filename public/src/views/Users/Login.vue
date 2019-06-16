@@ -101,7 +101,7 @@ export default {
               position: "top center"
             });
             localStorage.setItem("user", JSON.stringify(data));
-            this.$router.push("/dashboard");
+            this.$router.push("/home");
           } else {
             console.log("Logged Error");
             this.$notify({

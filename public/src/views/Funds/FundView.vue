@@ -338,7 +338,7 @@ export default {
         .then(function(response) {
           let data = response.data;
           if (data.status === true) {
-            // console.log("fund data", data);
+            console.log("fund data", data);
             this.fundName = data.data.name;
             this.fullFundName = this.utils.decodeString(data.data.nameFull);
             this.fundCategory = this.utils.decodeString(data.data.category);
@@ -353,12 +353,13 @@ export default {
               this.domicile = data.data.domicile;
               this.currency = data.data.currency;
 
+              this.fundStart = data.data.fundStart;
+              this.fundLastUpdate = data.data.lastUpdate;
+              this.fundLastPrice = data.data.lastValue;
+
               let hist = data.data.HistoryDetail;
               if (hist.length > 0) {
-                this.fundStart = hist[0].EndDate;
                 this.fundStartPrice = hist[0].Value;
-                this.fundLastUpdate = hist[hist.length - 1].EndDate;
-                this.fundLastPrice = hist[hist.length - 1].Value;
               }
               for (let index = 0; index < hist.length; index++) {
                 this.historyValues.labels.push(
