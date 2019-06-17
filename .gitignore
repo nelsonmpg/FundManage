@@ -67,3 +67,5 @@ public/node_modules/
 config/ssl-dev/
 config/ssl-prod/
 lib/seeds.js
+logs/
+ScriptsRun/
