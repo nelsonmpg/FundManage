@@ -7,3 +7,6 @@ ERRLOGFILE="${rootFolder}/logs/update_${DATE}_stderr.log"
 # rm "$OUTLOGFILE"
 # rm "$ERRLOGFILE"
 cd ${rootFolder} && npm run prod_update >> "${OUTLOGFILE}" 2>> "${ERRLOGFILE}" || true
+
+# (sudo crontab -l; echo '30 1 * * * /home/serveradmin/FundManage/ScriptsRun/autoupdatefunds.sh') | sudo crontab -
+# (sudo crontab -l; echo '30 13 * * * /home/serveradmin/FundManage/ScriptsRun/autoupdatefunds.sh') | sudo crontab -
