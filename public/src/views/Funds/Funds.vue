@@ -101,7 +101,7 @@ export default {
     },
     getAllFunds() {
       this.$http
-        .get("/api/funds")
+        .get(utils.geturl() + "/api/funds")
         .then(function(response) {
           let data = response.data;
           // console.log("AllFunds", data);
@@ -119,15 +119,27 @@ export default {
           this.$loading.hide();
         })
         .catch(function(err) {
-          this.$loading.hide();
           console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "New fund existes.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Get funds error.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
+          this.$loading.hide();
         });
     },
     getRowCount(items) {

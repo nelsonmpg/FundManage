@@ -64,8 +64,14 @@
   </div>
 </template>
 <script>
+import utils from "./../../shared/utilsLib.js";
 export default {
   name: "Login",
+  data: function() {
+    return {
+      utils
+    };
+  },
   methods: {
     login() {
       let data = {
@@ -88,7 +94,7 @@ export default {
         });
       }
       this.$http
-        .post("/api/login", data)
+        .post(utils.geturl() + "/api/login", data)
         .then(response => {
           let data = response.data;
           if (data.status === true) {
@@ -115,13 +121,25 @@ export default {
         })
         .catch(err => {
           console.log(err.toString());
-          this.$notify({
-            group: "notification",
-            title: "New fund existes.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Login error.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
         });
     },
     register() {

@@ -76,6 +76,7 @@
   </b-row>
 </template>
 <script>
+import utils from "./../../shared/utilsLib.js";
 export default {
   name: "Fund",
   data: () => {
@@ -86,7 +87,8 @@ export default {
       classisinCode: "fa-close",
       isinName: "",
       isinNameCheck: false,
-      classisinName: "fa-close"
+      classisinName: "fa-close",
+      utils
     };
   },
   methods: {
@@ -111,7 +113,7 @@ export default {
       };
       this.$loading.show();
       this.$http
-        .post("/api/funds/fund", data)
+        .post(utils.geturl() + "/api/funds/fund", data)
         .then(function(response) {
           let data = response.data;
           console.log("save", data);
@@ -136,13 +138,25 @@ export default {
           this.$loading.hide();
         })
         .catch(function(err) {
-          this.$notify({
-            group: "notification",
-            title: "New fund existes.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Post fund error.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
           this.$loading.hide();
         });
     }

@@ -114,6 +114,7 @@
   </div>
 </template>
 <script>
+import utils from "./../../shared/utilsLib.js";
 export default {
   name: "Register",
   data() {
@@ -136,7 +137,8 @@ export default {
       passTUsrTest: "",
       passTUsrTestCheck: false,
       classpassUserTest: "fa-asterisk",
-      check: true
+      check: true,
+      utils
     };
   },
   methods: {
@@ -172,7 +174,7 @@ export default {
         password: this.passTUsr
       };
       this.$http
-        .post("/api/register", data)
+        .post(utils.geturl() + "/api/register", data)
         .then(function(response) {
           let data = response.data;
           // console.log(response);
@@ -189,7 +191,7 @@ export default {
             console.log("Logged Error");
             return this.$notify({
               group: "notification",
-              title: "Error",
+              title: "Error create user",
               text: data.data,
               type: "danger",
               position: "top center"
@@ -200,7 +202,7 @@ export default {
           console.log(err);
           this.$notify({
             group: "notification",
-            title: "New fund existes.",
+            title: "Register user error.",
             type: "danger",
             text: "Error " + err,
             position: "top center"

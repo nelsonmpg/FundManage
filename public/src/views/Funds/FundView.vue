@@ -297,7 +297,7 @@ export default {
       this.deleteFundModal = false;
       this.$loading.show();
       this.$http
-        .delete("/api/funds/" + this.isin)
+        .delete(utils.geturl() + "/api/funds/" + this.isin)
         .then(function(response) {
           let data = response.data;
           if (data.status === true) {
@@ -322,19 +322,31 @@ export default {
         })
         .catch(function(err) {
           console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "Delete fund.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Delete fund error.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
           this.$loading.hide();
         });
     },
     getFundData() {
       this.$http
-        .get("/api/fund/" + this.isin + "/2000")
+        .get(utils.geturl() + "/api/fund/" + this.isin + "/2000")
         .then(function(response) {
           let data = response.data;
           if (data.status === true) {
@@ -388,13 +400,25 @@ export default {
         })
         .catch(function(err) {
           console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "New fund existes.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Get fund history error.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
           this.$loading.hide();
         });
     },

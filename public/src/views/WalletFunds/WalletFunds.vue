@@ -136,7 +136,8 @@ export default {
     getAllOwnerWallets() {
       this.$http
         .get(
-          "/api/portfoliofunds/" +
+          utils.geturl() +
+            "/api/portfoliofunds/" +
             JSON.parse(localStorage.getItem("user")).data._id
         )
         .then(function(response) {
@@ -164,7 +165,7 @@ export default {
           } else {
             this.$notify({
               group: "notification",
-              title: "New fund existes.",
+              title: "Error get user portfolios.",
               type: "danger",
               text: "The Portfolio find database.",
               position: "top center"
@@ -174,13 +175,25 @@ export default {
         })
         .catch(function(err) {
           console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "New fund existes.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Error get portfolios.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
           this.$loading.hide();
         });
     },

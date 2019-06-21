@@ -176,7 +176,7 @@ export default {
       this.$loading.show();
 
       this.$http
-        .put("/api/portfoliofunds", dataSave)
+        .put(utils.geturl() + "/api/portfoliofunds", dataSave)
         .then(function(response) {
           let data = response.data;
           if (data.status === true) {
@@ -200,20 +200,32 @@ export default {
           this.$loading.hide();
         })
         .catch(function(err) {
-          this.$loading.hide();
           console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "New fund existes.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Error save portfolio.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
+          this.$loading.hide();
         });
     },
     getAllFunds() {
       this.$http
-        .get("/api/funds")
+        .get(utils.geturl() + "/api/funds")
         .then(function(response) {
           let data = response.data;
           // console.log("AllFunds", data);
@@ -236,14 +248,34 @@ export default {
           }
         })
         .catch(function(err) {
-          this.$loading.hide();
           console.log("Error", err);
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Error get funds list.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
+          this.$loading.hide();
         });
     },
     getWalletFundList() {
       this.$http
         .get(
-          "/api/portfoliofunds/" +
+          utils.geturl() +
+            "/api/portfoliofunds/" +
             JSON.parse(localStorage.getItem("user")).data._id +
             "/" +
             this.wallet
@@ -272,13 +304,25 @@ export default {
         })
         .catch(function(err) {
           console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "Find fund.",
-            type: "warning",
-            text: err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Error get user protfolios.",
+              type: "warning",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
           this.$loading.hide();
         });
     }

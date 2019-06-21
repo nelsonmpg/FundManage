@@ -306,7 +306,8 @@ export default {
       this.$loading.show();
       this.$http
         .delete(
-          "/api/portfoliofunds/" +
+          utils.geturl() +
+            "/api/portfoliofunds/" +
             JSON.parse(localStorage.getItem("user")).data._id +
             "/" +
             this.wallet
@@ -335,13 +336,25 @@ export default {
         })
         .catch(function(err) {
           console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "Delete Portfolio.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Error Delete Portfolio.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
           this.$loading.hide();
         });
     },
@@ -351,7 +364,8 @@ export default {
     getWalletFundList() {
       this.$http
         .get(
-          "/api/portfoliofunds/" +
+          utils.geturl() +
+            "/api/portfoliofunds/" +
             JSON.parse(localStorage.getItem("user")).data._id +
             "/" +
             this.wallet
@@ -420,7 +434,7 @@ export default {
           } else {
             this.$notify({
               group: "notification",
-              title: "Find fund.",
+              title: "Find portfolio.",
               type: "warning",
               text: data.data,
               position: "top center"
@@ -430,13 +444,25 @@ export default {
         })
         .catch(function(err) {
           console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "New fund existes.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Error get user portfolio.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
           this.$loading.hide();
         });
     },

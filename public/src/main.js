@@ -14,7 +14,7 @@ import resource from 'vue-resource'
 import VLoading from './components/loading.js'
 import router from './router'
 import VueSocketio from 'vue-socket.io'
-
+import utils from "./shared/utilsLib.js"
 
 // todo
 cssVars()
@@ -28,7 +28,9 @@ Vue.use(new VueSocketio({
   debug: false,
   transports: ['websocket'],
   upgrade: false,
-  connection: location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : ''),
+  // connection: location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : ''),
+  // connection: 'https://fundsmanagement.ddns.net:9090',
+  connection: utils.geturl(),
   query: {
     token: window.localStorage.getItem('auth')
   }

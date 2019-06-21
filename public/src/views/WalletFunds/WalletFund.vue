@@ -173,7 +173,7 @@ export default {
       this.$loading.show();
 
       this.$http
-        .post("/api/portfoliofunds", dataSave)
+        .post(utils.geturl() + "/api/portfoliofunds", dataSave)
         .then(function(response) {
           let data = response.data;
           // console.log("saveWallet", data);
@@ -202,19 +202,31 @@ export default {
         })
         .catch(function(err) {
           console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "New fund existes.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Error save portfolio.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
           this.$loading.hide();
         });
     },
     getAllFunds() {
       this.$http
-        .get("/api/funds")
+        .get(utils.geturl() + "/api/funds")
         .then(function(response) {
           let data = response.data;
           // console.log("AllFunds", data);
@@ -237,13 +249,25 @@ export default {
         })
         .catch(function(err) {
           console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "New fund existes.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Errro get funds list.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
           this.$loading.hide();
         });
     }

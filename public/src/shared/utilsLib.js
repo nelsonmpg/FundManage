@@ -152,6 +152,12 @@ function checkDuplicatesV2(arr) {
   };
 }
 
+function geturl() {
+  // return "https://fundsmanagement.ddns.net:8080";
+  // return "https://localhost:8080";
+  return location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+}
+
 export default {
   dateFormat,
   onlyDateFormat,
@@ -168,5 +174,6 @@ export default {
   char_convert,
   decodeString,
   checkDuplicates,
-  checkDuplicatesV2
+  checkDuplicatesV2,
+  geturl
 }

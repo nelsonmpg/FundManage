@@ -22,5 +22,7 @@ WantedBy=multi-user.target
 #sudo dd if=/dev/null of=/var/log/syslog
 ##to get the last 25 lines of the syslog file
 #tail -25 /var/log/syslog
+
+# create on sudo nano /etc/systemd/system/nodeAutostart.service
 # sudo systemctl enable nodeAutostart.service
 # sudo systemctl start nodeAutostart.service

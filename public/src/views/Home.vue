@@ -122,7 +122,7 @@ export default {
     updateFundsAndPortfolio() {
       this.$loading.show();
       this.$http
-        .get("/api/updateallelements")
+        .get(utils.geturl() + "/api/updateallelements")
         .then(function(response) {
           let data = response.data;
           if (data.status === true) {
@@ -137,22 +137,34 @@ export default {
           } else {
             this.$notify({
               group: "notification",
-              title: "New fund existes.",
+              title: "Update database.",
               type: "warning",
-              text: "The fund '" + data.data.name + "' exists in database.",
+              text: "Update all elements in data base.",
               position: "top center"
             });
           }
           this.$loading.hide();
         })
         .catch(function(err) {
-          this.$notify({
-            group: "notification",
-            title: "New fund existes.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "New fund existes.",
+              type: "danger",
+              text: "Error " + err,
+              position: "top center"
+            });
+          }
           this.$loading.hide();
         });
     },
@@ -183,7 +195,7 @@ export default {
     getWeather() {
       this.continersArticles = [];
       this.$http
-        .get("/api/WeatherList")
+        .get(utils.geturl() + "/api/WeatherList")
         .then(function(response) {
           let data = response.data;
           if (data.status === true) {
@@ -202,13 +214,25 @@ export default {
         })
         .catch(function(err) {
           console.log("Error", err);
-          this.$notify({
-            group: "notification",
-            title: "New fund existes.",
-            type: "danger",
-            text: "Error " + err,
-            position: "top center"
-          });
+          if (err && err.status === 401) {
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$notify({
+              group: "notification",
+              title: "Login Error.",
+              type: "danger",
+              text: err.body.data,
+              position: "top center"
+            });
+          } else {
+            this.$notify({
+              group: "notification",
+              title: "Get Weather List.",
+              type: "danger",
+              text: "Error get Weather List.",
+              position: "top center"
+            });
+          }
         });
     },
     onSlideStart(slide) {

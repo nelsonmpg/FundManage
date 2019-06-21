@@ -5,7 +5,8 @@
     </template>\
     <template slot="dropdown">
       <b-dropdown-header tag="div" class="text-center">
-        <strong>Account</strong><br>
+        <strong>Account</strong>
+        <br>
         <b>({{username}})</b>
       </b-dropdown-header>
       <!-- <b-dropdown-item><i class="fa fa-bell-o" /> Updates
@@ -44,6 +45,7 @@
 
 <script>
 import { HeaderDropdown as AppHeaderDropdown } from "@coreui/vue";
+import utils from "./../shared/utilsLib.js";
 export default {
   name: "DefaultHeaderDropdownAccnt",
   components: {
@@ -51,13 +53,14 @@ export default {
   },
   data: () => {
     return {
-      username: ''
+      username: "",
+      utils
     };
   },
   methods: {
     logout() {
       this.$http
-        .post("/api/logout")
+        .post(utils.geturl() + "/api/logout")
         .then(response => {
           let data = response.data;
           if (data.status === true) {
@@ -65,7 +68,8 @@ export default {
             localStorage.removeItem("user");
             this.$notify({
               group: "notification",
-              title: "Logout Success",
+              title: "Logout Success.",
+              type: "warning",
               text: data.data,
               position: "top center"
             });
@@ -74,8 +78,8 @@ export default {
             this.$notify({
               group: "notification",
               title: "Logout Error",
-              text: "Error",
-              type: "error",
+              type: "danger",
+              text: "Logout error.",
               position: "top center"
             });
           }
@@ -87,7 +91,7 @@ export default {
   },
   created() {},
   mounted() {
-    this.username = JSON.parse(localStorage.getItem('user')).data.name
+    this.username = JSON.parse(localStorage.getItem("user")).data.name;
   },
   beforeCreate() {},
   beforeDestroy() {}
