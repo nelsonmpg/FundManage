@@ -35,7 +35,7 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col xl="4" lg="4" md="12" sm="12" xs="12">
+            <b-col xl="3" lg="3" md="12" sm="12" xs="12">
               <b-form-group>
                 <b-input-group>
                   <b-input-group-prepend>
@@ -45,7 +45,7 @@
                 </b-input-group>
               </b-form-group>
             </b-col>
-            <b-col xl="4" lg="4" md="12" sm="12" xs="12">
+            <b-col xl="3" lg="3" md="12" sm="12" xs="12">
               <b-form-group>
                 <b-input-group>
                   <b-input-group-prepend>
@@ -55,7 +55,21 @@
                 </b-input-group>
               </b-form-group>
             </b-col>
-            <b-col xl="4" lg="4" md="12" sm="12" xs="12">
+            <b-col xl="3" lg="3" md="12" sm="12" xs="12">
+              <b-form-group>
+                <b-input-group>
+                  <b-input-group-prepend>
+                    <b-input-group-text>€ Total Gain</b-input-group-text>
+                  </b-input-group-prepend>
+                  <b-form-input
+                    :value="utils.formatCurrency(totalEnd - totalInvest)"
+                    type="text"
+                    disabled
+                  ></b-form-input>
+                </b-input-group>
+              </b-form-group>
+            </b-col>
+            <b-col xl="3" lg="3" md="12" sm="12" xs="12">
               <b-form-group>
                 <b-input-group>
                   <b-input-group-prepend>
