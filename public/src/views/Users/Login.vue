@@ -31,6 +31,7 @@
                     </b-input-group-prepend>
                     <b-form-input
                       type="password"
+                      @keyup.enter="login()"
                       class="form-control user-pass"
                       placeholder="Password"
                       autocomplete="current-password"
