@@ -3,8 +3,7 @@ require('colors');
 var cp = require('child_process'),
   fs = require('fs'),
   config = null,
-  utils = require('./lib/utils.js'),
-  mode = process.env.NODE_ENV || "DEV";
+  utils = require('./lib/utils.js');
 
 var Main = function () {
   config = utils.getConfigFile();

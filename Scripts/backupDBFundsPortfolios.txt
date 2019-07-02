@@ -1,0 +1,11 @@
+#!/bin/bash
+
+rootFolder="/home/serveradmin/FundManage/"
+DATE=`date '+%Y-%m-%d'`
+OUTLOGFILE="${rootFolder}/logs/backup_${DATE}_stdout.log"
+ERRLOGFILE="${rootFolder}/logs/backup_${DATE}_stderr.log"
+# rm "$OUTLOGFILE"
+# rm "$ERRLOGFILE"
+cd ${rootFolder} && npm run prod_backup >> "${OUTLOGFILE}" 2>> "${ERRLOGFILE}" || true
+
+# (sudo crontab -l; echo '0 2 * * * /home/serveradmin/FundManage/ScriptsRun/backupDBFundsPortfolios.sh') | sudo crontab -
