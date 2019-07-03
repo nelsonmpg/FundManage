@@ -11,11 +11,17 @@ var Main = function () {
     var args = {
         mongodb: config.mongodb,
         env_dev: utils.isDevMode(),
+        actionDB: "funds"
     };
     // inicia p script e envia as configuracores
+    console.log("Script 1");
     var child2 = cp.fork('./lib/serverBackup.js');
     child2.send({ "serverdata": args });
 
+    args.actionDB = "portfolios";
+    console.log("Script 2");
+    var child3 = cp.fork('./lib/serverBackup.js');
+    child3.send({ "serverdata": args });
 };
 
 new Main();
