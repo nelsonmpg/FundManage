@@ -160,7 +160,7 @@
               <b-card header="Domicile">
                 <b-row>
                   <b-col sm="12" class="text-center">
-                    <img :src="domicileFlag" class="img-fluid" alt>
+                    <img :src="domicileFlag" class="img-fluid" alt />
                     <h5 class="mt-2 mb-0">{{domicile}}</h5>
                   </b-col>
                 </b-row>
@@ -239,7 +239,7 @@
       ok-variant="danger"
     >
       Are you sure you want to delete this Fund?
-      <br>
+      <br />
       "{{ fundName }}"
     </b-modal>
   </b-row>
@@ -352,8 +352,14 @@ export default {
           if (data.status === true) {
             console.log("fund data", data);
             this.fundName = data.data.name;
-            this.fullFundName = this.utils.decodeString(data.data.nameFull);
-            this.fundCategory = this.utils.decodeString(data.data.category);
+            try {
+              this.fullFundName = this.utils.decodeString(data.data.nameFull);
+              this.fundCategory = this.utils.decodeString(data.data.category);
+            } catch (e) {
+              console.log("Error", data.data.nameFull, data.data.category, e);
+              this.fullFundName = data.data.nameFull;
+              this.fundCategory = data.data.category;
+            }
             this.ratingFund = data.data.rating;
             if (data.list) {
               this.countiesList = data.list;
