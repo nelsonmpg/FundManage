@@ -63,7 +63,7 @@
           </b-table>
           <nav>
             <b-pagination
-              size="md"
+              size="sm"
               align="center"
               :total-rows="getRowCount(items)"
               :per-page="perPage"
