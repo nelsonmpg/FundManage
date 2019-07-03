@@ -13,7 +13,6 @@ var Main = function () {
         env_dev: utils.isDevMode()
     };
     // inicia p script e envia as configuracores
-    console.log("Script 1");
     var child2 = cp.fork('./lib/serverBackup.js');
     child2.send({ "serverdata": args });
 };
