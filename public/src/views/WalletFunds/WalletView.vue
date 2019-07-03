@@ -121,7 +121,7 @@
                   slot-scope="data"
                 >{{utils.formatCurrency(data.item.valInvest)}}</template>
                 <template slot="active" slot-scope="data">
-                  <input type="checkbox" :checked="data.item.active" disabled>
+                  <input type="checkbox" :checked="data.item.active" disabled />
                 </template>
                 <template slot="dateInative" slot-scope="data">
                   <n v-if="!data.item.active">{{utils.onlyDateFormat(data.item.dateInative)}}</n>
@@ -152,13 +152,13 @@
               </b-table>
               <nav>
                 <b-pagination
-                  size="sm"
+                  size="md"
+                  align="center"
                   :total-rows="getRowCount(items)"
                   :per-page="perPage"
                   v-model="currentPage"
                   prev-text="Prev"
                   next-text="Next"
-                  hide-goto-end-buttons
                 />
               </nav>
             </b-card>
@@ -229,7 +229,7 @@
       ok-variant="danger"
     >
       Are you sure you want to delete the Portfolio?
-      <br>
+      <br />
       "{{ walletName }}"
     </b-modal>
   </b-row>

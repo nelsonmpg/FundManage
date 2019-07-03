@@ -31,13 +31,13 @@
           </b-table>
           <nav>
             <b-pagination
-              size="sm"
+              size="md"
+              align="center"
               :total-rows="getRowCount(items)"
               :per-page="perPage"
               v-model="currentPage"
               prev-text="Prev"
               next-text="Next"
-              hide-goto-end-buttons
             />
           </nav>
         </b-card>
