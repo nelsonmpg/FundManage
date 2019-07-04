@@ -17,8 +17,11 @@ module.exports = {
   },
   fileBackup: {
     funds: "./backup/funds##date##.json",
+    fundsSeed: "./ScriptsRun/funds.json",
     portfolios: "./backup/portfolios##date##.json",
+    portfoliosSeed: "./ScriptsRun/portfolios.json",
     users: "./backup/users##date##.json",
+    usersSeed: "./ScriptsRun/users.json",
     textContent: "[]"
   },
   mongodb: 'mongodb://localhost:27017/FundsDev'
