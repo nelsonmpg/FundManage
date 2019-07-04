@@ -69,3 +69,4 @@ config/ssl-prod/
 lib/seeds.js
 logs/
 ScriptsRun/
+backup/

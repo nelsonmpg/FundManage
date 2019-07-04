@@ -15,5 +15,11 @@ module.exports = {
   serverHttp: {
     port: 8080
   },
+  fileBackup: {
+    funds: "./backup/funds##date##.json",
+    portfolios: "./backup/portfolios##date##.json",
+    users: "./backup/users##date##.json",
+    textContent: "[]"
+  },
   mongodb: 'mongodb://localhost:27017/FundsDev'
 }
