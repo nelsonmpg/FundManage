@@ -428,6 +428,7 @@ export default {
               }
             }
             this.items = refactWallet;
+            this.items = this.items.sort(utils.dynamicSort("name"));
             let moneyAll = walletData.moneyWallet;
             for (let index = 0; index < moneyAll.length; index++) {
               this.walletMoney.labels.push(

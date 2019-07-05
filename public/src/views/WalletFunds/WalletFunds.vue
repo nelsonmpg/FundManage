@@ -162,6 +162,7 @@ export default {
               });
             }
             this.items = refactWallet;
+            this.items = this.items.sort(utils.dynamicSort("nameWallet"));
           } else {
             this.$notify({
               group: "notification",

@@ -107,6 +107,7 @@ export default {
           // console.log("AllFunds", data);
           if (data.status === true) {
             this.items = data.data;
+            this.items = this.items.sort(utils.dynamicSort("name"));
           } else {
             this.$notify({
               group: "notification",

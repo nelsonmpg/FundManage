@@ -19,6 +19,7 @@ function onlyDateFormat(data) {
     date.getFullYear()
   )
 }
+
 function onlyShortDateFormat(data) {
   let date = new Date(data)
   return (
@@ -27,6 +28,7 @@ function onlyShortDateFormat(data) {
     (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
   )
 }
+
 function smallDateFormat(data) {
   // console.log(data)
   let date = new Date(data)
@@ -42,6 +44,7 @@ function smallDateFormat(data) {
     (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
   )
 }
+
 function onlyTimeFormat(data) {
   let date = new Date(data)
   return (
@@ -86,6 +89,7 @@ function formatPercentage(money, decimal) {
     return money;
   }
 }
+
 function dateIsWeekend(dateTime) {
   let dateT = new Date(dateTime),
     day = dateT.getDay(),
@@ -129,6 +133,7 @@ function checkDuplicates(obj) {
   });
   return unique.length == obj.length ? true : false;
 }
+
 function checkDuplicatesV2(arr) {
   const dataValArr = arr;
   const count = dataValArr =>
@@ -153,6 +158,21 @@ function geturl() {
   return location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
 }
 
+function dynamicSort(property) {
+  var sortOrder = 1;
+  if (property[0] === "-") {
+    sortOrder = -1;
+    property = property.substr(1);
+  }
+  return function (a, b) {
+    /* next line works with strings and numbers,
+     * and you may want to customize it to your needs
+     */
+    var result = (a[property].toLowerCase() < b[property].toLowerCase()) ? -1 : (a[property] > b[property]) ? 1 : 0;
+    return result * sortOrder;
+  }
+}
+
 export default {
   dateFormat,
   onlyDateFormat,
@@ -170,5 +190,6 @@ export default {
   decodeString,
   checkDuplicates,
   checkDuplicatesV2,
-  geturl
+  geturl,
+  dynamicSort
 }
