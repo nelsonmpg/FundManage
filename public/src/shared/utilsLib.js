@@ -168,7 +168,9 @@ function dynamicSort(property) {
     /* next line works with strings and numbers,
      * and you may want to customize it to your needs
      */
-    var result = (a[property].toLowerCase().trim() < b[property].toLowerCase().trim()) ? -1 : (a[property].toLowerCase().trim() > b[property].toLowerCase().trim()) ? 1 : 0;
+    let x = a[property].toLowerCase().trim(),
+      y = b[property].toLowerCase().trim(),
+      result = (x < y) ? -1 : (x > y) ? 1 : 0;
     return result * sortOrder;
   }
 }
