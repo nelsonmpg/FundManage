@@ -231,6 +231,7 @@ export default {
           // console.log("AllFunds", data);
           if (data.status === true) {
             let funds = data.data;
+            funds = funds.sort(utils.dynamicSort("name"));
             this.options = [];
             for (let index = 0; index < funds.length; index++) {
               this.options.push(funds[index].isin + " - " + funds[index].name);
