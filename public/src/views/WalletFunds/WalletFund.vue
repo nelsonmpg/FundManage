@@ -164,11 +164,31 @@ export default {
           position: "top center"
         });
       }
-      let dataSave = {
-        owner: JSON.parse(localStorage.getItem("user")).data._id,
-        walletName: this.walletName.trim(),
-        walletFunds: this.fundsList
-      };
+      let self = this,
+        dataSave = {
+          owner: JSON.parse(localStorage.getItem("user")).data._id,
+          walletName: this.walletName.trim(),
+          walletFunds: (function() {
+            let fundList = [];
+            for (let x = 0; x < self.fundsList.length; x++) {
+              if (self.fundsList[x]) {
+                for (let y = 0; y < self.fundsList[x].investList.length; y++) {
+                  fundList.push({
+                    codefund:
+                      self.fundsList[x].isin +
+                      "-" +
+                      self.fundsList[x].investList[y].dateCheck,
+                    isin: self.fundsList[x].isin,
+                    name: self.fundsList[x].name,
+                    dateInvest: self.fundsList[x].investList[y].dateInvest,
+                    nUps: self.fundsList[x].investList[y].nUps
+                  });
+                }
+              }
+            }
+            return fundList;
+          })()
+        };
       // console.log("data save", dataSave);
       this.$loading.show();
 

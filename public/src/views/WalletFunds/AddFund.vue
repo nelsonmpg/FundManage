@@ -122,7 +122,7 @@ export default {
       this.$parent.deleteFund(this.posArr);
     },
     checkFund() {
-      console.log("checkFund function");
+      // console.log("checkFund function");
       if (!this.selectedFundCheck) {
         this.$notify({
           group: "notification",

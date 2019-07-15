@@ -24,5 +24,5 @@ module.exports = {
     usersSeed: "./ScriptsRun/users.json",
     textContent: "[]"
   },
-  mongodb: 'mongodb://localhost:27017/FundsDev'
+  mongodb: 'mongodb://localhost:27017/FundsDevV2'
 }

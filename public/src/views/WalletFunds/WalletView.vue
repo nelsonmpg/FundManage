@@ -396,35 +396,29 @@ export default {
             this.totalEnd = walletData.lastWalletMoney;
             this.valArrow = this.totalEnd - this.totalInvest;
             for (let x = 0; x < fundWallet.length; x++) {
-              for (let y = 0; y < fundWallet[x].investList.length; y++) {
-                if (fundWallet[x].investList[y]) {
-                  refactWallet.push({
-                    isin: fundWallet[x].isin,
-                    name: fundWallet[x].name,
-                    dateInvest: fundWallet[x].investList[y].dateInvest,
-                    nUps: fundWallet[x].investList[y].nUps,
-                    cotacaoUp: fundWallet[x].investList[y].cotacaoUp,
-                    valInvest: fundWallet[x].investList[y].valInvest,
-                    lastvalUp:
-                      fundWallet[x].investList[y].moneyFund[
-                        fundWallet[x].investList[y].moneyFund.length - 1
-                      ].Value,
-                    lastDate:
-                      fundWallet[x].investList[y].moneyFund[
-                        fundWallet[x].investList[y].moneyFund.length - 1
-                      ].EndDate,
-                    lastVal:
-                      fundWallet[x].investList[y].moneyFund[
-                        fundWallet[x].investList[y].moneyFund.length - 1
-                      ].moneyCalc,
-                    gainValue:
-                      fundWallet[x].investList[y].moneyFund[
-                        fundWallet[x].investList[y].moneyFund.length - 1
-                      ].moneyCalc - fundWallet[x].investList[y].valInvest,
-                    active: fundWallet[x].investList[y].active,
-                    dateInative: fundWallet[x].investList[y].dateInative
-                  });
-                }
+              if (fundWallet[x]) {
+                refactWallet.push({
+                  isin: fundWallet[x].isin,
+                  name: fundWallet[x].name,
+                  dateInvest: fundWallet[x].dateInvest,
+                  nUps: fundWallet[x].nUps,
+                  cotacaoUp: fundWallet[x].cotacaoUp,
+                  valInvest: fundWallet[x].valInvest,
+                  lastvalUp:
+                    fundWallet[x].moneyFund[fundWallet[x].moneyFund.length - 1]
+                      .Value,
+                  lastDate:
+                    fundWallet[x].moneyFund[fundWallet[x].moneyFund.length - 1]
+                      .EndDate,
+                  lastVal:
+                    fundWallet[x].moneyFund[fundWallet[x].moneyFund.length - 1]
+                      .moneyCalc,
+                  gainValue:
+                    fundWallet[x].moneyFund[fundWallet[x].moneyFund.length - 1]
+                      .moneyCalc - fundWallet[x].valInvest,
+                  active: fundWallet[x].active,
+                  dateInative: fundWallet[x].dateInative
+                });
               }
             }
             this.items = refactWallet;
