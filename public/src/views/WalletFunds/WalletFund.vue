@@ -181,6 +181,7 @@ export default {
                     isin: self.fundsList[x].isin,
                     name: self.fundsList[x].name,
                     dateInvest: self.fundsList[x].investList[y].dateInvest,
+                    dateCheck: self.fundsList[x].investList[y].dateCheck,
                     nUps: self.fundsList[x].investList[y].nUps
                   });
                 }
