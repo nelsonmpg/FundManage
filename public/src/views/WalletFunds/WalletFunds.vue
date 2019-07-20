@@ -127,9 +127,9 @@ export default {
         { key: "dateLastUpdateWallet", label: "Last Update" },
         { key: "startWalletMoney", label: "€ Invested" },
         { key: "lastWalletMoney", label: "€ Last Update" },
-        { key: "rendLiquido", label: "Net income" },
+        { key: "gain" },
+        { key: "rendLiquido", label: "Net income" }
         // { key: "rendBruto", label: "Gross income" },
-        { key: "gain" }
         // { key: "status" }
       ],
       currentPage: 1,
