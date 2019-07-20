@@ -60,6 +60,15 @@
                 ></i>
               </b-card>
             </template>
+            <template slot="gain" slot-scope="data">
+              <b-card
+                :no-body="true"
+                class="mt-0 mb-0 pt-0 pb-0"
+                :class="data.item.gain > 0 ? 'bg-success' : 'bg-danger'"
+              >
+                <b>{{utils.formatCurrency(data.item.gain)}}</b>
+              </b-card>
+            </template>
           </b-table>
           <nav>
             <b-pagination
@@ -119,8 +128,9 @@ export default {
         { key: "startWalletMoney", label: "€ Invested" },
         { key: "lastWalletMoney", label: "€ Last Update" },
         { key: "rendLiquido", label: "Net income" },
-        { key: "rendBruto", label: "Gross income" },
-        { key: "status" }
+        // { key: "rendBruto", label: "Gross income" },
+        { key: "gain" }
+        // { key: "status" }
       ],
       currentPage: 1,
       perPage: 10,
@@ -157,6 +167,8 @@ export default {
                 _id: allWallet[i]._id,
                 rendLiquido: a,
                 rendBruto: a * 0.72,
+                gain:
+                  allWallet[i].lastWalletMoney - allWallet[i].startWalletMoney,
                 status:
                   allWallet[i].lastWalletMoney - allWallet[i].startWalletMoney
               });
