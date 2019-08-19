@@ -360,7 +360,7 @@ export default {
         )
         .then(function(response) {
           let data = response.data;
-          console.log("Wallet Funds List", data);
+          // console.log("Wallet Funds List", data);
           if (data.status === true) {
             let walletData = data.data,
               fundWallet = walletData.listFunds,
