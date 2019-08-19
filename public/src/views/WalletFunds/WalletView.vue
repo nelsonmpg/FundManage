@@ -165,49 +165,19 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col cols="12">
-            <b-card no-header>
-              <template slot="header">
-                <b-row>
-                  <b-col cols="5">
-                    <h4 class="card-title">Portfolio History</h4>
-                  </b-col>
-                  <b-col cols="7" class="d-md-block d-sm-block d-xs-block">
-                    <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
-                      <b-form-radio-group
-                        class="mr-3"
-                        id="radiosBtn"
-                        buttons
-                        button-variant="outline-secondary"
-                        v-model="selected"
-                        name="radiosBtn"
-                      >
-                        <b-form-radio value="30">1M</b-form-radio>
-                        <b-form-radio v-if="walletMoney.labels.length >= 90" value="90">3M</b-form-radio>
-                        <b-form-radio v-if="walletMoney.labels.length >= 180" value="180">6M</b-form-radio>
-                        <b-form-radio v-if="walletMoney.labels.length >= 365" value="365">1Y</b-form-radio>
-                        <b-form-radio v-if="walletMoney.labels.length >= 730" value="730">2Y</b-form-radio>
-                        <b-form-radio v-if="walletMoney.labels.length >= 1095" value="1095">3Y</b-form-radio>
-                        <b-form-radio v-if="walletMoney.labels.length >= 1460" value="1460">4Y</b-form-radio>
-                        <b-form-radio v-if="walletMoney.labels.length >= 1825" value="1825">5Y</b-form-radio>
-                        <b-form-radio :value="walletMoney.labels.length">All</b-form-radio>
-                      </b-form-radio-group>
-                    </b-button-toolbar>
-                  </b-col>
-                </b-row>
-              </template>
-              <b-row>
-                <b-col cols="12" v-if="showChart">
-                  <chart-line
-                    :id="'lineChart-1'"
-                    :lineChartId="'lineChart-1'"
-                    :chartTitle="''"
-                    :dataChartLabel="chartData.labels"
-                    :dataChartValues="chartData.values"
-                  ></chart-line>
-                </b-col>
-              </b-row>
-            </b-card>
+          <b-col cols="12" v-if="showChart">
+            <resize-chart-line :lineChartId="'lineChart-1'" :dataChartVals="walletMoney"></resize-chart-line>
+          </b-col>
+          <b-col
+            xl="6"
+            lg="6"
+            md="12"
+            sm="12"
+            xs="12"
+            v-for="(fund, index) in charFundsData"
+            :key="index"
+          >
+            <resize-chart-line :lineChartId="'lineChartFund-' + index" :dataChartVals="fund"></resize-chart-line>
           </b-col>
         </b-row>
         <template slot="footer">
@@ -236,10 +206,12 @@
 </template>
 <script>
 import ChartLine from "./../../components/chartLine.vue";
+import ResizeChartLine from "./../../components/resizeChartLine.vue";
 import utils from "./../../shared/utilsLib.js";
 export default {
   components: {
-    ChartLine
+    ChartLine,
+    ResizeChartLine
   },
   props: {
     caption: {
@@ -293,12 +265,14 @@ export default {
       totalRows: 0,
       walletMoney: {
         labels: [],
-        values: []
+        values: [],
+        title: "Portfolio History"
       },
       chartData: {
         labels: [],
         values: []
       },
+      charFundsData: [],
       showChart: false,
       deleteWalletModal: false,
       totalInvest: 0,
@@ -386,7 +360,7 @@ export default {
         )
         .then(function(response) {
           let data = response.data;
-          // console.log("Wallet Funds List", data);
+          console.log("Wallet Funds List", data);
           if (data.status === true) {
             let walletData = data.data,
               fundWallet = walletData.listFunds,
@@ -418,6 +392,27 @@ export default {
                       .moneyCalc - fundWallet[x].valInvest,
                   active: fundWallet[x].active,
                   dateInative: fundWallet[x].dateInative
+                });
+                let lChart = [],
+                  dChart = [];
+
+                for (
+                  let fData = 0;
+                  fData < fundWallet[x].moneyFund.length;
+                  fData++
+                ) {
+                  lChart.push(
+                    utils.onlyShortDateFormat(
+                      fundWallet[x].moneyFund[fData].EndDate
+                    )
+                  );
+                  dChart.push(fundWallet[x].moneyFund[fData].moneyCalc);
+                }
+
+                this.charFundsData.push({
+                  labels: lChart,
+                  values: dChart,
+                  title: fundWallet[x].name + " - " + fundWallet[x].isin
                 });
               }
             }

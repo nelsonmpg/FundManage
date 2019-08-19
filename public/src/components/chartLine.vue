@@ -43,8 +43,9 @@ export default {
           responsive: true,
           // maintainAspectRatio: false,
           title: {
-            display: false,
+            display: this.chartTitle === "" ? false : true,
             text: this.chartTitle,
+            fontColor: "#e4e7ea",
             fontSize: 18
           },
           legend: {
