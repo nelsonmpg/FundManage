@@ -1,0 +1,2 @@
+find /home/serveradmin/FundManage/backup/* -mtime +7 -exec rm {} \;
+find /home/serveradmin/FundManage/logs/* -mtime +7 -exec rm {} \;
