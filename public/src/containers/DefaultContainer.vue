@@ -24,29 +24,29 @@
         <!-- <b-nav-item class="d-md-down-none">
           <i class="icon-location-pin"></i>
         </b-nav-item> -->
-        <DefaultHeaderDropdownAccnt/>
+        <DefaultHeaderDropdownAccnt />
       </b-navbar-nav>
       <!--<AsideToggler class="d-none d-lg-block" />
       <AsideToggler class="d-lg-none" mobile />-->
     </AppHeader>
     <div class="app-body">
       <AppSidebar fixed>
-        <SidebarHeader/>
-        <SidebarForm/>
+        <SidebarHeader />
+        <SidebarForm />
         <SidebarNav :navItems="nav"></SidebarNav>
-        <SidebarFooter/>
-        <SidebarMinimizer/>
+        <SidebarFooter />
+        <SidebarMinimizer />
       </AppSidebar>
       <main class="main">
-        <Breadcrumb :list="list"/>
+        <Breadcrumb :list="list" />
         <div class="container-fluid">
           <router-view></router-view>
         </div>
       </main>
-      <AppAside fixed>
-        <!--aside-->
+      <!--<AppAside fixed>
+        aside
         <DefaultAside/>
-      </AppAside>
+      </AppAside>-->
     </div>
     <TheFooter>
       <!--footer-->
@@ -63,13 +63,26 @@
 </template>
 
 <script>
-import nav from '@/_nav'
-import { Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Aside as AppAside, AsideToggler, Footer as TheFooter, Breadcrumb } from '@coreui/vue'
-import DefaultAside from './DefaultAside'
-import DefaultHeaderDropdownAccnt from './DefaultHeaderDropdownAccnt'
+import nav from "@/_nav";
+import {
+  Header as AppHeader,
+  SidebarToggler,
+  Sidebar as AppSidebar,
+  SidebarFooter,
+  SidebarForm,
+  SidebarHeader,
+  SidebarMinimizer,
+  SidebarNav,
+  Aside as AppAside,
+  AsideToggler,
+  Footer as TheFooter,
+  Breadcrumb
+} from "@coreui/vue";
+// import DefaultAside from './DefaultAside'
+import DefaultHeaderDropdownAccnt from "./DefaultHeaderDropdownAccnt";
 
 export default {
-  name: 'DefaultContainer',
+  name: "DefaultContainer",
   components: {
     AsideToggler,
     AppHeader,
@@ -77,7 +90,7 @@ export default {
     AppAside,
     TheFooter,
     Breadcrumb,
-    DefaultAside,
+    // DefaultAside,
     DefaultHeaderDropdownAccnt,
     SidebarForm,
     SidebarFooter,
@@ -86,18 +99,20 @@ export default {
     SidebarNav,
     SidebarMinimizer
   },
-  data () {
+  data() {
     return {
       nav: nav.items
-    }
+    };
   },
   computed: {
-    name () {
-      return this.$route.name
+    name() {
+      return this.$route.name;
     },
-    list () {
-      return this.$route.matched.filter((route) => route.name || route.meta.label )
+    list() {
+      return this.$route.matched.filter(
+        route => route.name || route.meta.label
+      );
     }
   }
-}
+};
 </script>
