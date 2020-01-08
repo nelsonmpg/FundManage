@@ -1,16 +1,22 @@
 <template>
   <div class="animated fadeIn">
-    <b-row>
-      <b-col xl="6" lg="12" md="12" sm="12" xs="12">
-        <b-card no-header>
-          <b-row>
-            <b-col cols="12" id="clock">
-              <h1 class="date">{{ clock.date }}</h1>
-              <h1 class="time">{{ clock.time }}</h1>
-            </b-col>
-          </b-row>
-        </b-card>
-        <b-card no-header v-show="continersArticles.length > 0">
+    <CRow>
+      <CCol xl="6" lg="12" md="12" sm="12" xs="12">
+        <CCard no-header>
+          <CCardHeader
+            ><CIcon name="cil-calendar" /> Date /
+            <CIcon name="cil-clock" /> Time</CCardHeader
+          >
+          <CCardBody>
+            <CRow>
+              <CCol col="12" id="clock">
+                <h1 class="date">{{ clock.date }}</h1>
+                <h1 class="time">{{ clock.time }}</h1>
+              </CCol>
+            </CRow>
+          </CCardBody>
+        </CCard>
+        <CCard no-header v-show="continersArticles.length > 0">
           <b-carousel
             id="carousel1"
             controls
@@ -22,12 +28,19 @@
             @sliding-start="onSlideStart"
             @sliding-end="onSlideEnd"
           >
-            <b-carousel-slide img-blank v-for="(article, index) in continersArticles" :key="index">
-              <b-card no-body border-variant="info">
+            <b-carousel-slide
+              img-blank
+              v-for="(article, index) in continersArticles"
+              :key="index"
+            >
+              <CCard no-body border-variant="info">
                 <div class="brand-card-header bg-gray-900">
                   <i :class="article.classIcon"></i>
                 </div>
-                <div class="h4 mt-2" v-html="utils.decode_utf8(article.local)"></div>
+                <div
+                  class="h4 mt-2"
+                  v-html="utils.decode_utf8(article.local)"
+                ></div>
                 <div class="h5" v-html="utils.decode_utf8(article.state)"></div>
                 <div class="brand-card-body p-0 m-0">
                   <div>
@@ -39,52 +52,56 @@
                     <div class="text-uppercase small">Min</div>
                   </div>
                 </div>
-              </b-card>
+              </CCard>
             </b-carousel-slide>
           </b-carousel>
-        </b-card>
-      </b-col>
-      <b-col xl="6" lg="12" md="12" sm="12" xs="12">
-        <b-row>
-          <b-col cols="12">
-            <b-card no-header>
-              <template slot="header">Actions</template>
-              <b-row>
-                <b-col cols="12">
-                  <b-button
-                    @click="updateFundsAndPortfolio"
-                    block
-                    class="mb-3"
-                    :disabled="uupdatefundsAll.status"
-                    variant="outline-success"
-                  >
-                    <i class="fa fa-refresh"></i> Force update All Funds and Portfolio
-                  </b-button>
-                </b-col>
-              </b-row>
-              <fundupdateinfo
-                :fundupdate="uupdatefundsAll"
-                :fundstep="msgUpdateall"
-                :fundval="valUpdateall"
-              ></fundupdateinfo>
-            </b-card>
-          </b-col>
-
-          <b-col cols="12">
-            <b-card no-header>
-              <template slot="header">List Fund Now Update in Data Base</template>
-              <fundupdateinfo
-                v-for="(fundupdate, index) in listFundsUpdate"
-                :key="index"
-                :fundupdate="fundupdate"
-                :fundstep="fundupdate.step"
-                :fundval="fundupdate.val"
-              ></fundupdateinfo>
-            </b-card>
-          </b-col>
-        </b-row>
-      </b-col>
-    </b-row>
+        </CCard>
+      </CCol>
+      <CCol xl="6" lg="12" md="12" sm="12" xs="12">
+        <CRow>
+          <CCol col="12">
+            <CCard no-header>
+              <CCardHeader>Actions</CCardHeader>
+              <CCardBody>
+                <CRow>
+                  <CCol cols="12">
+                    <CButton
+                      @click="updateFundsAndPortfolio"
+                      block
+                      class="mb-3"
+                      :disabled="uupdatefundsAll.status"
+                      variant="outline"
+                      color="success"
+                      ><CIcon name="cil-reload" /> Force update All Funds and
+                      Portfolio
+                    </CButton>
+                  </CCol>
+                </CRow>
+                <fundupdateinfo
+                  :fundupdate="uupdatefundsAll"
+                  :fundstep="msgUpdateall"
+                  :fundval="valUpdateall"
+                ></fundupdateinfo>
+              </CCardBody>
+            </CCard>
+          </CCol>
+          <CCol col="12">
+            <CCard no-header>
+              <CCardHeader>List Fund Now Update in Data Base</CCardHeader>
+              <CCardBody>
+                <fundupdateinfo
+                  v-for="(fundupdate, index) in listFundsUpdate"
+                  :key="index"
+                  :fundupdate="fundupdate"
+                  :fundstep="fundupdate.step"
+                  :fundval="fundupdate.val"
+                ></fundupdateinfo>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+      </CCol>
+    </CRow>
   </div>
 </template>
 <script>

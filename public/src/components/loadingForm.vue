@@ -6,28 +6,23 @@
           <div role="document" class="modal-content">
             <div class="modal-body">
               <h1 class="text-center">
-                <br>
+                <br />
                 <p>
-                  <i class="fa fa-refresh fa-spin fa-lg"></i>
+                  <CIcon class="rotate" :height="50" name="cib-anaconda" />
                 </p>
                 <p v-if="showProgressBar">Wait...</p>
                 <p v-else>Loading...</p>
-                <br>
+                <br />
               </h1>
-              <div class="progress" v-show="showProgressBar">
-                <div
-                  class="progress-bar progress-bar-striped bg-success"
-                  role="progressbar"
-                  :style="pbStyle"
-                  aria-valuenow="0"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >{{pbarVal}}%</div>
-              </div>
-              <b-row v-show="showProgressBar">
-                <b-col cols="10">{{text}}</b-col>
-                <b-col cols="2" class="text-right">{{pbarVal}}%</b-col>
-              </b-row>
+              <CCol col="12" v-show="showProgressBar">
+                <CProgress>
+                  <CProgressBar color="info" striped animated :value="pbStyle" :max="max"></CProgressBar>
+                </CProgress>
+              </CCol>
+              <CRom v-show="showProgressBar">
+                <CCol>{{ text }}</CCol>
+                <CCol class="ml-auto">{{ pbarVal }}%</CCol>
+              </CRom>
             </div>
           </div>
         </div>
@@ -46,8 +41,11 @@ export default {
       execProcess: false,
       showProgressBar: false,
       pbarVal: 0,
-      pbStyle: "width: 0%",
-      text: ""
+      pbStyle: 0,
+      text: "",
+      striped: true,
+      animate: true,
+      max: 100
     };
   },
   beforeMount() {
@@ -80,10 +78,22 @@ export default {
   beforeDestroy() {},
   watch: {
     pbarVal: function(val) {
-      this.pbStyle = "width: " + val + "%";
+      this.pbStyle = val;
     }
   }
 };
 </script>
 <style>
+.rotate {
+  animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
 </style>

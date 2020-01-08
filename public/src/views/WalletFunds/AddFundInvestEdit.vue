@@ -1,130 +1,103 @@
 <template>
-  <b-row class="mb-2" v-if="show">
-    <b-col cols="1" class="mx-auto text-center">
-      <h5>
-        <b-badge pill variant="dark">{{ (posArr + 1) }}</b-badge>
-      </h5>
-    </b-col>
-    <b-col cols="10">
-      <b-row>
-        <b-col xl="3" lg="6" md="12" sm="12" xs="12">
-          <b-form-group class="mb-0">
-            <b-input-group>
-              <b-input-group-prepend>
-                <b-input-group-text>Active</b-input-group-text>
-              </b-input-group-prepend>
-              <b-input-group-append>
-                <b-input-group-text>
-                  <i
-                    class="fa"
-                    v-b-tooltip.hover.html="'<strong>Investiment inative.</strong>'"
-                    :class="classfundStateA"
-                  ></i>
-                  <c-switch
-                    color="dark"
-                    checked
-                    v-model="fundState"
-                    value="true"
-                    uncheckedValue="false"
-                    variant="pill"
-                  />
-                  <i
-                    class="fa"
-                    v-b-tooltip.hover.html="'<strong>Investiment ative.</strong>'"
-                    :class="classfundStateB"
-                  ></i>
-                </b-input-group-text>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-        <b-col class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-xs-12" v-show="!controlStatus">
-          <b-form-group class="mb-0">
-            <b-input-group>
-              <b-input-group-prepend>
-                <b-input-group-text>
-                  <i class="fa fa-calendar-times-o"></i>
-                </b-input-group-text>
-              </b-input-group-prepend>
-              <b-form-input type="date" ref="fundDateInative" v-model="dateFundInative"></b-form-input>
-              <b-input-group-append>
-                <b-input-group-text>
-                  <i
-                    class="fa"
-                    v-b-tooltip.hover.html="'<strong>Select a date to stop this investiment.</strong>'"
-                    :class="classdateFundInative"
-                  ></i>
-                </b-input-group-text>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-        <b-col :class="classsDateShow">
-          <b-form-group class="mb-0">
-            <b-input-group>
-              <b-input-group-prepend>
-                <b-input-group-text>
-                  <i class="fa fa-calendar-check-o"></i>
-                </b-input-group-text>
-              </b-input-group-prepend>
-              <b-form-input
+  <CCard class="m-0 p-0" no-header border-color="primary" v-if="show">
+    <CCardBody>
+      <CRow>
+        <CCol col="1" class="mx-auto text-center">
+          <h5>
+            <CBadge pill color="dark">{{ (posArr + 1) }}</CBadge>
+          </h5>
+        </CCol>
+        <CCol col="10">
+          <CRow>
+            <CCol xl="3" lg="6" md="12" sm="12" xs="12">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button type="button" disabled="disabled" class="btn btn-dark disabled">Active</button>
+                </div>
+                <div class="form-control">
+                  <CSwitch color="dark" shape="pill" :checked.sync="fundState" v-bind="labelIcon" />
+                </div>
+              </div>
+            </CCol>
+            <CCol xl="3" lg="6" md="12" sm="12" xs="12" v-show="!controlStatus">
+              <CInput class="mb-0" type="date" ref="fundDateInative" v-model="dateFundInative">
+                <template #prepend>
+                  <CButton color="dark" disabled>
+                    <CIcon name="cil-calendar" />
+                  </CButton>
+                </template>
+                <template #append>
+                  <CButton color="dark" disabled>
+                    <CIcon
+                      v-c-tooltip.hover.html="'<strong>Select a date to stop this investiment.</strong>'"
+                      :name="classdateFundInative"
+                    />
+                  </CButton>
+                </template>
+              </CInput>
+            </CCol>
+            <CCol :class="classsDateShow">
+              <CInput
+                class="mb-0"
                 type="date"
                 ref="fundDate"
                 v-model="dateFund"
                 :disabled="!controlStatus"
-              ></b-form-input>
-              <b-input-group-append>
-                <b-input-group-text>
-                  <i
-                    class="fa"
-                    v-b-tooltip.hover.html="'<strong>Select a date to start this investiment.</strong>'"
-                    :class="classdateFund"
-                  ></i>
-                </b-input-group-text>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-        <b-col :class="classsNupsShow">
-          <b-form-group class="mb-0">
-            <b-input-group>
-              <b-input-group-prepend>
-                <b-input-group-text>Nº Ups</b-input-group-text>
-              </b-input-group-prepend>
-              <b-form-input
+              >
+                <template #prepend>
+                  <CButton color="dark" disabled>
+                    <CIcon name="cil-calendar" />
+                  </CButton>
+                </template>
+                <template #append>
+                  <CButton color="dark" disabled>
+                    <CIcon
+                      v-c-tooltip.hover.html="'<strong>Select a date to start this investiment.</strong>'"
+                      :name="classdateFund"
+                    />
+                  </CButton>
+                </template>
+              </CInput>
+            </CCol>
+            <CCol :class="classsNupsShow">
+              <CInput
+                class="mb-0"
                 type="number"
                 ref="fundNups"
                 v-model="nUpsFund"
                 :disabled="!controlStatus"
                 placeholder="ex. 123.45"
-              ></b-form-input>
-              <b-input-group-append>
-                <b-input-group-text>
-                  <i
-                    class="fa"
-                    v-b-tooltip.hover.html="'<strong>Inser the number of Nups to invest.</strong>'"
-                    :class="classnUpsFund"
-                  ></i>
-                </b-input-group-text>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-      </b-row>
-    </b-col>
-    <b-col cols="1">
-      <div class="card-header-actions">
-        <b-link
-          href="#"
-          class="card-header-action btn-close"
-          v-b-tooltip.hover.html="'<strong>Delete this investiment.</strong>'"
-          v-on:click="removePanel"
-        >
-          <i class="icon-close"></i>
-        </b-link>
-      </div>
-    </b-col>
-  </b-row>
+              >
+                <template #prepend>
+                  <CButton color="dark" disabled>Nº Ups</CButton>
+                </template>
+                <template #append>
+                  <CButton color="dark" disabled>
+                    <CIcon
+                      v-c-tooltip.hover.html="'<strong>Insert the number of Nups to invest.</strong>'"
+                      :name="classnUpsFund"
+                    />
+                  </CButton>
+                </template>
+              </CInput>
+            </CCol>
+          </CRow>
+        </CCol>
+        <CCol col="1">
+          <div class="card-header-actions">
+            <CLink
+              href="#"
+              class="card-header-action btn-close"
+              v-on:click="removePanel"
+              v-c-tooltip.hover.html="'<strong>Delete this investiment.</strong>'"
+            >
+              <CIcon name="cil-x-circle" />
+            </CLink>
+          </div>
+        </CCol>
+      </CRow>
+    </CCardBody>
+  </CCard>
 </template>
 </template>
 <script>
@@ -140,20 +113,24 @@ export default {
     return {
       dateFund: "",
       dateFundCheck: false,
-      classdateFund: "fa-close",
+      classdateFund: "cil-x",
       nUpsFund: "",
       nUpsFundCheck: false,
-      classnUpsFund: "fa-close",
+      classnUpsFund: "cil-x",
       classfundStateA: "times-circle-o",
       classfundStateB: "",
       fundState: true,
       dateFundInative: "",
-      classdateFundInative: "fa-close",
+      classdateFundInative: "cil-x",
       dateFundInativeCheck: false,
       classsDateShow: "col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12",
       classsNupsShow: "col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12",
-      controlStatus: false,
+      controlStatus: true,
       show: true,
+      labelIcon: {
+        labelOn: "Yes",
+        labelOff: "No"
+      },
       utils
     };
   },
@@ -218,16 +195,18 @@ export default {
         .toISOString()
         .split("T")[0];
       this.dateFundCheck = true;
-      this.classdateFund = "fa-check";
+      this.classdateFund = "cil-check-alt";
     }
     if (this.invest.nUps !== "") {
       this.nUpsFund = this.invest.nUps;
       this.nUpsFundCheck = true;
-      this.classnUpsFund = "fa-check";
+      this.classnUpsFund = "cil-check-alt";
     }
     if (!this.invest.active) {
-      this.fundState = this.invest.active.toString();
-      this.controlStatus = this.fundState === "true" ? true : false;
+      let fundStateAct = this.invest.active;
+      this.controlStatus =
+        fundStateAct === "true" || fundStateAct === true ? true : false;
+      this.fundState = this.controlStatus;
       try {
         this.dateFundInative = new Date(this.invest.dateInative)
           .toISOString()
@@ -236,7 +215,7 @@ export default {
         this.dateFundInative = new Date().toISOString().split("T")[0];
       }
       this.dateFundInativeCheck = true;
-      this.classdateFundInative = "fa-check";
+      this.classdateFundInative = "cil-check-alt";
     }
   },
   beforeCreate() {},
@@ -249,7 +228,7 @@ export default {
       let weekEnd = this.utils.dateIsWeekend(val);
       this.dateFundCheck = false;
       if (val.trim() === "") {
-        classAdd = "close";
+        classAdd = "x";
         this.invest.dateInvest = "";
       } else if (Date.parse(datToday) < Date.parse(datNewSelec)) {
         this.$notify({
@@ -259,7 +238,7 @@ export default {
           text: "You selected a day after Today.",
           position: "top center"
         });
-        classAdd = "close";
+        classAdd = "x";
         this.invest.dateInvest = "";
       } else if (weekEnd) {
         this.$notify({
@@ -269,31 +248,32 @@ export default {
           text: "You selected a day of weekend.",
           position: "top center"
         });
-        classAdd = "close";
+        classAdd = "x";
         this.invest.dateInvest = "";
       } else {
-        classAdd = "check";
+        classAdd = "check-alt";
         this.dateFundCheck = true;
         this.invest.dateInvest = this.dateFund;
         this.invest.dateCheck = new Date(this.dateFund).getTime();
       }
-      this.classdateFund = "fa-" + classAdd;
+      this.classdateFund = "cil-" + classAdd;
     },
     nUpsFund: function(val) {
       let classAdd = "";
       this.nUpsFundCheck = false;
       if (val.toString().trim() === "" || val.toString().trim() * 1 <= 0) {
-        classAdd = "close";
+        classAdd = "x";
         this.invest.nUps = "";
       } else {
-        classAdd = "check";
+        classAdd = "check-alt";
         this.nUpsFundCheck = true;
         this.invest.nUps = this.nUpsFund;
       }
-      this.classnUpsFund = "fa-" + classAdd;
+      this.classnUpsFund = "cil-" + classAdd;
     },
     fundState: function(val) {
-      this.controlStatus = val === "true" ? true : false;
+      console.log("teste", val);
+      this.controlStatus = val; // === "true" ? true : false;
       if (this.controlStatus) {
         this.classfundStateA = "fa-circle-o";
         this.classfundStateB = "fa-check-circle-o";
@@ -316,7 +296,7 @@ export default {
       this.dateFundInativeCheck = false;
 
       if (val.trim() === "") {
-        classAdd = "close";
+        classAdd = "x";
         this.invest.dateInative = "";
       } else if (Date.parse(datToday) < Date.parse(datNewSelec)) {
         this.$notify({
@@ -326,7 +306,7 @@ export default {
           text: "You selected a day after Today.",
           position: "top center"
         });
-        classAdd = "close";
+        classAdd = "x";
         this.invest.dateInative = "";
       } else if (weekEnd) {
         this.$notify({
@@ -336,7 +316,7 @@ export default {
           text: "You selected a day of weekend.",
           position: "top center"
         });
-        classAdd = "close";
+        classAdd = "x";
         this.invest.dateInative = "";
       } else if (Date.parse(datNewSelec) <= Date.parse(datStartInvest)) {
         this.$notify({
@@ -346,14 +326,14 @@ export default {
           text: "You selected a day before investment is created.",
           position: "top center"
         });
-        classAdd = "close";
+        classAdd = "x";
         this.invest.dateInative = "";
       } else {
-        classAdd = "check";
+        classAdd = "check-alt";
         this.dateFundInativeCheck = true;
         this.invest.dateInative = this.dateFundInative;
       }
-      this.classdateFundInative = "fa-" + classAdd;
+      this.classdateFundInative = "cil-" + classAdd;
     }
   }
 };

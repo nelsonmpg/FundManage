@@ -1,75 +1,92 @@
 <template>
-  <b-row class="animated fadeIn">
-    <b-col cols="12">
-      <b-card no-header>
-        <template slot="header">Name: {{ title }}</template>
-        <b-form>
-          <b-row>
-            <b-col cols="12">
-              <b-form-group>
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>Portfolio Name</b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input
-                    v-model="walletName"
-                    type="text"
-                    ref="walletNameFocus"
-                    placeholder="Please enter Portfolio Name."
-                    required
-                  ></b-form-input>
-                  <b-input-group-append>
-                    <b-input-group-text>
-                      <i
-                        class="fa"
-                        v-b-tooltip.hover.html="'<strong>Insert a prefered Portfolio name.</strong>'"
-                        :class="classwalletName"
-                      ></i>
-                    </b-input-group-text>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <add-fund
-                :posArr="index"
-                :fund="fund"
-                :optsSelect="options"
-                ref="checkFund"
-                v-for="(fund, index) in fundsList"
-                :key="index"
-              ></add-fund>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" class="mt-3 mb-3">
-              <b-button @click="addFund" ref="addFundFocus" block variant="outline-info">
-                <i class="fa fa-plus"></i> Add Fund to Portfolio
-              </b-button>
-            </b-col>
-          </b-row>
-          <!--<div slot="footer">
-          </div>-->
-        </b-form>
-        <template slot="footer">
-          <b-row>
-            <b-col cols="6">
-              <b-button block variant="outline-primary" @click="goBack">
-                <i class="cui-account-logout icons active mt-3"></i> Back
-              </b-button>
-            </b-col>
-            <b-col cols="6">
-              <b-button @click="saveWallet" block variant="outline-success">
-                <i class="fa fa-save"></i> Save Portfolio
-              </b-button>
-            </b-col>
-          </b-row>
-        </template>
-      </b-card>
-    </b-col>
-  </b-row>
+  <CRow class="animated fadeIn">
+    <CCol col="12">
+      <CCard no-header>
+        <CCardHeader>
+          <CRow>
+            <CCol sm="12">
+              <h3 class="card-title mb-0">New Portfolio of Funds</h3>
+            </CCol>
+          </CRow>
+        </CCardHeader>
+        <CCardBody class="mb-0 mt-0 pb-0 pt-0">
+          <CForm>
+            <CCard no-header class="mb-0 pt-2 pb-2">
+              <CCardHeader>
+                <CRow>
+                  <CCol col="12">
+                    <CInput
+                      class="mb-0"
+                      v-model="walletName"
+                      type="text"
+                      ref="walletNameFocus"
+                      placeholder="Please enter Portfolio Name."
+                      required
+                    >
+                      <template #prepend>
+                        <CButton color="dark" disabled>Portfolio Name</CButton>
+                      </template>
+                      <template #append>
+                        <CButton color="dark" disabled>
+                          <CIcon
+                            v-c-tooltip.hover.html="'<strong>Insert a prefered Portfolio name.</strong>'"
+                            :name="classwalletName"
+                          />
+                        </CButton>
+                      </template>
+                    </CInput>
+                  </CCol>
+                </CRow>
+              </CCardHeader>
+              <CCardBody class="mb-0 mt-0 pb-0 pt-0">
+                <CRow>
+                  <CCol col="12" class="mt-3">
+                    <add-fund
+                      :posArr="index"
+                      :fund="fund"
+                      :optsSelect="options"
+                      ref="checkFund"
+                      v-for="(fund, index) in fundsList"
+                      :key="index"
+                    ></add-fund>
+                  </CCol>
+                </CRow>
+              </CCardBody>
+              <CCardFooter class="mt-0 mb-0 pt-0 pb-0">
+                <CRow>
+                  <CCol col="12" class="mt-3 mb-3">
+                    <CButton
+                      @click="addFund"
+                      ref="addFundFocus"
+                      block
+                      variant="outline"
+                      color="info"
+                    >
+                      <CIcon name="cil-plus" />&nbsp;&nbsp;Add Fund to Portfolio
+                    </CButton>
+                  </CCol>
+                </CRow>
+              </CCardFooter>
+            </CCard>
+          </CForm>
+        </CCardBody>
+        <CCardFooter>
+          <CRow>
+            <CCol col="6">
+              <CButton block variant="outline" color="primary" @click="goBack">
+                <CIcon name="cil-account-logout" />&nbsp;&nbsp;Back
+              </CButton>
+            </CCol>
+            <CCol col="6">
+              <CButton @click="saveWallet" block variant="outline" color="success">
+                <CIcon name="cil-save" />&nbsp;&nbsp;Save Portfolio
+              </CButton>
+            </CCol>
+          </CRow>
+        </CCardFooter>
+      </CCard>
+    </CCol>
+  </CRow>
 </template>
 <script>
 import AddFund from "./AddFund.vue";
@@ -81,10 +98,9 @@ export default {
   name: "New Portfolio",
   data: () => {
     return {
-      title: "New Portfolio of Fund",
       walletName: "",
       walletNameCheck: false,
-      classwalletName: "fa-close",
+      classwalletName: "cil-x",
       fundsList: [],
       fundCount: 0,
       options: [],
@@ -308,12 +324,12 @@ export default {
       let addClass = "";
       this.walletNameCheck = false;
       if (val.trim().length > 4) {
-        addClass = "check";
+        addClass = "check-alt";
         this.walletNameCheck = true;
       } else {
-        addClass = "close";
+        addClass = "x";
       }
-      this.classwalletName = "fa-" + addClass;
+      this.classwalletName = "cil-" + addClass;
     }
   }
 };

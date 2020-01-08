@@ -1,100 +1,69 @@
 <template>
-  <b-row class="animated fadeIn">
-    <b-col cols="12">
-      <transition name="slide">
-        <b-card :header="caption">
-          <b-button class="mb-2" @click="createNewFund" block variant="outline-success">
-            <i class="cui-pencil icons"></i> Create New Fund
-          </b-button>
-          <b-table
-            hover
-            stripe
-            bordered
-            small
-            fixed
-            responsive="sm"
-            :items="items"
-            :fields="fields"
-            :current-page="currentPage"
-            :per-page="perPage"
-            @row-clicked="rowClicked"
-          >
-            <template slot="lastUpdate" slot-scope="data">{{utils.dateFormat(data.item.lastUpdate)}}</template>
-            <template
-              slot="lastHistoryDate"
-              slot-scope="data"
-            >{{utils.onlyDateFormat(data.item.lastHistoryDate)}}</template>
-            <template
-              slot="fundStart"
-              slot-scope="data"
-            >{{utils.onlyDateFormat(data.item.fundStart)}}</template>
-            <template
-              slot="lastValue"
-              slot-scope="data"
-            >{{utils.formatCurrency(data.item.lastValue)}}</template>
-          </b-table>
-          <nav>
-            <b-pagination
-              size="sm"
-              align="center"
-              :total-rows="getRowCount(items)"
-              :per-page="perPage"
-              v-model="currentPage"
-              prev-text="Prev"
-              next-text="Next"
-            />
-          </nav>
-        </b-card>
-      </transition>
-    </b-col>
-  </b-row>
+  <CRow class="animated fadeIn">
+    <CCol col="12">
+      <CCard>
+        <CCardHeader>
+          <CRow>
+            <CCol col="12">
+              <h3 class="card-title">Funds</h3>
+            </CCol>
+          </CRow>
+        </CCardHeader>
+        <CCardBody>
+          <CRow>
+            <CCol col="12">
+              <CButton class="mb-2" @click="createNewFund" block variant="outline" color="success">
+                <CIcon name="cil-pencil" />Create New Fund
+              </CButton>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol col="12">
+              <CTableWrapper
+                :items="items"
+                :fields="fields"
+                hover
+                striped
+                bordered
+                small
+                fixed
+                sorter
+                responsive
+                :caption="'Funds list'"
+                :place="'funds'"
+              />
+            </CCol>
+          </CRow>
+        </CCardBody>
+      </CCard>
+    </CCol>
+  </CRow>
 </template>
-
 <script>
+import CTableWrapper from "./../../components/Table.vue";
 import utils from "./../../shared/utilsLib.js";
 export default {
-  components: {},
+  components: { CTableWrapper },
   name: "Funds",
-  props: {
-    caption: {
-      type: String,
-      default: "Funds"
-    },
-    hover: {
-      type: Boolean,
-      default: true
-    },
-    striped: {
-      type: Boolean,
-      default: true
-    },
-    bordered: {
-      type: Boolean,
-      default: false
-    },
-    small: {
-      type: Boolean,
-      default: false
-    },
-    fixed: {
-      type: Boolean,
-      default: false
-    }
-  },
   data: () => {
     return {
       items: [],
       fields: [
-        { key: "isin", sortable: true },
-        { key: "name", sortable: true },
-        { key: "fundStart", label: "Fund Created", sortable: true },
-        { key: "lastUpdate", label: "Date Updated" },
-        { key: "lastHistoryDate", label: "Last Date Record" },
-        { key: "lastValue", sortable: true }
+        { key: "isin", _classes: "text-center" },
+        { key: "name", _classes: "text-center" },
+        {
+          key: "fundStart",
+          label: "Fund Created",
+          _classes: "text-center"
+        },
+        { key: "lastUpdate", label: "Date Updated", _classes: "text-center" },
+        {
+          key: "lastHistoryDate",
+          label: "Last Date Record",
+          _classes: "text-center"
+        },
+        { key: "lastValue", _classes: "text-center" }
       ],
-      currentPage: 1,
-      perPage: 10,
-      totalRows: 0,
       utils
     };
   },
@@ -146,16 +115,6 @@ export default {
           }
           this.$loading.hide();
         });
-    },
-    getRowCount(items) {
-      return items.length;
-    },
-    userLink(isin) {
-      return `/funds/fundView/${isin.toString()}`;
-    },
-    rowClicked(item) {
-      const userLink = this.userLink(item.isin);
-      this.$router.push({ path: userLink });
     }
   },
   created() {
@@ -169,9 +128,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.card-body >>> table > tbody > tr > td {
-  cursor: pointer;
-  vertical-align: middle;
-}
-</style>

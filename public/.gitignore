@@ -1,11 +1,11 @@
 .DS_Store
 node_modules
-package-lock.json
-# /dist
+/dist
 /coverage
 
 /tests/e2e/reports/
 selenium-debug.log
+chromedriver.log
 
 # local env files
 .env.local

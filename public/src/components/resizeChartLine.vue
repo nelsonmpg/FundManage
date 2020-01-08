@@ -1,46 +1,41 @@
 <template>
-  <b-card no-header v-if="showChart">
-    <template slot="header">
-      <b-row>
-        <b-col cols="5">
-          <h4 class="card-title">{{ dataChartVals.title }}</h4>
-        </b-col>
-        <b-col cols="7" class="d-md-block d-sm-block d-xs-block">
-          <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
-            <b-form-radio-group
-              class="mr-3"
-              id="radiosBtn"
-              buttons
-              button-variant="outline-secondary"
+  <CCard no-header v-if="showChart">
+    <CCardHeader>
+      <CRow>
+        <CCol cols="5">
+          <h5 class="card-title">{{ dataChartVals.title }}</h5>
+        </CCol>
+        <CCol cols="7" class="d-md-block d-sm-block d-xs-block">
+          <CButtonGroup class="float-right mr-3">
+            <CButton
+              color="outline-secondary"
               v-model="selected"
+              size="sm"
               name="radiosBtn"
-            >
-              <b-form-radio value="30">1M</b-form-radio>
-              <b-form-radio v-if="dataChartVals.labels.length >= 90" value="90">3M</b-form-radio>
-              <b-form-radio v-if="dataChartVals.labels.length >= 180" value="180">6M</b-form-radio>
-              <b-form-radio v-if="dataChartVals.labels.length >= 365" value="365">1Y</b-form-radio>
-              <b-form-radio v-if="dataChartVals.labels.length >= 730" value="730">2Y</b-form-radio>
-              <b-form-radio v-if="dataChartVals.labels.length >= 1095" value="1095">3Y</b-form-radio>
-              <b-form-radio v-if="dataChartVals.labels.length >= 1460" value="1460">4Y</b-form-radio>
-              <b-form-radio v-if="dataChartVals.labels.length >= 1825" value="1825">5Y</b-form-radio>
-              <b-form-radio :value="dataChartVals.labels.length">All</b-form-radio>
-            </b-form-radio-group>
-          </b-button-toolbar>
-        </b-col>
-      </b-row>
-    </template>
-    <b-row>
-      <b-col cols="12">
-        <chart-line
-          :id="lineChartId"
-          :lineChartId="lineChartId"
-          :chartTitle="''"
-          :dataChartLabel="chartDataVals.labels"
-          :dataChartValues="chartDataVals.values"
-        ></chart-line>
-      </b-col>
-    </b-row>
-  </b-card>
+              v-for="(value, key) in listChartFiltered"
+              :key="key"
+              class="mx-0"
+              :pressed="value.v === selected ? true : false"
+              @click="selected = value.v"
+            >{{value.l}}</CButton>
+          </CButtonGroup>
+        </CCol>
+      </CRow>
+    </CCardHeader>
+    <CCardBody>
+      <CRow>
+        <CCol cols="12">
+          <chart-line
+            :id="lineChartId"
+            :lineChartId="lineChartId"
+            :chartTitle="''"
+            :dataChartLabel="chartDataVals.labels"
+            :dataChartValues="chartDataVals.values"
+          ></chart-line>
+        </CCol>
+      </CRow>
+    </CCardBody>
+  </CCard>
 </template>
 <script>
 import ChartLine from "./chartLine.vue";
@@ -50,7 +45,18 @@ export default {
   },
   data() {
     return {
-      selected: "30",
+      listChartFiltered: [],
+      listChartFilter: [
+        { l: "1M", v: 30 },
+        { l: "3M", v: 90 },
+        { l: "6M", v: 180 },
+        { l: "1Y", v: 365 },
+        { l: "2Y", v: 730 },
+        { l: "3Y", v: 1095 },
+        { l: "4Y", v: 1460 },
+        { l: "5Y", v: 1825 }
+      ],
+      selected: 30,
       chartDataVals: {
         labels: [],
         values: []
@@ -67,6 +73,19 @@ export default {
         values: arrV
       };
       this.showChart = true;
+    },
+    filterChartOpts: function(fullDataLength) {
+      let arrRet = this.listChartFilter.filter(function(value) {
+        return fullDataLength >= value.v;
+      });
+      arrRet.push({
+        l: "All",
+        v: fullDataLength
+      });
+      if (arrRet.length === 1) {
+        this.selected = fullDataLength;
+      }
+      return arrRet;
     }
   },
   mounted() {
@@ -76,6 +95,9 @@ export default {
       );
       let vArr = this.dataChartVals.values.slice(
         Math.max(this.dataChartVals.values.length - this.selected, 1)
+      );
+      this.listChartFiltered = this.filterChartOpts(
+        this.dataChartVals.labels.length
       );
       this.createChartData(lArr, vArr);
       this.showChart = true;

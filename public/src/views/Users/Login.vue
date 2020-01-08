@@ -1,68 +1,70 @@
 <template>
-  <div class="app flex-row align-items-center">
-    <div class="container">
-      <b-row class="justify-content-center">
-        <b-col md="8">
-          <b-card-group>
-            <b-card no-body class="p-4">
-              <b-card-body>
-                <b-form>
-                  <h1>Login</h1>
-                  <p class="text-muted">Sign In to your account</p>
-                  <b-input-group class="mb-3">
-                    <b-input-group-prepend>
-                      <b-input-group-text>
-                        <i class="icon-user"></i>
-                      </b-input-group-text>
-                    </b-input-group-prepend>
-                    <b-form-input
-                      type="text"
-                      class="form-control user-mail"
-                      placeholder="Email"
-                      autocomplete="username email"
-                      name="email"
-                    />
-                  </b-input-group>
-                  <b-input-group class="mb-4">
-                    <b-input-group-prepend>
-                      <b-input-group-text>
-                        <i class="icon-lock"></i>
-                      </b-input-group-text>
-                    </b-input-group-prepend>
-                    <b-form-input
-                      type="password"
-                      @keyup.enter="login()"
-                      class="form-control user-pass"
-                      placeholder="Password"
-                      autocomplete="current-password"
-                      name="password"
-                    />
-                  </b-input-group>
-                  <b-row>
-                    <b-col cols="12">
-                      <b-button
-                        block
-                        variant="outline-success"
-                        v-on:click="login()"
-                        class="px-4"
-                        value="Login"
-                      >Login</b-button>
-                      <b-button
-                        block
-                        variant="outline-primary"
-                        v-on:click="register()"
-                        class="px-4"
-                      >Register Now!</b-button>
-                    </b-col>
-                  </b-row>
-                </b-form>
-              </b-card-body>
-            </b-card>
-          </b-card-group>
-        </b-col>
-      </b-row>
-    </div>
-  </div>
+  <CContainer class="min-vh-100 d-flex align-items-center">
+    <CRow class="w-100 justify-content-center">
+      <CCol md="8" sm="12">
+        <CCard class="mx-4 mb-4">
+          <CCardBody class="p-4">
+            <CForm>
+              <h1>Login</h1>
+              <p class="text-muted">Sign In to your account</p>
+              <CInput
+                type="text"
+                placeholder="Email"
+                class="user-mail"
+                autocomplete="username email"
+                name="email"
+              >
+                <template #prepend>
+                  <CButton color="dark" disabled
+                    ><CIcon name="cil-at"
+                  /></CButton>
+                </template>
+              </CInput>
+              <CInput
+                placeholder="Password"
+                type="password"
+                class="user-pass"
+                @keyup.enter="login()"
+                autocomplete="curent-password"
+                name="password"
+              >
+                <template #prepend>
+                  <CButton color="dark" disabled
+                    ><CIcon name="cil-lock-locked"
+                  /></CButton>
+                </template>
+              </CInput>
+              <CRow>
+                <CCol col="12">
+                  <CButton
+                    variant="outline"
+                    color="success"
+                    block
+                    v-on:click="login()"
+                    >Login</CButton
+                  >
+                </CCol>
+              </CRow>
+            </CForm>
+          </CCardBody>
+          <CCardFooter class="p-4">
+            <CRow>
+              <CCol col="12">
+                <CButton
+                  variant="outline"
+                  color="primary"
+                  block
+                  v-on:click="register()"
+                >
+                  Register Now!</CButton
+                >
+              </CCol>
+            </CRow>
+          </CCardFooter>
+        </CCard>
+      </CCol>
+    </CRow>
+  </CContainer>
 </template>
 <script>
 import utils from "./../../shared/utilsLib.js";
@@ -76,12 +78,10 @@ export default {
   methods: {
     login() {
       let data = {
-        email: document.getElementsByClassName("user-mail")[0].value,
+        email: document.getElementsByName("email")[0].value,
         password: window.btoa(
           unescape(
-            encodeURIComponent(
-              document.getElementsByClassName("user-pass")[0].value
-            )
+            encodeURIComponent(document.getElementsByName("password")[0].value)
           )
         )
       };
