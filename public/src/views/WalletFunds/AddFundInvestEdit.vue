@@ -1,7 +1,7 @@
 <template>
   <CCard class="m-0 p-0" no-header border-color="primary" v-if="show">
-    <CCardBody>
-      <CRow>
+    <CCardBody class="pl-2 pr-0 pt-0 pb-2">
+      <CRow class="align-items-center h-100">
         <CCol col="1" class="mx-auto text-center">
           <h5>
             <CBadge pill color="dark">{{ (posArr + 1) }}</CBadge>
@@ -9,17 +9,21 @@
         </CCol>
         <CCol col="10">
           <CRow>
-            <CCol xl="3" lg="6" md="12" sm="12" xs="12">
+            <CCol class="mt-2" xl="6" lg="12" md="12" sm="12" xs="12">
               <div class="input-group">
                 <div class="input-group-prepend">
-                  <button type="button" disabled="disabled" class="btn btn-dark disabled">Active</button>
+                  <button
+                    type="button"
+                    disabled="disabled"
+                    class="btn btn-dark disabled"
+                  >Fund Active</button>
                 </div>
                 <div class="form-control">
                   <CSwitch color="dark" shape="pill" :checked.sync="fundState" v-bind="labelIcon" />
                 </div>
               </div>
             </CCol>
-            <CCol xl="3" lg="6" md="12" sm="12" xs="12" v-show="!controlStatus">
+            <CCol class="mt-2" xl="6" lg="12" md="12" sm="12" xs="12" v-show="!controlStatus">
               <CInput class="mb-0" type="date" ref="fundDateInative" v-model="dateFundInative">
                 <template #prepend>
                   <CButton color="dark" disabled>
@@ -36,7 +40,9 @@
                 </template>
               </CInput>
             </CCol>
-            <CCol :class="classsDateShow">
+          </CRow>
+          <CRow>
+            <CCol class="mt-2" xl="6" lg="6" md="12" sm="12" xs="12">
               <CInput
                 class="mb-0"
                 type="date"
@@ -59,7 +65,7 @@
                 </template>
               </CInput>
             </CCol>
-            <CCol :class="classsNupsShow">
+            <CCol class="mt-2" xl="6" lg="6" md="12" sm="12" xs="12">
               <CInput
                 class="mb-0"
                 type="number"
@@ -117,14 +123,10 @@ export default {
       nUpsFund: "",
       nUpsFundCheck: false,
       classnUpsFund: "cil-x",
-      classfundStateA: "times-circle-o",
-      classfundStateB: "",
       fundState: true,
       dateFundInative: "",
       classdateFundInative: "cil-x",
       dateFundInativeCheck: false,
-      classsDateShow: "col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12",
-      classsNupsShow: "col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12",
       controlStatus: true,
       show: true,
       labelIcon: {
@@ -274,17 +276,6 @@ export default {
     fundState: function(val) {
       console.log("teste", val);
       this.controlStatus = val; // === "true" ? true : false;
-      if (this.controlStatus) {
-        this.classfundStateA = "fa-circle-o";
-        this.classfundStateB = "fa-check-circle-o";
-        this.classsDateShow = "col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12";
-        this.classsNupsShow = "col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12";
-      } else {
-        this.classfundStateA = "fa-times-circle-o";
-        this.classfundStateB = "fa-circle-o";
-        this.classsDateShow = "col-xl-3 col-lg-6 col-md-12 col-sm-12 col-xs-12";
-        this.classsNupsShow = "col-xl-3 col-lg-6 col-md-12 col-sm-12 col-xs-12";
-      }
       this.invest.active = this.controlStatus;
     },
     dateFundInative: function(val) {

@@ -1,7 +1,7 @@
 <template>
   <CCard class="m-0 p-0" no-header border-color="primary" v-if="show">
-    <CCardBody>
-      <CRow>
+    <CCardBody class="pl-2 pr-0 pt-0 pb-2">
+      <CRow class="align-items-center h-100">
         <CCol col="1" class="mx-auto text-center">
           <h5>
             <CBadge pill color="dark">{{ (posArr + 1) }}</CBadge>
@@ -9,7 +9,7 @@
         </CCol>
         <CCol col="10">
           <CRow>
-            <CCol xl="6" lg="12" md="12" sm="12" xs="12">
+            <CCol class="mt-2" xl="6" lg="12" md="12" sm="12" xs="12">
               <CInput class="mb-0" type="date" ref="fundDate" v-model="dateFund">
                 <template #prepend>
                   <CButton color="dark" disabled>
@@ -26,7 +26,7 @@
                 </template>
               </CInput>
             </CCol>
-            <CCol xl="6" lg="12" md="12" sm="12" xs="12">
+            <CCol class="mt-2" xl="6" lg="12" md="12" sm="12" xs="12">
               <CInput
                 class="mb-0"
                 type="number"
