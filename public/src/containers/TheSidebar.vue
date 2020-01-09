@@ -1,6 +1,30 @@
 <template>
   <CSidebar fixed :minimize="minimize" :show.sync="show">
-    <!-- <spam>Fund Manage</spam> -->
+    <CCard no-header class="m-0 p-0">
+      <CCardBody class="m-0 p-0">
+        <CRow class="m-0 p-0">
+          <CCol col="12" class="m-0 p-0">
+            <CButton color="dark" block disabled>
+              <h2 class="text-center" v-show="!minimize">
+                <b>&dollar;&nbsp;&pound;&nbsp;&euro;&nbsp;&yen;</b>
+              </h2>
+              <h5 class="text-center" v-show="minimize">
+                <b>&dollar;&nbsp;&pound;&nbsp;&euro;&nbsp;&yen;</b>
+              </h5>
+            </CButton>
+          </CCol>
+        </CRow>
+      </CCardBody>
+    </CCard>
+    <!--<CButton color="dark" block disabled>
+      <h2 class="text-center" v-show="!minimize">
+        <b>&dollar;&nbsp;&pound;&nbsp;&euro;</b>
+      </h2>
+      <h5 class="text-center" v-show="minimize">
+        <b>&dollar;&nbsp;&pound;&nbsp;&euro;</b>
+      </h5>
+    </CButton>
+    
     <CSidebarBrand
       :imgFull="{
         width: 118,
@@ -14,13 +38,10 @@
         alt: 'Logo',
         src: 'img/brand/coreui-signet-white.svg'
       }"
-      :wrappedInLink="{ href: 'https://coreui.io/', target: '_blank' }"
-    />
+    :wrappedInLink="{ href: 'https://coreui.io/', target: '_blank' }"
+    />-->
     <CRenderFunction flat :content-to-render="nav" />
-    <CSidebarMinimizer
-      class="d-md-down-none"
-      @click.native="minimize = !minimize"
-    />
+    <CSidebarMinimizer class="d-md-down-none" @click.native="minimize = !minimize" />
   </CSidebar>
 </template>
 

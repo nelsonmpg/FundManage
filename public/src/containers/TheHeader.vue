@@ -1,15 +1,7 @@
 <template>
   <CHeader fixed with-subheader light>
-    <CToggler
-      in-header
-      class="ml-3 d-lg-none"
-      v-c-emit-root-event:toggle-sidebar-mobile
-    />
-    <CToggler
-      in-header
-      class="ml-3 d-md-down-none"
-      v-c-emit-root-event:toggle-sidebar
-    />
+    <CToggler in-header class="ml-3 d-lg-none" v-c-emit-root-event:toggle-sidebar-mobile />
+    <CToggler in-header class="ml-3 d-md-down-none" v-c-emit-root-event:toggle-sidebar />
     <CHeaderBrand
       class="mx-auto d-lg-none"
       src="img/brand/coreui-vue-logo.svg"
@@ -32,7 +24,7 @@
         <CHeaderNavLink>
           Settings
         </CHeaderNavLink>
-      </CHeaderNavItem> -->
+      </CHeaderNavItem>-->
     </CHeaderNav>
     <CHeaderNav class="mr-4">
       <!-- <CHeaderNavItem class="d-md-down-none mx-2">
@@ -49,7 +41,7 @@
         <CHeaderNavLink>
           <CIcon name="cil-envelope-open"/>
         </CHeaderNavLink>
-      </CHeaderNavItem> -->
+      </CHeaderNavItem>-->
       <TheHeaderDropdownAccnt />
     </CHeaderNav>
     <CSubheader class="px-3">
