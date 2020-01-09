@@ -15,6 +15,7 @@
         :fixed="fixed"
         :items="items"
         :fields="fields"
+        :sorter="sorter"
         :items-per-page="perPage"
         :current-page="currentPage"
         @row-clicked="rowClicked"
@@ -225,18 +226,20 @@ export default {
   },
   created() {},
   mounted() {
-    let elem = document.getElementsByClassName("pagination")[0];
-    elem.classList.remove("justify-content-start");
-    elem.classList.add("justify-content-center");
-    elem.classList.add("pagination-sm");
-    elem.firstElementChild.getElementsByTagName("a")[0].innerHTML = "First";
-    elem.lastElementChild.getElementsByTagName("a")[0].innerHTML = "Last";
-    elem.firstElementChild.nextElementSibling.getElementsByTagName(
-      "a"
-    )[0].innerHTML = "Prev";
-    elem.lastElementChild.previousElementSibling.getElementsByTagName(
-      "a"
-    )[0].innerHTML = "Next";
+    setTimeout(() => {
+      let elem = document.getElementsByClassName("pagination")[0];
+      elem.classList.remove("justify-content-start");
+      elem.classList.add("justify-content-center");
+      elem.classList.add("pagination-sm");
+      elem.firstElementChild.getElementsByTagName("a")[0].innerHTML = "First";
+      elem.lastElementChild.getElementsByTagName("a")[0].innerHTML = "Last";
+      elem.firstElementChild.nextElementSibling.getElementsByTagName(
+        "a"
+      )[0].innerHTML = "Prev";
+      elem.lastElementChild.previousElementSibling.getElementsByTagName(
+        "a"
+      )[0].innerHTML = "Next";
+    }, 100);
   },
   beforeCreate() {},
   beforeDestroy() {}

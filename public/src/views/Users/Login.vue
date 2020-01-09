@@ -15,34 +15,28 @@
                 name="email"
               >
                 <template #prepend>
-                  <CButton color="dark" disabled
-                    ><CIcon name="cil-at"
-                  /></CButton>
+                  <CButton color="dark" disabled>
+                    <CIcon name="cil-at" />
+                  </CButton>
                 </template>
               </CInput>
               <CInput
                 placeholder="Password"
                 type="password"
                 class="user-pass"
-                @keyup.enter="login()"
+                @keyup.enter.native="login()"
                 autocomplete="curent-password"
                 name="password"
               >
                 <template #prepend>
-                  <CButton color="dark" disabled
-                    ><CIcon name="cil-lock-locked"
-                  /></CButton>
+                  <CButton color="dark" disabled>
+                    <CIcon name="cil-lock-locked" />
+                  </CButton>
                 </template>
               </CInput>
               <CRow>
                 <CCol col="12">
-                  <CButton
-                    variant="outline"
-                    color="success"
-                    block
-                    v-on:click="login()"
-                    >Login</CButton
-                  >
+                  <CButton variant="outline" color="success" block v-on:click="login()">Login</CButton>
                 </CCol>
               </CRow>
             </CForm>
@@ -55,9 +49,7 @@
                   color="primary"
                   block
                   v-on:click="register()"
-                >
-                  Register Now!</CButton
-                >
+                >Register Now!</CButton>
               </CCol>
             </CRow>
           </CCardFooter>
@@ -146,6 +138,7 @@ export default {
     register() {
       this.$router.push("/register");
     }
-  }
+  },
+  mounted() {}
 };
 </script>
