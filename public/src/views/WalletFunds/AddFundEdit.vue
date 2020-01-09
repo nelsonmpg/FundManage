@@ -1,11 +1,6 @@
 <template>
-  <CCard
-    no-header
-    class="mb-0 mt-0 pb-0 pt-0 clear-padding-next-div animated fadeIn"
-    border-color="primary"
-    v-if="show"
-  >
-    <CCardBody>
+  <CCard no-header class="mb-0 mt-0 pb-0 pt-0" border-color="primary" v-if="show">
+    <CCardBody class="pl-2 pr-0 pt-0 pb-2">
       <CRow class="align-items-center h-100">
         <CCol col="1" class="mx-auto text-center">
           <h3>

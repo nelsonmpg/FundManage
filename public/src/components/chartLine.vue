@@ -59,7 +59,7 @@ export default {
             }
           },
           tooltips: {
-            yAlign: "bottom",
+            // yAlign: "bottom",
             callbacks: {
               label: function(tooltipItem) {
                 return utils.formatCurrency(tooltipItem.yLabel);

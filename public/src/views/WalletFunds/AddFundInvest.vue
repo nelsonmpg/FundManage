@@ -50,7 +50,7 @@
           </CRow>
         </CCol>
         <CCol col="1">
-          <div class="card-header-actions">
+          <div class="card-header-actions pr-3">
             <CLink
               href="#"
               class="card-header-action btn-close"
