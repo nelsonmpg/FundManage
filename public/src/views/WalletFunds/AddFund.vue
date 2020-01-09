@@ -1,85 +1,90 @@
 <template>
-  <b-card
+  <CCard
     no-header
-    class="mb-0 clear-padding-next-div animated fadeIn"
-    border-variant="primary"
+    class="mb-0 mt-0 pb-0 pt-0 clear-padding-next-div animated fadeIn"
+    border-color="primary"
     v-if="show"
   >
-    <b-row class="align-items-center h-100">
-      <b-col cols="1" class="mx-auto text-center">
-        <h3>
-          <b-badge pill variant="dark">{{ (posArr + 1) }}</b-badge>
-        </h3>
-      </b-col>
-      <b-col cols="11">
-        <b-card class="mb-0">
-          <template slot="header">
-            <b-row>
-              <b-col cols="11">
-                <b-form-group class="mb-0">
-                  <b-input-group>
-                    <b-input-group-prepend>
-                      <b-input-group-text>Select Fund</b-input-group-text>
-                    </b-input-group-prepend>
-                    <b-form-select
-                      ref="selectFundFocus"
-                      v-model="selectedFund"
-                      :plain="true"
-                      :options="optsSelect"
-                      value
-                    ></b-form-select>
-                    <b-input-group-append>
-                      <b-input-group-text>
-                        <i
-                          class="fa"
-                          v-b-tooltip.hover.html="'<strong>Select a Fund to add to this portfolio.</strong>'"
-                          :class="classselectedFund"
-                        ></i>
-                      </b-input-group-text>
-                    </b-input-group-append>
-                  </b-input-group>
-                </b-form-group>
-              </b-col>
-              <b-col cols="1">
-                <div class="card-header-actions">
-                  <b-link
-                    href="#"
-                    class="card-header-action btn-close"
-                    v-b-tooltip.hover.html="'<strong>Delete this fund.</strong>'"
-                    v-on:click="removePanel"
+    <CCardBody>
+      <CRow class="align-items-center h-100">
+        <CCol col="1" class="mx-auto text-center">
+          <h3>
+            <CBadge pill color="dark">{{ (posArr + 1) }}</CBadge>
+          </h3>
+        </CCol>
+        <CCol col="11">
+          <CCard class="mb-0" border-color="primary">
+            <CCardHeader>
+              <CRow>
+                <CCol col="11">
+                  <CSelect
+                    :value.sync="selectedFund"
+                    class="mb-0"
+                    ref="selectFundFocus"
+                    :options="optsSelect"
+                    placeholder="Please select"
                   >
-                    <i class="icon-close"></i>
-                  </b-link>
-                </div>
-              </b-col>
-            </b-row>
-          </template>
-          <b-row v-show="selectedFund != ''">
-            <b-col cols="12">
-              <add-invest
-                :invest="invest"
-                :posArr="index"
-                ref="checkInvest"
-                v-for="(invest, index) in fund.investList"
-                :key="index"
-              ></add-invest>
-            </b-col>
-            <b-col sm="12" class="mt-3 mb-3">
-              <b-button
-                @click="addInvest"
-                ref="addInvestFocus"
-                block
-                size="sm"
-                variant="outline-secondary"
-              >
-                <i class="fa fa-plus"></i> Add new Invest to Fund
-              </b-button>
-            </b-col>
-          </b-row>
-        </b-card>
-      </b-col>
-    </b-row>
-  </b-card>
+                    <template #prepend>
+                      <CButton color="dark" disabled>Select Fund</CButton>
+                    </template>
+                    <template #append>
+                      <CButton color="dark" disabled>
+                        <CIcon
+                          v-c-tooltip.hover.html="'<strong>Select a Fund to add to this portfolio.</strong>'"
+                          :name="classselectedFund"
+                        />
+                      </CButton>
+                    </template>
+                  </CSelect>
+                </CCol>
+                <CCol col="1">
+                  <div class="card-header-actions">
+                    <CLink
+                      href="#"
+                      class="card-header-action btn-close"
+                      v-on:click="removePanel"
+                      v-c-tooltip.hover.html="'<strong>Delete this fund.</strong>'"
+                    >
+                      <CIcon name="cil-x-circle" />
+                    </CLink>
+                  </div>
+                </CCol>
+              </CRow>
+            </CCardHeader>
+            <CCardBody class="mb-2 mt-2 pb-0 pt-0 pl-0 pr-0" v-show="selectedFund != ''">
+              <CRow>
+                <CCol col="12">
+                  <add-invest
+                    :invest="invest"
+                    :posArr="index"
+                    ref="checkInvest"
+                    v-for="(invest, index) in fund.investList"
+                    :key="index"
+                  ></add-invest>
+                </CCol>
+              </CRow>
+            </CCardBody>
+            <CCardFooter v-show="selectedFund != ''">
+              <CRow>
+                <CCol col="12">
+                  <CButton
+                    @click="addInvest"
+                    ref="addInvestFocus"
+                    block
+                    size="sm"
+                    color="info"
+                    variant="outline"
+                  >
+                    <CIcon name="cil-plus" />&nbsp;&nbsp;Add new Invest to Fund
+                  </CButton>
+                </CCol>
+              </CRow>
+            </CCardFooter>
+          </CCard>
+        </CCol>
+      </CRow>
+    </CCardBody>
+  </CCard>
 </template>
 </template>
 <script>
@@ -95,7 +100,7 @@ export default {
     return {
       selectedFund: "",
       selectedFundCheck: false,
-      classselectedFund: "fa-close",
+      classselectedFund: "cil-x",
       countInvest: 0,
       show: true,
       utils
@@ -198,17 +203,17 @@ export default {
       let classAdd = "";
       this.selectedFundCheck = false;
       if (val.trim() === "") {
-        classAdd = "close";
+        classAdd = "x";
         this.fund.isin = "";
         this.fund.name = "";
       } else {
-        classAdd = "check";
+        classAdd = "check-alt";
         this.selectedFundCheck = true;
         let datafund = this.selectedFund.split("-");
         this.fund.isin = datafund[0].trim();
         this.fund.name = datafund[1].trim();
       }
-      this.classselectedFund = "fa-" + classAdd;
+      this.classselectedFund = "cil-" + classAdd;
     }
   }
 };

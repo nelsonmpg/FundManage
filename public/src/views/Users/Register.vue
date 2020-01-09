@@ -1,117 +1,162 @@
 <template>
-  <div class="app flex-row align-items-center">
-    <div class="container">
-      <b-row class="justify-content-center">
-        <b-col md="6" sm="8">
-          <b-card no-body class="mx-4">
-            <b-card-body class="p-4">
-              <b-form>
-                <b-row>
-                  <h1>Register</h1>
-                </b-row>
-                <p class="text-muted">Create your account</p>
-                <b-alert :show="showErrorName" variant="danger" dismissible fade>
-                  <strong>Not valid name..</strong>
-                </b-alert>
-                <b-input-group class="mb-3">
-                  <b-input-group-prepend>
-                    <b-input-group-text>
-                      <i class="icon-user"></i>
-                    </b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input type="text" v-model="nameUser" placeholder="Username"/>
-                  <b-input-group-append>
-                    <b-input-group-text>
-                      <i
-                        class="fa"
-                        v-b-tooltip.hover.html="'<strong>Insert a valid name. Size larger than 4.</strong>'"
-                        :class="classusername"
-                      ></i>
-                    </b-input-group-text>
-                  </b-input-group-append>
-                </b-input-group>
+  <CContainer class="min-vh-100 d-flex align-items-center">
+    <CRow class="w-100 justify-content-center">
+      <CCol md="8" sm="12">
+        <CCard class="mx-4 mb-0">
+          <CCardBody class="p-4">
+            <CForm>
+              <h1>Register</h1>
+              <p class="text-muted">Create your account</p>
+              <CAlert
+                :show="showErrorName"
+                color="danger"
+                closeButton
+                dismissible
+                fade
+              >
+                <strong>Not valid name..</strong>
+              </CAlert>
+              <CInput
+                placeholder="Username"
+                autocomplete="username"
+                v-model="nameUser"
+              >
+                <template #prepend>
+                  <CButton color="dark" disabled
+                    ><CIcon name="cil-user"
+                  /></CButton>
+                </template>
+                <template #append>
+                  <CButton color="dark" disabled
+                    ><CIcon
+                      v-c-tooltip.hover.html="
+                        '<strong>Insert a valid name. Size larger than 4.</strong>'
+                      "
+                      :name="classusername"
+                  /></CButton>
+                </template>
+              </CInput>
 
-                <b-alert :show="showErrorEmail" variant="danger" dismissible fade>
-                  <strong>Not valid email.</strong>
-                </b-alert>
-                <b-input-group class="mb-3">
-                  <b-input-group-prepend>
-                    <b-input-group-text>@</b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input type="text" v-model="emailUser" placeholder="Email"/>
-                  <b-input-group-append>
-                    <b-input-group-text>
-                      <i
-                        class="fa"
-                        v-b-tooltip.hover.html="'<strong>Insert a valid email.</strong>'"
-                        :class="classemailUser"
-                      ></i>
-                    </b-input-group-text>
-                  </b-input-group-append>
-                </b-input-group>
+              <CAlert
+                :show="showErrorEmail"
+                color="danger"
+                closeButton
+                dismissible
+                fade
+              >
+                <strong>Not valid email.</strong>
+              </CAlert>
+              <CInput
+                placeholder="Email"
+                v-model="emailUser"
+                autocomplete="email"
+              >
+                <template #prepend>
+                  <CButton color="dark" disabled
+                    ><CIcon name="cil-at"
+                  /></CButton>
+                </template>
+                <template #append>
+                  <CButton color="dark" disabled
+                    ><CIcon
+                      v-c-tooltip.hover.html="
+                        '<strong>Insert a valid email.</strong>'
+                      "
+                      :name="classemailUser"
+                  /></CButton>
+                </template>
+              </CInput>
 
-                <b-alert :show="showErrorPass" variant="danger" dismissible fade>
-                  <strong>Not valid password.</strong>
-                </b-alert>
-                <b-input-group class="mb-3">
-                  <b-input-group-prepend>
-                    <b-input-group-text>
-                      <i class="icon-lock"></i>
-                    </b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input type="password" v-model="passUser" placeholder="Password"/>
-                  <b-input-group-append>
-                    <b-input-group-text>
-                      <i
-                        class="fa"
-                        v-b-tooltip.hover.html="'<strong>Insert a valid password. Size larger than 6.</strong>'"
-                        :class="classpassUser"
-                      ></i>
-                    </b-input-group-text>
-                  </b-input-group-append>
-                </b-input-group>
+              <CAlert
+                :show="showErrorPass"
+                color="danger"
+                closeButton
+                dismissible
+                fade
+              >
+                <strong>Not valid password.</strong>
+              </CAlert>
+              <CInput
+                placeholder="Password"
+                type="password"
+                v-model="passUser"
+                autocomplete="new-password"
+              >
+                <template #prepend>
+                  <CButton color="dark" disabled
+                    ><CIcon name="cil-lock-locked"
+                  /></CButton>
+                </template>
+                <template #append>
+                  <CButton color="dark" disabled
+                    ><CIcon
+                      v-c-tooltip.hover.html="
+                        '<strong>Insert a valid password. Size larger than 6.</strong>'
+                      "
+                      :name="classpassUser"
+                  /></CButton>
+                </template>
+              </CInput>
 
-                <b-alert :show="showErrorPassRepeat" variant="danger" dismissible fade>
-                  <strong>The password not equals.</strong>
-                </b-alert>
-                <b-input-group class="mb-4">
-                  <b-input-group-prepend>
-                    <b-input-group-text>
-                      <i class="icon-lock"></i>
-                    </b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input
-                    type="password"
-                    v-model="passUserTest"
-                    placeholder="Repeat password"
-                  />
-                  <b-input-group-append>
-                    <b-input-group-text>
-                      <i
-                        class="fa"
-                        v-b-tooltip.hover.html="'<strong>Repeat password.</strong>'"
-                        :class="classpassUserTest"
-                      ></i>
-                    </b-input-group-text>
-                  </b-input-group-append>
-                </b-input-group>
-                <b-button variant="outline-success" v-on:click="registerUser()" block>Create Account</b-button>
-              </b-form>
-            </b-card-body>
-            <template slot="footer">
-              <b-row>
-                <b-col cols="12">
-                  <b-button block variant="outline-primary" @click="backLogin()">
-                    <i class="cui-account-logout icons active mt-3"></i> Back
-                  </b-button>
-                </b-col>
-              </b-row>
-            </template>
-          </b-card>
-        </b-col>
-      </b-row>
-    </div>
-  </div>
+              <CAlert
+                :show="showErrorPassRepeat"
+                color="danger"
+                closeButton
+                dismissible
+                fade
+              >
+                <strong>The password not equals.</strong>
+              </CAlert>
+              <CInput
+                placeholder="Repeat password"
+                type="password"
+                v-model="passUserTest"
+                autocomplete="new-password"
+                class="mb-4"
+              >
+                <template #prepend>
+                  <CButton color="dark" disabled
+                    ><CIcon name="cil-lock-locked"
+                  /></CButton>
+                </template>
+                <template #append>
+                  <CButton color="dark" disabled
+                    ><CIcon
+                      v-c-tooltip.hover.html="
+                        '<strong>Repeat password.</strong>'
+                      "
+                      :name="classpassUserTest"
+                  /></CButton>
+                </template>
+              </CInput>
+              <CButton
+                variant="outline"
+                color="success"
+                v-on:click="registerUser()"
+                block
+              >
+                Create Account
+              </CButton>
+            </CForm>
+          </CCardBody>
+          <CCardFooter class="p-4">
+            <CRow>
+              <CCol col="12">
+                <CButton
+                  variant="outline"
+                  color="primary"
+                  @click="backLogin()"
+                  block
+                >
+                  Back
+                </CButton>
+              </CCol>
+            </CRow>
+          </CCardFooter>
+        </CCard>
+      </CCol>
+    </CRow>
+  </CContainer>
 </template>
 <script>
 import utils from "./../../shared/utilsLib.js";
@@ -125,18 +170,18 @@ export default {
       showErrorName: false,
       nameUser: "",
       nameUserCheck: false,
-      classusername: "fa-asterisk",
+      classusername: "cil-asterisk",
       emailUser: "",
       emailUserCheck: false,
-      classemailUser: "fa-asterisk",
+      classemailUser: "cil-asterisk",
       passUser: "",
       passTUsr: "",
       passTUsrCheck: false,
-      classpassUser: "fa-asterisk",
+      classpassUser: "cil-asterisk",
       passUserTest: "",
       passTUsrTest: "",
       passTUsrTestCheck: false,
-      classpassUserTest: "fa-asterisk",
+      classpassUserTest: "cil-asterisk",
       check: true,
       utils
     };
@@ -225,12 +270,12 @@ export default {
       if (val.trim().length === 0) {
         classAdd = "asterisk";
       } else if (val.trim().length <= 3) {
-        classAdd = "close";
+        classAdd = "x";
       } else {
-        classAdd = "check";
+        classAdd = "check-alt";
         this.nameUserCheck = true;
       }
-      this.classusername = "fa-" + classAdd;
+      this.classusername = "cil-" + classAdd;
     },
     emailUser: function(val) {
       let regexMail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -240,12 +285,12 @@ export default {
       if (val.toLowerCase().trim().length === 0) {
         classAdd = "asterisk";
       } else if (!regexMail.test(String(val.toLowerCase()).toLowerCase())) {
-        classAdd = "close";
+        classAdd = "x";
       } else {
-        classAdd = "check";
+        classAdd = "check-alt";
         this.emailUserCheck = true;
       }
-      this.classemailUser = "fa-" + classAdd;
+      this.classemailUser = "cil-" + classAdd;
     },
     passUser: function(val) {
       let classAdd = "";
@@ -255,12 +300,12 @@ export default {
       if (this.passTUsr.trim().length === 0) {
         classAdd = "asterisk";
       } else if (val.trim().length < 6) {
-        classAdd = "close";
+        classAdd = "x";
       } else {
-        classAdd = "check";
+        classAdd = "check-alt";
         this.passTUsrCheck = true;
       }
-      this.classpassUser = "fa-" + classAdd;
+      this.classpassUser = "cil-" + classAdd;
     },
     passUserTest: function(val) {
       let classAdd = "";
@@ -270,16 +315,14 @@ export default {
       if (this.passTUsrTest.trim().length === 0) {
         classAdd = "asterisk";
       } else if (this.passTUsr.trim() !== this.passTUsrTest.trim()) {
-        classAdd = "close";
+        classAdd = "x";
       } else {
-        classAdd = "check";
+        classAdd = "check-alt";
         this.passTUsrTestCheck = true;
       }
-      this.classpassUserTest = "fa-" + classAdd;
+      this.classpassUserTest = "cil-" + classAdd;
     }
   }
 };
 </script>
-<style>
-</style>
-
+<style></style>

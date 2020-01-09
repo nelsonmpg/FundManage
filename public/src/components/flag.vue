@@ -1,6 +1,6 @@
 <template>
   <div class="ml-5 text-center" cols="2">
-    <i class="flag-icon h1" :class="'flag-icon-' + country.alpha2Code.toLowerCase()"></i>
+    <CIcon :height="42" :name="'cif-' + country.alpha2Code.toLowerCase()" />
     <p>{{ country.name }}</p>
   </div>
 </template>

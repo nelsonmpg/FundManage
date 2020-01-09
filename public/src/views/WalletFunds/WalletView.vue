@@ -1,264 +1,190 @@
 <template>
-  <b-row class="animated fadeIn">
-    <b-col cols="12">
-      <b-card no-header>
-        <template slot="header">
-          <b-row>
-            <b-col cols="6">
+  <CRow class="animated fadeIn">
+    <CCol col="12">
+      <CCard no-header>
+        <CCardHeader>
+          <CRow>
+            <CCol col="6">
               <h3 class="card-title">Portfolio Details</h3>
-            </b-col>
-            <b-col cols="6">
-              <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
-                <b-button-group>
-                  <b-button @click="openWalletEdit" variant="outline-primary">
-                    <i class="cui-note icons"></i> Edit
-                  </b-button>
-                  <b-button @click="deleteWallet" variant="outline-danger">
-                    <i class="cui-trash icons"></i> Delete
-                  </b-button>
-                </b-button-group>
-              </b-button-toolbar>
-            </b-col>
-          </b-row>
-        </template>
-        <b-form>
-          <b-row>
-            <b-col cols="12">
-              <b-form-group>
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>Portfolio Name</b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input :value="walletName" type="text" disabled></b-form-input>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col xl="3" lg="3" md="12" sm="12" xs="12">
-              <b-form-group>
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>€ Total Invest</b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input :value="utils.formatCurrency(totalInvest)" type="text" disabled></b-form-input>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-            <b-col xl="3" lg="3" md="12" sm="12" xs="12">
-              <b-form-group>
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>€ Total</b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input :value="utils.formatCurrency(totalEnd)" type="text" disabled></b-form-input>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-            <b-col xl="3" lg="3" md="12" sm="12" xs="12">
-              <b-form-group>
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>€ Total Gain</b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input
-                    :value="utils.formatCurrency(totalEnd - totalInvest)"
-                    type="text"
-                    disabled
-                  ></b-form-input>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-            <b-col xl="3" lg="3" md="12" sm="12" xs="12">
-              <b-form-group>
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>Status</b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-input-group-text
-                    :class="'bg-' + (valArrow > 0 ? 'success' : (valArrow = 0 ? 'info' : 'danger'))"
-                  >
-                    <i class="fa" :class="'fa-thumbs-' + (valArrow >= 0 ? 'up' : 'down')"></i>
-                  </b-input-group-text>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-            <!---->
-          </b-row>
-          <div slot="footer"></div>
-        </b-form>
-        <b-row>
-          <b-col cols="12">
-            <b-card no-body>
-              <template slot="header">
-                <b-row>
-                  <b-col cols="12">
-                    <h4 class="card-title">{{ caption }}</h4>
-                  </b-col>
-                </b-row>
-              </template>
-              <b-table
-                stripe
-                bordered
-                small
-                responsive="sm"
-                :items="items"
-                :fields="fields"
-                :current-page="currentPage"
-                :per-page="perPage"
-                @row-clicked="rowClicked"
+            </CCol>
+            <CCol col="6" class="d-none d-md-block">
+              <CButton
+                @click="deleteWallet"
+                class="float-right mb-2"
+                color="danger"
+                variant="outline"
               >
-                <template
-                  slot="dateInvest"
-                  slot-scope="data"
-                >{{utils.onlyDateFormat(data.item.dateInvest)}}</template>
-                <template
-                  slot="cotacaoUp"
-                  slot-scope="data"
-                >{{utils.formatCurrency(data.item.cotacaoUp)}}</template>
-                <template
-                  slot="valInvest"
-                  slot-scope="data"
-                >{{utils.formatCurrency(data.item.valInvest)}}</template>
-                <template slot="active" slot-scope="data">
-                  <input type="checkbox" :checked="data.item.active" disabled />
-                </template>
-                <template slot="dateInative" slot-scope="data">
-                  <n v-if="!data.item.active">{{utils.onlyDateFormat(data.item.dateInative)}}</n>
-                  <n v-else>- - -</n>
-                </template>
-                <template
-                  slot="lastvalUp"
-                  slot-scope="data"
-                >{{utils.formatCurrency(data.item.lastvalUp)}}</template>
-                <template
-                  slot="lastDate"
-                  slot-scope="data"
-                >{{utils.onlyDateFormat(data.item.lastDate)}}</template>
-                <template
-                  slot="lastVal"
-                  slot-scope="data"
-                >{{utils.formatCurrency(data.item.lastVal)}}</template>
-                <template slot="gainValue" slot-scope="data">
-                  <b-card
-                    :no-body="true"
-                    class="mt-0 mb-0 pt-0 pb-0"
-                    :class="data.item.gainValue > 0 ? 'bg-success' : 'bg-danger'"
-                  >
-                    <b v-if="data.item.active">{{utils.formatCurrency(data.item.gainValue)}}</b>
-                    <b v-else>0,00</b>
-                  </b-card>
-                </template>
-              </b-table>
-              <nav>
-                <b-pagination
-                  size="sm"
-                  align="center"
-                  :total-rows="getRowCount(items)"
-                  :per-page="perPage"
-                  v-model="currentPage"
-                  prev-text="Prev"
-                  next-text="Next"
-                />
-              </nav>
-            </b-card>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col cols="12" v-if="showChart">
-            <resize-chart-line :lineChartId="'lineChart-1'" :dataChartVals="walletMoney"></resize-chart-line>
-          </b-col>
-          <b-col
-            xl="6"
-            lg="6"
-            md="12"
-            sm="12"
-            xs="12"
-            v-for="(fund, index) in charFundsData"
-            :key="index"
-          >
-            <resize-chart-line :lineChartId="'lineChartFund-' + index" :dataChartVals="fund"></resize-chart-line>
-          </b-col>
-        </b-row>
-        <template slot="footer">
-          <b-row>
-            <b-col cols="12">
-              <b-button block variant="outline-primary" @click="goBack">
-                <i class="cui-account-logout icons active mt-3"></i> Back
-              </b-button>
-            </b-col>
-          </b-row>
-        </template>
-      </b-card>
-    </b-col>
-    <b-modal
+                <CIcon name="cil-trash" />&nbsp;&nbsp;Delete
+              </CButton>
+              <CButton
+                @click="openWalletEdit"
+                class="float-right mb-2"
+                color="info"
+                variant="outline"
+              >
+                <CIcon name="cil-pen-alt" />&nbsp;&nbsp;Edit
+              </CButton>
+            </CCol>
+          </CRow>
+        </CCardHeader>
+        <CCardBody>
+          <CForm>
+            <CRow>
+              <CCol col="12" class="mb-2">
+                <CInput class="mb-0" :value="walletName" type="text" disabled>
+                  <template #prepend>
+                    <CButton color="dark" disabled>Portfolio Name</CButton>
+                  </template>
+                </CInput>
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol xl="3" lg="3" md="12" sm="12" xs="12" class="mb-2">
+                <CInput
+                  class="mb-0"
+                  :value="utils.formatCurrency(totalInvest)"
+                  type="text"
+                  disabled
+                >
+                  <template #prepend>
+                    <CButton color="dark" disabled>Total Invest</CButton>
+                  </template>
+                </CInput>
+              </CCol>
+              <CCol xl="3" lg="3" md="12" sm="12" xs="12" class="mb-2">
+                <CInput class="mb-0" :value="utils.formatCurrency(totalEnd)" type="text" disabled>
+                  <template #prepend>
+                    <CButton color="dark" disabled>€ Total</CButton>
+                  </template>
+                </CInput>
+              </CCol>
+              <CCol xl="3" lg="3" md="12" sm="12" xs="12" class="mb-2">
+                <CInput
+                  class="mb-0"
+                  :value="utils.formatCurrency(totalEnd - totalInvest)"
+                  type="text"
+                  disabled
+                >
+                  <template #prepend>
+                    <CButton color="dark" disabled>€ Total Gain</CButton>
+                  </template>
+                </CInput>
+              </CCol>
+              <CCol xl="3" lg="3" md="12" sm="12" xs="12" class="mb-2">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <button type="button" disabled="disabled" class="btn btn-dark disabled">Status</button>
+                  </div>
+                  <div class="form-control" style="background-color: hsla(0,0%,100%,.12);">
+                    <CIcon
+                      v-if="valArrow >= 0"
+                      :name="(valArrow > 0) ? 'cil-hand-point-up' : 'cil-hand-point-down'"
+                      :height="20"
+                      :class="(valArrow > 0) ? 'bg-success' : 'bg-danger'"
+                    />
+                  </div>
+                </div>
+              </CCol>
+            </CRow>
+          </CForm>
+          <CRow>
+            <CCol col="12" class="mb-0 pb-0">
+              <CCard no-body>
+                <CCardBody>
+                  <CTableWrapper
+                    :items="items"
+                    :fields="fields"
+                    hover
+                    striped
+                    bordered
+                    small
+                    fixed
+                    sorter
+                    responsive
+                    :caption="'List Funds in Portfolio'"
+                    :place="'funds'"
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol col="12" v-if="showChart">
+              <resize-chart-line :lineChartId="'lineChart-1'" :dataChartVals="walletMoney"></resize-chart-line>
+            </CCol>
+            <!-- <CCol
+              xl="6"
+              lg="6"
+              md="12"
+              sm="12"
+              xs="12"
+              v-for="(fund, index) in charFundsData"
+              :key="index"
+            >
+              <resize-chart-line :lineChartId="'lineChartFund-' + index" :dataChartVals="fund"></resize-chart-line>
+            </CCol>-->
+          </CRow>
+        </CCardBody>
+        <CCardFooter>
+          <CRow>
+            <CCol col="12">
+              <CButton block variant="outline" color="primary" @click="goBack">
+                <CIcon name="cil-account-logout" />&nbsp;&nbsp;Back
+              </CButton>
+            </CCol>
+          </CRow>
+        </CCardFooter>
+      </CCard>
+    </CCol>
+    <CModal
+      :show.sync="deleteWalletModal"
+      :no-close-on-backdrop="true"
+      :centered="true"
       title="Attention"
-      class="modal-danger"
-      v-model="deleteWalletModal"
-      @ok="closeModalAccept"
-      ok-variant="danger"
+      color="danger"
     >
       Are you sure you want to delete the Portfolio?
       <br />
       "{{ walletName }}"
-    </b-modal>
-  </b-row>
+      <template #header>
+        <h6 class="modal-title">Attention</h6>
+        <CButtonClose @click="deleteWalletModal = false" class="text-white" />
+      </template>
+      <template #footer>
+        <CButton @click="deleteWalletModal = false" variant="outline" color="info">Cancel</CButton>
+        <CButton @click="deleteWalletModal()" variant="outline" color="danger">Ok</CButton>
+      </template>
+    </CModal>
+  </CRow>
 </template>
 <script>
-import ChartLine from "./../../components/chartLine.vue";
+import CTableWrapper from "./../../components/Table.vue";
 import ResizeChartLine from "./../../components/resizeChartLine.vue";
 import utils from "./../../shared/utilsLib.js";
 export default {
   components: {
-    ChartLine,
-    ResizeChartLine
-  },
-  props: {
-    caption: {
-      type: String,
-      default: "List Funds in Portfolio"
-    },
-    hover: {
-      type: Boolean,
-      default: true
-    },
-    striped: {
-      type: Boolean,
-      default: true
-    },
-    bordered: {
-      type: Boolean,
-      default: false
-    },
-    small: {
-      type: Boolean,
-      default: false
-    },
-    fixed: {
-      type: Boolean,
-      default: false
-    }
+    ResizeChartLine,
+    CTableWrapper
   },
   name: "PortfolioView",
   data: () => {
     return {
       wallet: "",
       walletName: "",
-      selected: "30",
       items: [],
       fields: [
-        { key: "name", sortable: true, label: "Fund Name" },
-        { key: "isin", sortable: true },
-        { key: "dateInvest", label: "Invested Date" },
-        { key: "nUps", label: "Nº Ups" },
-        { key: "cotacaoUp", label: "Buy Price" },
-        { key: "valInvest", label: "Invested Value" },
-        { key: "lastvalUp", label: "Last Value Up" },
-        { key: "lastDate", label: "Last Date Update" },
-        { key: "lastVal", label: "Last Value" },
-        { key: "gainValue", label: "Gain", sortable: true },
-        { key: "active", label: "Active" },
-        { key: "dateInative" }
+        { key: "name", label: "Fund Name", _classes: "text-center" },
+        { key: "isin", _classes: "text-center" },
+        { key: "dateInvest", label: "Invested Date", _classes: "text-center" },
+        { key: "nUps", label: "Nº Ups", _classes: "text-center" },
+        { key: "cotacaoUp", label: "Buy Price", _classes: "text-center" },
+        { key: "valInvest", label: "Invested Value", _classes: "text-center" },
+        { key: "lastvalUp", label: "Last Value Up", _classes: "text-center" },
+        { key: "lastDate", label: "Last Date Update", _classes: "text-center" },
+        { key: "lastVal", label: "Last Value", _classes: "text-center" },
+        { key: "gainValue", label: "Gain", _classes: "text-center" },
+        { key: "active", label: "Active", _classes: "text-center" },
+        { key: "dateInative", _classes: "text-center" }
       ],
       currentPage: 1,
       perPage: 10,
@@ -267,10 +193,6 @@ export default {
         labels: [],
         values: [],
         title: "Portfolio History"
-      },
-      chartData: {
-        labels: [],
-        values: []
       },
       charFundsData: [],
       showChart: false,
@@ -427,13 +349,6 @@ export default {
                 moneyAll[index].moneyWalletCalc.toFixed(2)
               );
             }
-            let lArr = this.walletMoney.labels.slice(
-              Math.max(this.walletMoney.labels.length - this.selected, 1)
-            );
-            let vArr = this.walletMoney.values.slice(
-              Math.max(this.walletMoney.values.length - this.selected, 1)
-            );
-            this.createChartData(lArr, vArr);
             this.showChart = true;
           } else {
             this.$notify({
@@ -472,13 +387,6 @@ export default {
     },
     getRowCount(items) {
       return items.length;
-    },
-    createChartData(arrL, arrV) {
-      this.chartData = {
-        labels: arrL,
-        values: arrV
-      };
-      this.showChart = true;
     }
   },
   created() {
@@ -490,16 +398,6 @@ export default {
   },
   beforeCreate() {},
   beforeDestroy() {},
-  watch: {
-    selected: function(value) {
-      let lArrUp = this.walletMoney.labels.slice(
-        Math.max(this.walletMoney.labels.length - value, 1)
-      );
-      let vArrUp = this.walletMoney.values.slice(
-        Math.max(this.walletMoney.values.length - value, 1)
-      );
-      this.createChartData(lArrUp, vArrUp);
-    }
-  }
+  watch: {}
 };
 </script>

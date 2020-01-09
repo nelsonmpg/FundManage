@@ -3,6 +3,7 @@
 </template>
 <script>
 import Chart from "chart.js";
+import chartjsPluginAnnotation from "chartjs-plugin-annotation";
 import utils from "./../shared/utilsLib.js";
 
 export default {
@@ -17,6 +18,8 @@ export default {
   data() {
     return {
       labelsPos: 0,
+      tendStart: 0,
+      tendEnd: 0,
       clearChart: false,
       lineChart: null,
       configChart: {
@@ -56,13 +59,34 @@ export default {
             }
           },
           tooltips: {
-            yAlign: "bottom",
+            // yAlign: "bottom",
             callbacks: {
               label: function(tooltipItem) {
                 return utils.formatCurrency(tooltipItem.yLabel);
               }
             }
-          },
+          } /*,
+          annotation: {
+            drawTime: "afterDraw",
+            annotations: [
+              {
+                type: "line",
+                mode: "horizontal",
+                scaleID: "y-axis-0",
+                value: this.dataChartValues[0],
+                endValue: this.dataChartValues[this.dataChartValues.length - 1],
+                // value: this.tendStart,
+                // endValue: this.tendEnd,
+                borderColor: "rgb(75, 192, 192)",
+                borderWidth: 4,
+                label: {
+                  enabled: true,
+                  content: "Trendline",
+                  yAdjust: -16
+                }
+              }
+            ]
+          } */,
           scales: {
             yAxes: [
               {
@@ -105,8 +129,50 @@ export default {
       var ctx = canvas.getContext("2d");
       this.configChart.data.labels = this.dataChartLabel;
       this.configChart.data.datasets[0].data = this.dataChartValues;
+      // this.calculateTrendLine();
+      // this.configChart.options.annotation.annotations[0].value = this.tendStart;
+      // this.configChart.options.annotation.annotations[0].endValue = this.tendEnd;
       this.lineChart = new Chart(ctx, this.configChart);
       this.lineChart.update();
+    },
+    calculateTrendLine: function() {
+      let a, b, c, d, e, slope, yIntercept;
+      let xSum = 0,
+        ySum = 0,
+        xySum = 0,
+        xSquare = 0,
+        dpsLength = this.configChart.data.datasets[0].data.length;
+      for (let i = 0; i < dpsLength; i++) {
+        xySum += (i + 1) * this.configChart.data.datasets[0].data[i] * 1;
+        xSum += i + 1;
+        ySum += this.configChart.data.datasets[0].data[i] * 1;
+        xSquare += Math.pow(i + 1, 2);
+      }
+      a = xySum * dpsLength;
+      b = xSum * ySum;
+      c = dpsLength * xSquare;
+      d = Math.pow(xSum, 2);
+      slope = (a - b) / (c - d);
+      e = slope * xSum;
+      yIntercept = (ySum - e) / dpsLength;
+
+      let startPoint = this.getTrendLinePoint(
+        this.configChart.data.datasets[0].data[0] * 1,
+        slope,
+        yIntercept
+      );
+      let endPoint = this.getTrendLinePoint(
+        this.configChart.data.datasets[0].data[dpsLength - 1] * 1,
+        slope,
+        yIntercept
+      );
+
+      this.tendStart = startPoint.y;
+      this.tendEnd = endPoint.y;
+      console.log("points", this.tendStart, this.tendEnd);
+    },
+    getTrendLinePoint: function(x, slope, intercept) {
+      return { x: x, y: slope * x + intercept };
     }
   },
   mounted() {
@@ -133,5 +199,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

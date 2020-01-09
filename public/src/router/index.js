@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 // Containers
-const DefaultContainer = () => import('@/containers/DefaultContainer')
+const TheContainer = () => import('@/containers/TheContainer')
 
-// Views
+// Views// Views
 const Home = () => import('@/views/Home')
 const Login = () => import('@/views/Users/Login')
 const Register = () => import('@/views/Users/Register')
@@ -19,18 +19,23 @@ const WalletFunds = () => import('@/views/WalletFunds/WalletFunds')
 const WalletFund = () => import('@/views/WalletFunds/WalletFund')
 const WalletView = () => import('@/views/WalletFunds/WalletView')
 const WalletEdit = () => import('@/views/WalletFunds/WalletEdit')
+
 Vue.use(Router)
 
 const router = new Router({
   mode: 'hash', // https://router.vuejs.org/api/#mode
-  linkActiveClass: 'open active',
+  linkActiveClass: 'active',
   scrollBehavior: () => ({ y: 0 }),
-  routes: [
+  routes: configRoutes()
+})
+
+function configRoutes() {
+  return [
     {
       path: '/',
       redirect: '/home',
       name: 'Home',
-      component: DefaultContainer,
+      component: TheContainer,
       children: [
         {
           path: 'home',
@@ -106,7 +111,7 @@ const router = new Router({
       component: Register
     }
   ]
-})
+}
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
@@ -120,4 +125,5 @@ router.beforeEach((to, from, next) => {
 
   next();
 })
+
 export default router;

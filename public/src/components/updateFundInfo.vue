@@ -1,23 +1,22 @@
 <template>
-  <b-row v-show="fundupdate.status">
-    <b-col cols="12">
-      <h3>{{ fundupdate.name }}</h3>
-    </b-col>
-    <b-col cols="12">
-      <div class="progress">
-        <div
-          class="progress-bar progress-bar-striped bg-info"
-          role="progressbar"
-          :style="pbStyle"
-          aria-valuenow="0"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
-    </b-col>
-    <b-col cols="8">{{text}}</b-col>
-    <b-col cols="4" class="text-right">{{pbarVal}}%</b-col>
-  </b-row>
+  <CRow v-show="fundupdate.status">
+    <CCol col="12">
+      <h5>{{ fundupdate.name }}</h5>
+    </CCol>
+    <CCol col="12">
+      <CProgress>
+        <CProgressBar
+          color="info"
+          striped
+          animated
+          :value="pbStyle"
+          :max="max"
+        ></CProgressBar>
+      </CProgress>
+    </CCol>
+    <CCol>{{ text }}</CCol>
+    <CCol class="ml-auto">{{ pbarVal }}%</CCol>
+  </CRow>
 </template>
 <script>
 export default {
@@ -28,8 +27,11 @@ export default {
       execProcess: false,
       showProgressBar: false,
       pbarVal: this.fundupdate.val,
-      pbStyle: "width: " + this.pbarVal + "%",
-      text: this.fundupdate.step
+      pbStyle: this.pbarVal,
+      text: this.fundupdate.step,
+      striped: true,
+      animate: true,
+      max: 100
     };
   },
   beforeDestroy() {},
@@ -39,7 +41,7 @@ export default {
     },
     fundval: function(val) {
       this.pbarVal = val;
-      this.pbStyle = "width: " + this.pbarVal + "%";
+      this.pbStyle = this.pbarVal;
     }
   }
 };

@@ -1,7 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-BOX_NAME = ENV['BOX_NAME'] || "ubuntu/xenial64"
+# BOX_NAME = ENV['BOX_NAME'] || "ubuntu/xenial64"
+BOX_NAME = ENV['BOX_NAME'] || "centos/7"
 SSH_PRIVKEY_PATH = ENV["SSH_PRIVKEY_PATH"]
 
 $script = <<SCRIPT
@@ -10,22 +11,15 @@ if [ -z "$user" ]; then
     user=vagrant
 fi
 
-apt-get update -q
-apt-get install -q -y apt-transport-https ca-certificates
+sudo yum update -q
+sudo yum install -q -y apt-transport-https ca-certificates
 
-apt-get update -q
+sudo yum update -q
 
-curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
+curl -sL https://rpm.nodesource.com/setup_12.x | sudo bash -
 
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
-echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
-
-
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
-echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
-
-apt-get update -q
-apt-get install -q -y nodejs python-software-properties python g++ make software-properties-common mongodb-org
+sudo yum update -q
+sudo yum install -q -y nodejs python-software-properties python g++ make software-properties-common
 
 SCRIPT
 
@@ -52,4 +46,6 @@ Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
   end
+  
+  config.vm.synced_folder "./", "/vagrant", type: "virtualbox", disabled: false
 end

@@ -1,79 +1,79 @@
 <template>
-  <b-row class="animated fadeIn">
-    <b-col cols="12">
-      <b-card no-header>
-        <template slot="header">ISIN: {{ isin }}</template>
-        <b-form>
-          <b-row>
-            <b-col xl="5" lg="12" md="12" sm="12" xs="12">
-              <b-form-group class="mb-0">
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>Fund ISIN</b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input
-                    v-model="isinCode"
-                    type="text"
-                    placeholder="Enter Fund ISIN.."
-                    required
-                  ></b-form-input>
-                  <b-input-group-append>
-                    <b-input-group-text>
-                      <i
-                        class="fa"
-                        v-b-tooltip.hover.html="'<strong>Insert a valid ISIN of Fund.</strong>'"
-                        :class="classisinCode"
-                      ></i>
-                    </b-input-group-text>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-            <b-col xl="7" lg="12" md="12" sm="12" xs="12">
-              <b-form-group class="mb-0">
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-input-group-text>Fund Name</b-input-group-text>
-                  </b-input-group-prepend>
-                  <b-form-input
-                    v-model="isinName"
-                    type="text"
-                    placeholder="Enter Fund Name.."
-                    required
-                  ></b-form-input>
-                  <b-input-group-append>
-                    <b-input-group-text>
-                      <i
-                        class="fa"
-                        v-b-tooltip.hover.html="'<strong>Insert a valid fund name.</strong>'"
-                        :class="classisinName"
-                      ></i>
-                    </b-input-group-text>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <!-- <div slot="footer">
-          </div>-->
-        </b-form>
-        <template slot="footer">
-          <b-row>
-            <b-col cols="6">
-              <b-button block variant="outline-primary" @click="goBack">
-                <i class="cui-account-logout icons active mt-3"></i> Back
-              </b-button>
-            </b-col>
-            <b-col cols="6">
-              <b-button @click="saveFund" block class="mb-3" variant="outline-success">
-                <i class="fa fa-save"></i> Save Fund
-              </b-button>
-            </b-col>
-          </b-row>
-        </template>
-      </b-card>
-    </b-col>
-  </b-row>
+  <CRow class="animated fadeIn">
+    <CCol cols="12">
+      <CCard no-header>
+        <CCardHeader>
+          <h3 class="card-title">New Fund</h3>
+        </CCardHeader>
+        <CCardBody>
+          <CForm>
+            <CRow>
+              <CCol xl="5" lg="12" md="12" sm="12" xs="12">
+                <CInput
+                  class="mb-0"
+                  v-model="isinCode"
+                  type="text"
+                  placeholder="Enter Fund ISIN.."
+                  required
+                >
+                  <template #prepend>
+                    <CButton color="dark" disabled>Fund ISIN</CButton>
+                  </template>
+                  <template #append>
+                    <CButton color="dark" disabled>
+                      <CIcon
+                        v-c-tooltip.hover.html="
+                          '<strong>Insert a valid ISIN of Fund.</strong>'
+                        "
+                        :name="classisinCode"
+                      />
+                    </CButton>
+                  </template>
+                </CInput>
+              </CCol>
+              <CCol xl="7" lg="12" md="12" sm="12" xs="12">
+                <CInput
+                  class="mb-0"
+                  v-model="isinName"
+                  type="text"
+                  placeholder="Enter Fund Name.."
+                  required
+                >
+                  <template #prepend>
+                    <CButton color="dark" disabled>Fund Name</CButton>
+                  </template>
+                  <template #append>
+                    <CButton color="dark" disabled>
+                      <CIcon
+                        v-c-tooltip.hover.html="
+                          '<strong>Insert a valid fund name.</strong>'
+                        "
+                        :name="classisinName"
+                      />
+                    </CButton>
+                  </template>
+                </CInput>
+              </CCol>
+            </CRow>
+          </CForm>
+        </CCardBody>
+        <CCardFooter>
+          <CRow>
+            <CCol cols="6">
+              <CButton block variant="outline" color="primary" @click="goBack">
+                <CIcon name="cil-account-logout" />&nbsp;&nbsp;Back
+              </CButton>
+            </CCol>
+            <CCol cols="6">
+              <CButton @click="saveFund" block class="mb-3" color="success" variant="outline">
+                <CIcon name="cil-save" />&nbsp;&nbsp;Save Fund
+              </CButton>
+            </CCol>
+          </CRow>
+        </CCardFooter>
+      </CCard>
+    </CCol>
+  </CRow>
 </template>
 <script>
 import utils from "./../../shared/utilsLib.js";
@@ -84,10 +84,10 @@ export default {
       isin: "New Fund",
       isinCode: "",
       isinCodeCheck: false,
-      classisinCode: "fa-close",
+      classisinCode: "cil-x",
       isinName: "",
       isinNameCheck: false,
-      classisinName: "fa-close",
+      classisinName: "cil-x",
       utils
     };
   },
@@ -166,23 +166,23 @@ export default {
       let addClass = "";
       this.isinCodeCheck = false;
       if (val.trim().length > 9) {
-        addClass = "check";
+        addClass = "check-alt";
         this.isinCodeCheck = true;
       } else {
-        addClass = "close";
+        addClass = "x";
       }
-      this.classisinCode = "fa-" + addClass;
+      this.classisinCode = "cil-" + addClass;
     },
     isinName: function(val) {
       let addClass = "";
       this.isinNameCheck = false;
       if (val.trim().length > 4) {
-        addClass = "check";
+        addClass = "check-alt";
         this.isinNameCheck = true;
       } else {
-        addClass = "close";
+        addClass = "x";
       }
-      this.classisinName = "fa-" + addClass;
+      this.classisinName = "cil-" + addClass;
     }
   }
 };
