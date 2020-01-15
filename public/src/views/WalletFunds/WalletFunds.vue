@@ -18,7 +18,7 @@
             </CCol>
           </CRow>
           <CRow>
-            <CCol col="12">
+            <CCol col="12" id="walletList">
               <CTableWrapper
                 :items="items"
                 :fields="fields"
@@ -171,6 +171,8 @@ export default {
     this.$loading.show();
   },
   beforeCreate() {},
-  beforeDestroy() {}
+  beforeDestroy() {
+    document.getElementById("walletList").outerHTML = "";
+  }
 };
 </script>

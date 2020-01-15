@@ -3,88 +3,33 @@
     <CRow>
       <CCol xl="6" lg="12" md="12" sm="12" xs="12">
         <CCard no-header>
-          <CCardHeader
-            ><CIcon name="cil-calendar" /> Date /
-            <CIcon name="cil-clock" /> Time</CCardHeader
-          >
+          <CCardHeader>Actions</CCardHeader>
           <CCardBody>
             <CRow>
-              <CCol col="12" id="clock">
-                <h1 class="date">{{ clock.date }}</h1>
-                <h1 class="time">{{ clock.time }}</h1>
+              <CCol cols="12">
+                <CButton
+                  @click="updateFundsAndPortfolio"
+                  block
+                  class="mb-3"
+                  :disabled="uupdatefundsAll.status"
+                  variant="outline"
+                  color="success"
+                >
+                  <CIcon name="cil-reload" />Force update All Funds and
+                  Portfolio
+                </CButton>
               </CCol>
             </CRow>
+            <fundupdateinfo
+              :fundupdate="uupdatefundsAll"
+              :fundstep="msgUpdateall"
+              :fundval="valUpdateall"
+            ></fundupdateinfo>
           </CCardBody>
-        </CCard>
-        <CCard no-header v-show="continersArticles.length > 0">
-          <b-carousel
-            id="carousel1"
-            controls
-            indicators
-            img-width="1024"
-            img-height="480"
-            :interval="4000"
-            v-model="slide"
-            @sliding-start="onSlideStart"
-            @sliding-end="onSlideEnd"
-          >
-            <b-carousel-slide
-              img-blank
-              v-for="(article, index) in continersArticles"
-              :key="index"
-            >
-              <CCard no-body border-variant="info">
-                <div class="brand-card-header bg-gray-900">
-                  <i :class="article.classIcon"></i>
-                </div>
-                <div
-                  class="h4 mt-2"
-                  v-html="utils.decode_utf8(article.local)"
-                ></div>
-                <div class="h5" v-html="utils.decode_utf8(article.state)"></div>
-                <div class="brand-card-body p-0 m-0">
-                  <div>
-                    <div class="text-value" v-html="article.maxval"></div>
-                    <div class="text-uppercase small">Max</div>
-                  </div>
-                  <div>
-                    <div class="text-value" v-html="article.minval"></div>
-                    <div class="text-uppercase small">Min</div>
-                  </div>
-                </div>
-              </CCard>
-            </b-carousel-slide>
-          </b-carousel>
         </CCard>
       </CCol>
       <CCol xl="6" lg="12" md="12" sm="12" xs="12">
         <CRow>
-          <CCol col="12">
-            <CCard no-header>
-              <CCardHeader>Actions</CCardHeader>
-              <CCardBody>
-                <CRow>
-                  <CCol cols="12">
-                    <CButton
-                      @click="updateFundsAndPortfolio"
-                      block
-                      class="mb-3"
-                      :disabled="uupdatefundsAll.status"
-                      variant="outline"
-                      color="success"
-                      ><CIcon name="cil-reload" /> Force update All Funds and
-                      Portfolio
-                    </CButton>
-                  </CCol>
-                </CRow>
-                <fundupdateinfo
-                  :fundupdate="uupdatefundsAll"
-                  :fundstep="msgUpdateall"
-                  :fundval="valUpdateall"
-                ></fundupdateinfo>
-              </CCardBody>
-            </CCard>
-          </CCol>
           <CCol col="12">
             <CCard no-header>
               <CCardHeader>List Fund Now Update in Data Base</CCardHeader>
@@ -97,6 +42,45 @@
                   :fundval="fundupdate.val"
                 ></fundupdateinfo>
               </CCardBody>
+            </CCard>
+          </CCol>
+          <CCol col="12">
+            <CCard no-header v-show="continersArticles.length > 0">
+              <b-carousel
+                id="carousel1"
+                controls
+                indicators
+                img-width="1024"
+                img-height="480"
+                :interval="4000"
+                v-model="slide"
+                @sliding-start="onSlideStart"
+                @sliding-end="onSlideEnd"
+              >
+                <b-carousel-slide
+                  img-blank
+                  v-for="(article, index) in continersArticles"
+                  :key="index"
+                >
+                  <CCard no-body border-variant="info">
+                    <div class="brand-card-header bg-gray-900">
+                      <i :class="article.classIcon"></i>
+                    </div>
+                    <div class="h4 mt-2" v-html="utils.decode_utf8(article.local)"></div>
+                    <div class="h5" v-html="utils.decode_utf8(article.state)"></div>
+                    <div class="brand-card-body p-0 m-0">
+                      <div>
+                        <div class="text-value" v-html="article.maxval"></div>
+                        <div class="text-uppercase small">Max</div>
+                      </div>
+                      <div>
+                        <div class="text-value" v-html="article.minval"></div>
+                        <div class="text-uppercase small">Min</div>
+                      </div>
+                    </div>
+                  </CCard>
+                </b-carousel-slide>
+              </b-carousel>
             </CCard>
           </CCol>
         </CRow>
@@ -185,30 +169,6 @@ export default {
           this.$loading.hide();
         });
     },
-    zeroPadding(num, digit) {
-      var zero = "";
-      for (let i = 0; i < digit; i++) {
-        zero += "0";
-      }
-      return (zero + num).slice(-digit);
-    },
-    updateTime() {
-      var cd = new Date();
-      this.clock.time =
-        this.zeroPadding(cd.getHours(), 2) +
-        ":" +
-        this.zeroPadding(cd.getMinutes(), 2) +
-        ":" +
-        this.zeroPadding(cd.getSeconds(), 2);
-      this.clock.date =
-        this.zeroPadding(cd.getFullYear(), 4) +
-        "-" +
-        this.zeroPadding(cd.getMonth() + 1, 2) +
-        "-" +
-        this.zeroPadding(cd.getDate(), 2) +
-        " " +
-        this.week[cd.getDay()];
-    },
     getWeather() {
       this.continersArticles = [];
       this.$http
@@ -268,13 +228,9 @@ export default {
     }
   },
   created() {
-    this.timerID = setInterval(this.updateTime, 1000);
-    this.updateTime();
     this.getWeather();
   },
-  beforeDestroy() {
-    // clearInterval(this.timerID);
-  },
+  beforeDestroy() {},
   sockets: {
     updateProgressBar(data) {
       let addData = false;
@@ -331,30 +287,6 @@ export default {
 </script>
 
 <style>
-/* #clock p {
-  margin: 0;
-  padding: 0;
-} */
-#clock {
-  font-family: "Share Tech Mono", monospace;
-  color: #ffffff;
-  text-align: center;
-  /* position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%); */
-  color: #daf6ff;
-  text-shadow: 0 0 20px rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0);
-}
-.time {
-  letter-spacing: 0.05em;
-  font-size: 50px;
-  padding: 5px 0;
-}
-.date {
-  letter-spacing: 0.1em;
-  font-size: 24px;
-}
 .text {
   letter-spacing: 0.1em;
   font-size: 12px;

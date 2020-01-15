@@ -17,6 +17,19 @@ export default {
   ],
   data() {
     return {
+      count: 0,
+      sumX: 0,
+      sumX2: 0,
+      sumXY: 0,
+      sumY: 0,
+      sQcount: 0,
+      sQsumX: 0,
+      sQsumX2: 0,
+      sQsumX3: 0,
+      sQsumX4: 0,
+      sQsumY: 0,
+      sQsumXY: 0,
+      sQsumX2Y: 0,
       labelsPos: 0,
       tendStart: 0,
       tendEnd: 0,
@@ -65,7 +78,7 @@ export default {
                 return utils.formatCurrency(tooltipItem.yLabel);
               }
             }
-          } /*,
+          } /*
           annotation: {
             drawTime: "afterDraw",
             annotations: [
@@ -86,7 +99,7 @@ export default {
                 }
               }
             ]
-          } */,
+          },*/,
           scales: {
             yAxes: [
               {
@@ -129,9 +142,12 @@ export default {
       var ctx = canvas.getContext("2d");
       this.configChart.data.labels = this.dataChartLabel;
       this.configChart.data.datasets[0].data = this.dataChartValues;
-      // this.calculateTrendLine();
-      // this.configChart.options.annotation.annotations[0].value = this.tendStart;
-      // this.configChart.options.annotation.annotations[0].endValue = this.tendEnd;
+      /* let YY3 = this.calculateTrendLine();
+      let YY2 = this.LineFitter();
+      let YY = this.SquareFitter();
+      console.log("Points", YY, YY2, YY3);
+      this.configChart.options.annotation.annotations[0].value = YY.start;
+      this.configChart.options.annotation.annotations[0].endValue = YY.ed; */
       this.lineChart = new Chart(ctx, this.configChart);
       this.lineChart.update();
     },
@@ -156,23 +172,95 @@ export default {
       e = slope * xSum;
       yIntercept = (ySum - e) / dpsLength;
 
-      let startPoint = this.getTrendLinePoint(
-        this.configChart.data.datasets[0].data[0] * 1,
-        slope,
-        yIntercept
-      );
-      let endPoint = this.getTrendLinePoint(
-        this.configChart.data.datasets[0].data[dpsLength - 1] * 1,
-        slope,
-        yIntercept
-      );
-
-      this.tendStart = startPoint.y;
-      this.tendEnd = endPoint.y;
-      console.log("points", this.tendStart, this.tendEnd);
+      return {
+        start: this.getTrendLinePoint(1, slope, yIntercept),
+        end: this.getTrendLinePoint(dpsLength - 1, slope, yIntercept)
+      };
     },
     getTrendLinePoint: function(x, slope, intercept) {
-      return { x: x, y: slope * x + intercept };
+      return slope * x + intercept;
+    },
+    LineFitter: function() {
+      let x1 = 1;
+      let x2 = this.configChart.data.datasets[0].data.length - 1;
+      for (let i = 0; i < this.configChart.data.datasets[0].data.length; i++) {
+        this.LineFitterAdd(
+          i + 1,
+          this.configChart.data.datasets[0].data[i] * 1
+        );
+      }
+      return this.LineFitterProject(x1, x2);
+    },
+    LineFitterAdd: function(x, y) {
+      this.count++;
+      this.sumX += x;
+      this.sumX2 += x * x;
+      this.sumXY += x * y;
+      this.sumY += y;
+    },
+    LineFitterProject: function(x1, x2) {
+      let det = this.count * this.sumX2 - this.sumX * this.sumX;
+      let scale = (this.count * this.sumXY - this.sumX * this.sumY) / det;
+      // let offset = (this.sumX2 * this.sumY - this.sumX * this.sumXY) / det;
+      let offset = (this.sumY - scale * this.sumX) / this.count;
+      return {
+        start: offset + x1 * scale,
+        end: offset + x2 * scale
+      };
+    },
+    SquareFitter: function() {
+      let x1 = 1;
+      let x2 = this.configChart.data.datasets[0].data.length - 1;
+      for (let i = 0; i < this.configChart.data.datasets[0].data.length; i++) {
+        this.SquareFitterAdd(
+          i + 1,
+          this.configChart.data.datasets[0].data[i] * 1
+        );
+      }
+      return this.SquareFitterProject(x1, x2);
+    },
+    SquareFitterAdd: function(x, y) {
+      this.sQcount++;
+      this.sQsumX += x;
+      this.sQsumX2 += x * x;
+      this.sQsumX3 += x * x * x;
+      this.sQsumX4 += x * x * x * x;
+      this.sQsumY += y;
+      this.sQsumXY += x * y;
+      this.sQsumX2Y += x * x * y;
+    },
+    SquareFitterProject: function(x1, x2) {
+      let det =
+        this.sQcount * this.sQsumX2 * this.sQsumX4 -
+        this.sQcount * this.sQsumX3 * this.sQsumX3 -
+        this.sQsumX * this.sQsumX * this.sQsumX4 +
+        2 * this.sQsumX * this.sQsumX2 * this.sQsumX3 -
+        this.sQsumX2 * this.sQsumX2 * this.sQsumX2;
+      let offset =
+        this.sQsumX * this.sQsumX2Y * this.sQsumX3 -
+        this.sQsumX * this.sQsumX4 * this.sQsumXY -
+        this.sQsumX2 * this.sQsumX2 * this.sQsumX2Y +
+        this.sQsumX2 * this.sQsumX3 * this.sQsumXY +
+        this.sQsumX2 * this.sQsumX4 * this.sQsumY -
+        this.sQsumX3 * this.sQsumX3 * this.sQsumY;
+      let scale =
+        -this.sQcount * this.sQsumX2Y * this.sQsumX3 +
+        this.sQcount * this.sQsumX4 * this.sQsumXY +
+        this.sQsumX * this.sQsumX2 * this.sQsumX2Y -
+        this.sQsumX * this.sQsumX4 * this.sQsumY -
+        this.sQsumX2 * this.sQsumX2 * this.sQsumXY +
+        this.sQsumX2 * this.sQsumX3 * this.sQsumY;
+      let accel =
+        this.sQsumY * this.sQsumX * this.sQsumX3 -
+        this.sQsumY * this.sQsumX2 * this.sQsumX2 -
+        this.sQsumXY * this.sQcount * this.sQsumX3 +
+        this.sQsumXY * this.sQsumX2 * this.sQsumX -
+        this.sQsumX2Y * this.sQsumX * this.sQsumX +
+        this.sQsumX2Y * this.sQcount * this.sQsumX2;
+      return {
+        start: (offset + x1 * scale + x1 * x1 * accel) / det,
+        end: (offset + x2 * scale + x2 * x2 * accel) / det
+      };
     }
   },
   mounted() {

@@ -88,7 +88,7 @@
             </CRow>
           </CForm>
           <CRow>
-            <CCol col="12" class="mb-0 pb-0">
+            <CCol col="12" class="mb-0 pb-0" id="walletFundsList">
               <CCard no-body>
                 <CCardBody>
                   <CTableWrapper
@@ -397,7 +397,9 @@ export default {
     this.$loading.show();
   },
   beforeCreate() {},
-  beforeDestroy() {},
+  beforeDestroy() {
+    document.getElementById("walletFundsList").outerHTML = "";
+  },
   watch: {}
 };
 </script>

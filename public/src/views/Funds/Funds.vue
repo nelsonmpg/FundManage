@@ -18,7 +18,7 @@
             </CCol>
           </CRow>
           <CRow>
-            <CCol col="12">
+            <CCol col="12" id="findsList">
               <CTableWrapper
                 :items="items"
                 :fields="fields"
@@ -77,7 +77,7 @@ export default {
         .get(utils.geturl() + "/api/funds")
         .then(function(response) {
           let data = response.data;
-          // console.log("AllFunds", data);
+          console.log("AllFunds", data);
           if (data.status === true) {
             this.items = data.data;
             this.items = this.items.sort(utils.dynamicSort("name"));
@@ -124,7 +124,9 @@ export default {
     this.$loading.show();
   },
   beforeCreate() {},
-  beforeDestroy() {}
+  beforeDestroy() {
+    document.getElementById("findsList").outerHTML = "";
+  }
 };
 </script>
 
