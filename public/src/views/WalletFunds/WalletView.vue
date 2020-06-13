@@ -152,7 +152,7 @@
       </template>
       <template #footer>
         <CButton @click="deleteWalletModal = false" variant="outline" color="info">Cancel</CButton>
-        <CButton @click="deleteWalletModal()" variant="outline" color="danger">Ok</CButton>
+        <CButton @click="closeModalAccept()" variant="outline" color="danger">Ok</CButton>
       </template>
     </CModal>
   </CRow>
@@ -398,7 +398,11 @@ export default {
   },
   beforeCreate() {},
   beforeDestroy() {
-    document.getElementById("walletFundsList").outerHTML = "";
+    try {
+      document.getElementById("walletFundsList").outerHTML = "";
+    } catch (e) {
+      // console.log("Error - WalletView.vue", e.toString());
+    }
   },
   watch: {}
 };

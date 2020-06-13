@@ -274,7 +274,7 @@ export default {
       this.classnUpsFund = "cil-" + classAdd;
     },
     fundState: function(val) {
-      console.log("teste", val);
+      // console.log("teste", val);
       this.controlStatus = val; // === "true" ? true : false;
       this.invest.active = this.controlStatus;
     },

@@ -5,10 +5,7 @@
     <notifications group="notification" position="top center">
       <template slot="body" slot-scope="props">
         <CCard no-body :border-color="props.item.type">
-          <CCardHeader
-            class="ajust-notifications"
-            :class="'bg-' + props.item.type"
-          >
+          <CCardHeader class="ajust-notifications" :class="'bg-' + props.item.type">
             <h5>{{ props.item.title }}</h5>
           </CCardHeader>
           <CCardBody color="dark">

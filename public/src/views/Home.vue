@@ -11,20 +11,35 @@
                   @click="updateFundsAndPortfolio"
                   block
                   class="mb-3"
-                  :disabled="uupdatefundsAll.status"
+                  :disabled="updatefundsAll.status"
                   variant="outline"
                   color="success"
                 >
-                  <CIcon name="cil-reload" />Force update All Funds and
+                  <CIcon name="cil-reload" />&nbsp;&nbsp;Force update All Funds and
                   Portfolio
                 </CButton>
               </CCol>
             </CRow>
             <fundupdateinfo
-              :fundupdate="uupdatefundsAll"
+              :fundupdate="updatefundsAll"
               :fundstep="msgUpdateall"
               :fundval="valUpdateall"
             ></fundupdateinfo>
+            <!-- <CRow>
+              <CCol cols="12">
+                <CButton
+                  @click="alert('Teste')"
+                  block
+                  class="mb-3"
+                  :disabled="updatefundsAll.status"
+                  variant="outline"
+                  color="success"
+                >
+                  <CIcon name="cil-reload" />&nbsp;&nbsp;Insert Portfolio In File
+                  Portfolio
+                </CButton>
+              </CCol>
+            </CRow>-->
           </CCardBody>
         </CCard>
       </CCol>
@@ -102,7 +117,7 @@ export default {
       sliding: null,
       continersArticles: "",
       listFundsUpdate: [],
-      uupdatefundsAll: {
+      updatefundsAll: {
         status: false,
         name: "Update All Funds and Portfolios.",
         msg: "Step 1 / 2",
@@ -134,7 +149,7 @@ export default {
               type: "info",
               position: "top center"
             });
-            this.uupdatefundsAll.status = true;
+            this.updatefundsAll.status = true;
           } else {
             this.$notify({
               group: "notification",
@@ -274,11 +289,11 @@ export default {
     updateFundsAndWallets(data) {
       // console.log("Receive upate", data);
       if (data.status === true) {
-        this.uupdatefundsAll.status = true;
+        this.updatefundsAll.status = true;
         this.msgUpdateall = data.msg;
         this.valUpdateall = data.val;
       } else {
-        this.uupdatefundsAll.status = false;
+        this.updatefundsAll.status = false;
         console.log("Status = False.");
       }
     }

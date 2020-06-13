@@ -172,7 +172,11 @@ export default {
   },
   beforeCreate() {},
   beforeDestroy() {
-    document.getElementById("walletList").outerHTML = "";
+    try {
+      document.getElementById("walletList").outerHTML = "";
+    } catch (e) {
+      // console.log("Error - WalletFunds.vue", e.toString());
+    }
   }
 };
 </script>
